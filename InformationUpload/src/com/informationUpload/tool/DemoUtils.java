@@ -1,4 +1,4 @@
-package com.informationUpload;
+package com.informationUpload.tool;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

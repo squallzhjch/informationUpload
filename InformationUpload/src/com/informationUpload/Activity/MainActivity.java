@@ -1,4 +1,4 @@
-package com.informationUpload;
+package com.informationUpload.Activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -9,13 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Activity;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +28,11 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
+import com.informationUpload.map.MapManager;
+import com.informationUpload.tool.DemoUtils;
+import com.informationUpload.tool.JsonParser;
+import com.informationUpload.R;
+import com.informationUpload.utils.Utils;
 import com.informationUpload.tool.ImageTool;
 import com.informationUpload.widget.ImageViewEx;
 import com.tencent.map.geolocation.TencentLocation;
@@ -37,7 +41,6 @@ import com.tencent.map.geolocation.TencentLocationManager;
 import com.tencent.map.geolocation.TencentLocationRequest;
 import com.tencent.mapsdk.raster.model.GeoPoint;
 import com.tencent.mapsdk.raster.model.LatLng;
-import com.tencent.mapsdk.raster.model.Marker;
 import com.tencent.mapsdk.raster.model.MarkerOptions;
 import com.tencent.tencentmap.mapsdk.map.MapView;
 import com.tencent.tencentmap.mapsdk.map.Overlay;
@@ -50,30 +53,25 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class MainActivity extends Activity implements TencentLocationListener {
+public class MainActivity extends FragmentActivity  {
 
-    private MapView mMapView;
     private Button mVoice;
     private Button mPhoto;
     private SpeechRecognizer mIat;
     private EditText editTextKDXF;
-    private TencentLocationManager mLocationManager;
 
-    private TencentLocation mLocation;
-    private LocationOverlay mLocationOverlay;
+    private MapManager mMapManager;
+
     // 用于记录定位参数, 以显示到 UI
     private String mRequestParams;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMapView = (MapView) findViewById(R.id.mapView);
-        mMapView.getMap().setZoom(13);
+        MapView mapView = (MapView) findViewById(R.id.mapView);
+        mMapManager = MapManager.getInstance();
+        mMapManager.init(this, mapView);
 
-        Bitmap bmpMarker = BitmapFactory.decodeResource(getResources(),
-                R.drawable.mark_location);
-        mLocationOverlay = new LocationOverlay(bmpMarker);
-        mMapView.addOverlay(mLocationOverlay);
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=565eb095");
         //1.创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
@@ -103,7 +101,7 @@ public class MainActivity extends Activity implements TencentLocationListener {
             }
         });
         setParam();
-        mLocationManager = TencentLocationManager.getInstance(this);
+
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -202,72 +200,70 @@ public class MainActivity extends Activity implements TencentLocationListener {
     };
     @Override
     protected void onDestroy() {
-        mMapView.onDestroy();
+        if(mMapManager != null){
+            mMapManager.onDestroy();
+        }
         mIat.destroy();
         super.onDestroy();
     }
 
     @Override
     protected void onPause() {
-        mMapView.onPause();
-        stopLocation();
+        if(mMapManager != null) {
+            mMapManager.onPause();
+        }
+
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        mMapView.onResume();
-        startLocation();
+//        mMapView.onResume();
+//        startLocation();
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        mMapView.onStop();
+//        mMapView.onStop();
         super.onStop();
     }
 
-    @Override
-    public void onLocationChanged(TencentLocation location, int error, String s) {
-        if (error == TencentLocation.ERROR_OK) {
-            mLocation = location;
+//    @Override
+//    public void onLocationChanged(TencentLocation location, int error, String s) {
+//        if (error == TencentLocation.ERROR_OK) {
+//            mLocation = location;
+//
+//            // 定位成功
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("定位参数=").append(mRequestParams).append("\n");
+//            sb.append("(纬度=").append(location.getLatitude()).append(",经度=")
+//                    .append(location.getLongitude()).append(",精度=")
+//                    .append(location.getAccuracy()).append("), 来源=")
+//                    .append(location.getProvider()).append(", 地址=")
+//                    .append(location.getAddress());
+//
+////            // 更新 status
+////            mStatus.setText(sb.toString());
+//
+//            // 更新 location 图层
+//            mLocationOverlay.setAccuracy(mLocation.getAccuracy());
+//            mLocationOverlay.setGeoCoords(Utils.of(mLocation));
+//            mMapView.invalidate();
+//        }
+//    }
 
-            // 定位成功
-            StringBuilder sb = new StringBuilder();
-            sb.append("定位参数=").append(mRequestParams).append("\n");
-            sb.append("(纬度=").append(location.getLatitude()).append(",经度=")
-                    .append(location.getLongitude()).append(",精度=")
-                    .append(location.getAccuracy()).append("), 来源=")
-                    .append(location.getProvider()).append(", 地址=")
-                    .append(location.getAddress());
 
-//            // 更新 status
-//            mStatus.setText(sb.toString());
+//    private void startLocation() {
+//        TencentLocationRequest request = TencentLocationRequest.create();
+//        request.setInterval(5000);
+//        mLocationManager.requestLocationUpdates(request, this);
+//
+//        mRequestParams = request.toString() + ", 坐标系="
+//                + DemoUtils.toString(mLocationManager.getCoordinateType());
+//    }
 
-            // 更新 location 图层
-            mLocationOverlay.setAccuracy(mLocation.getAccuracy());
-            mLocationOverlay.setGeoCoords(Utils.of(mLocation));
-            mMapView.invalidate();
-        }
-    }
 
-    @Override
-    public void onStatusUpdate(String s, int i, String s1) {
-
-    }
-
-    private void startLocation() {
-        TencentLocationRequest request = TencentLocationRequest.create();
-        request.setInterval(5000);
-        mLocationManager.requestLocationUpdates(request, this);
-
-        mRequestParams = request.toString() + ", 坐标系="
-                + DemoUtils.toString(mLocationManager.getCoordinateType());
-    }
-
-    private void stopLocation() {
-        mLocationManager.removeUpdates(this);
-    }
 
 
     private static final int TAKE_PICTURE_CODE = 505;
@@ -325,10 +321,10 @@ public class MainActivity extends Activity implements TencentLocationListener {
         view.setImageByFilePath(uri.getPath(), nDegree);
         view.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
-        markerOptions.markerView(view);
-        mMapView.getMap().addMarker(markerOptions);
+//        MarkerOptions markerOptions = new MarkerOptions();
+//        markerOptions.position(new LatLng(mLocation.getLatitude(), mLocation.getLongitude()));
+//        markerOptions.markerView(view);
+//        mMapView.getMap().addMarker(markerOptions);
 //        String locationInfo = "null";
 //        if (mLocation != null) {
 //            GeoPoint pLoc = new GeoPoint(
@@ -351,54 +347,3 @@ public class MainActivity extends Activity implements TencentLocationListener {
     }
 }
 
-class LocationOverlay extends Overlay {
-
-    GeoPoint geoPoint;
-    Bitmap bmpMarker;
-    float fAccuracy = 0f;
-
-    public LocationOverlay(Bitmap mMarker) {
-        bmpMarker = mMarker;
-    }
-
-    public void setGeoCoords(GeoPoint point) {
-        if (geoPoint == null) {
-            geoPoint = new GeoPoint(point.getLatitudeE6(),
-                    point.getLongitudeE6());
-        } else {
-            geoPoint.setLatitudeE6(point.getLatitudeE6());
-            geoPoint.setLongitudeE6(point.getLongitudeE6());
-        }
-    }
-
-    public void setAccuracy(float fAccur) {
-        fAccuracy = fAccur;
-    }
-
-    @Override
-    public void draw(Canvas canvas, MapView mapView) {
-        if (geoPoint == null) {
-            return;
-        }
-        Projection mapProjection = mapView.getProjection();
-        Paint paint = new Paint();
-        Point ptMap = mapProjection.toPixels(geoPoint, null);
-        paint.setColor(Color.BLUE);
-        paint.setAlpha(8);
-        paint.setAntiAlias(true);
-
-        float fRadius = mapProjection.metersToEquatorPixels(fAccuracy);
-        canvas.drawCircle(ptMap.x, ptMap.y, fRadius, paint);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setAlpha(200);
-        canvas.drawCircle(ptMap.x, ptMap.y, fRadius, paint);
-
-        if (bmpMarker != null) {
-            paint.setAlpha(255);
-            canvas.drawBitmap(bmpMarker, ptMap.x - bmpMarker.getWidth() / 2,
-                    ptMap.y - bmpMarker.getHeight() / 2, paint);
-        }
-
-        super.draw(canvas, mapView);
-    }
-}

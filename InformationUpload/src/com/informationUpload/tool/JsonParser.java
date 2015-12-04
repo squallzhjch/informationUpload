@@ -1,4 +1,4 @@
-package com.informationUpload;
+package com.informationUpload.tool;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,4 +1,4 @@
-package com.informationUpload;
+package com.informationUpload.utils;
 
 import android.os.Environment;
 

@@ -8,12 +8,17 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true" />
+    <FrameLayout
+        android:id="@+id/main_fragment_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/submit_btn"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
     <Button
         android:id="@+id/voice"
@@ -35,5 +40,14 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@id/submit_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="上报"
+        android:background="@drawable/shade_wight_bg_gray_frame_4_radius"
+        android:layout_width="250dp"
+        android:layout_height="50dp" />
 
 </RelativeLayout>
