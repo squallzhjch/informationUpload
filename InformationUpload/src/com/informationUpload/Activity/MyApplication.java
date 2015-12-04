@@ -4,6 +4,7 @@ import android.app.Application;
 import android.util.DisplayMetrics;
 
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.tool.ImageTool;
 
 /**
@@ -24,6 +25,6 @@ public class MyApplication extends Application{
         mVoiceSpeechManager = VoiceSpeechManager.getInstance();
         mVoiceSpeechManager.init(this);
 
-
+        IntentHelper.getInstance().init(this);
     }
 }
