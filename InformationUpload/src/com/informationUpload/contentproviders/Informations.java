@@ -12,12 +12,6 @@ import android.net.Uri;
 public final class Informations {
     public static final String AUTHORITY = "com.informationUpload.contentproviders.Informations";
 
-    
-    
-    
-    
-    
-    
     static class InformationsBase {
 
     }

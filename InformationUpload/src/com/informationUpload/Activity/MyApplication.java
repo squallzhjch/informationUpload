@@ -1,6 +1,10 @@
 package com.informationUpload.Activity;
 
 import android.app.Application;
+import android.util.DisplayMetrics;
+
+import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.tool.ImageTool;
 
 /**
  * @author zhjch
@@ -10,8 +14,16 @@ import android.app.Application;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class MyApplication extends Application{
+
+    private VoiceSpeechManager mVoiceSpeechManager;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mVoiceSpeechManager = VoiceSpeechManager.getInstance();
+        mVoiceSpeechManager.init(this);
+
+
     }
 }
