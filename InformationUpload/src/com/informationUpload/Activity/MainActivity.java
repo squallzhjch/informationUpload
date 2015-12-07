@@ -17,6 +17,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,6 +30,9 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.fragments.BusReportFragment;
+import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.tool.DemoUtils;
 import com.informationUpload.tool.JsonParser;
@@ -54,52 +58,58 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class MainActivity extends FragmentActivity  {
+public class MainActivity extends BaseActivity implements OnClickListener{
 
     private Button mVoice;
     private Button mPhoto;
 
     private EditText editTextKDXF;
-
+    private Button mSubmitBtn;
     private MapManager mMapManager;
     private VoiceSpeechManager mVoiceSpeechManager;
-    // 用于记录定位参数, 以显示到 UI
-    private String mRequestParams;
+    private MyFragmentManager myFragmentManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        MapView mapView = (MapView) findViewById(R.id.mapView);
-        mMapManager = MapManager.getInstance();
-        mMapManager.init(this, mapView);
 
-        mVoiceSpeechManager = VoiceSpeechManager.getInstance();
+        if(savedInstanceState == null) {
+            setContentView(R.layout.activity_main);
 
-        mPhoto = (Button)findViewById(R.id.photo);
-        mPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doTakePicture();
-            }
-        });
-        editTextKDXF = (EditText) findViewById(R.id.kdxf_text);
-        mVoice = (Button) findViewById(R.id.voice);
-        mVoice.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    mVoiceSpeechManager.start();
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    mVoiceSpeechManager.stop();
+            MapView mapView = (MapView) findViewById(R.id.mapView);
+            mMapManager = MapManager.getInstance();
+            mMapManager.init(this, mapView);
+            myFragmentManager = MyFragmentManager.getInstance();
+            myFragmentManager.init(getApplicationContext(), getSupportFragmentManager());
+            mVoiceSpeechManager = VoiceSpeechManager.getInstance();
+
+            mPhoto = (Button) findViewById(R.id.photo);
+            mPhoto.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    doTakePicture();
                 }
-                return true;
-            }
-        });
+            });
+            editTextKDXF = (EditText) findViewById(R.id.kdxf_text);
+            mVoice = (Button) findViewById(R.id.voice);
+            mVoice.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mVoiceSpeechManager.start();
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        mVoiceSpeechManager.stop();
+                    }
+                    return true;
+                }
+            });
+            mSubmitBtn = (Button)findViewById(R.id.submit_btn);
+            mSubmitBtn.setOnClickListener(this);
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        ImageTool.setDisplayMetrics(dm);
-
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            ImageTool.setDisplayMetrics(dm);
+        }
     }
 
     @Override
@@ -214,6 +224,29 @@ public class MainActivity extends FragmentActivity  {
 //
 //        CommonToolkit.renameFile(uri.getPath(), path);
 
+    }
+
+    @Override
+    public boolean isInstanceStateSaved() {
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.submit_btn: {
+                myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(BusReportFragment.class, null));
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (!myFragmentManager.back()) {
+                finish();
+                System.exit(0);
+        }
     }
 }
 

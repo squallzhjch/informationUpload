@@ -31,8 +31,15 @@
 	    <item name="android:paddingRight">15dp</item>
 	    <item name="android:paddingTop">5dp</item>
 	    <item name="android:paddingBottom">5dp</item>
-	    
 	    <item name="android:textSize">14sp</item>
-	    
 	</style>
+
+    <style name="TitleView">
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/title_view_line_background</item>
+        <item name="title_padding_right">@dimen/title_horizontal_padding</item>
+    </style>
+
 </resources>

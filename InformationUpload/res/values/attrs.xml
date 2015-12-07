@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleView">
+        <attr name="title_text" format="string|reference"/>
+        <attr name="hide_title_bottom_line" format="boolean"/>
+        <attr name="title_padding_right" format="dimension|reference"></attr>
+        <attr name="title_right_image" format="reference"/>
+        <attr name="title_right_text" format="string|reference"/>
+        <attr name="title_left_text" format="string|reference"/>
+        <attr name="title_view_allowed_flexible_height" format="boolean"/>
+        <attr name="title_text_size_flexible" format="boolean"></attr>
+        <attr name="maximum_title_text_displaying_count" format="integer"/>
+    </declare-styleable>
+</resources>

@@ -34,8 +34,9 @@ public class MyFragmentManager {
         return mInstance;
     }
 
-    public void init(Context context){
+    public void init(Context context, FragmentManager fragmentManager){
         mContext = context;
+        mFragmentManager = fragmentManager;
     }
 
     public void showFragment(Intent intent){
@@ -50,12 +51,16 @@ public class MyFragmentManager {
 
         fragment = (BaseFragment) Fragment.instantiate(mContext, fragmentName);
         fragment.setArguments(intent.getExtras());
+        transformation.addToBackStack(null);
         transformation.add(R.id.main_fragment_layout, fragment, fragmentName);
         transformation.commitAllowingStateLoss();
     }
 
-    public void back(){
-
+    public boolean  back(){
+        int fragmentSize = mFragmentManager.getBackStackEntryCount();
+        boolean canBack = fragmentSize > 0;
+        mFragmentManager.popBackStack();
+        return  canBack;
     }
 
     public void hideFragment(){

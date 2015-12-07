@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="title_text_color">#494949</color>
+    <color name="default_text_pink_color">#f64b78</color>
+    <color name="fragment_background_color">#fbfbfb</color>
+</resources>
