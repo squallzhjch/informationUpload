@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.iflytek.cloud.RecognizerListener;
@@ -28,6 +29,7 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.SpeechUtility;
+import com.informationUpload.fragments.InformationCollectionFragment;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.tool.DemoUtils;
 import com.informationUpload.tool.JsonParser;
@@ -106,7 +108,10 @@ public class MainActivity extends FragmentActivity  {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         ImageTool.setDisplayMetrics(dm);
-
+        
+        
+       startActivity(new Intent(MainActivity.this,InformationCollectionActivity.class));
+        
     }
 
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
