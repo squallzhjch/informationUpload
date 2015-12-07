@@ -4,19 +4,19 @@ import java.io.Serializable;
 
 public class ChatMessage implements Serializable {
 	
-	private String chattimelong;//录音时间长度 
+	private long chattimelong;//录音时间长度 
 	
 	private String name;//音频名字
 	
 	private String path;//路径
 	
-	private String amp;//音量
+	private double amp;//音量
 
-	public String getChattimelong() {
+	public long getChattimelong() {
 		return chattimelong;
 	}
 
-	public void setChattimelong(String chattimelong) {
+	public void setChattimelong(long chattimelong) {
 		this.chattimelong = chattimelong;
 	}
 
@@ -36,11 +36,11 @@ public class ChatMessage implements Serializable {
 		this.path = path;
 	}
 
-	public String getAmp() {
+	public double getAmp() {
 		return amp;
 	}
 
-	public void setAmp(String amp) {
+	public void setAmp(double amp) {
 		this.amp = amp;
 	}
 	

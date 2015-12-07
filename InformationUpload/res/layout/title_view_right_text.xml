@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/title_right_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:padding="@dimen/title_right_padding"
+    android:textColor="@color/default_text_pink_color"
+    android:textSize="@dimen/text_size_middle" />

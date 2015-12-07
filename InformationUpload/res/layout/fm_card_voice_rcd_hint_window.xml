@@ -40,17 +40,7 @@
                 android:scaleType="center" />
         </LinearLayout>
 
-        <!--
-             <ImageView
-            android:id="@+id/img1"
-            android:layout_width="30.0dip"
-            android:layout_height="30.0dip"
-            android:layout_marginLeft="10.0dip"
-            android:layout_marginRight="20.0dip"
-            android:background="@drawable/voice_rcd_cancel_bg"
-            android:padding="7.0dip"
-            android:src="@drawable/rcd_cancel_icon"  />
-        -->
+  
 
         <LinearLayout
             android:id="@+id/del_re"
@@ -78,23 +68,7 @@
                 android:src="@drawable/rcd_cancel_icon" />
         </LinearLayout>
     </LinearLayout>
-    <!--
-    <LinearLayout
-        android:id="@+id/voice_rcd_hint_loading"
-        android:layout_width="140.0dip"
-        android:layout_height="140.0dip"
-        android:background="@drawable/voice_rcd_hint_bg"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone" >
-
-        <ProgressBar
-            android:id="@+id/progressBar1"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    -->
+   
 
     <LinearLayout
         android:id="@+id/voice_rcd_hint_tooshort"

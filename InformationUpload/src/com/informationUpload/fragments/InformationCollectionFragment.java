@@ -3,6 +3,7 @@ package com.informationUpload.fragments;
 
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 import com.informationUpload.R;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,9 +34,11 @@ import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.utils.PoiRecordPopup;
 
-public class InformationCollectionFragment extends BaseFragment{
+public class InformationCollectionFragment extends Fragment{
 
 
 	private View view;
@@ -81,14 +85,17 @@ public class InformationCollectionFragment extends BaseFragment{
 	/**
 	 * 录音探出框
 	 */
-
-
 	private PoiRecordPopup mVoicePop;
+	/**
+	 * 聊天信息数组
+	 */
+	private ArrayList<ChatMessage> list;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view =inflater.inflate(R.layout.information_collection,null);
+		
 		//初始化
 		init();
 		//添加监听器
@@ -99,6 +106,7 @@ public class InformationCollectionFragment extends BaseFragment{
 	 * 初始化组件
 	 */
 	private void init() {
+		list=new ArrayList<ChatMessage>();
 		select_position=(TextView)view.findViewById(R.id.select_position);
 		hliv=(ImageView) view.findViewById(R.id.hliv);    
 		voice_collection_lv=(ListView) view.findViewById(R.id.voice_collection_lv);
@@ -128,7 +136,14 @@ public class InformationCollectionFragment extends BaseFragment{
 		mVoicePop.setRecordListener(new PoiRecordPopup.RecorListener() {
 			@Override
 			public void stopListener(double amp, String path, String name, long time) {
-
+                    if(time>1000&&time<6000){
+                   ChatMessage chatmsg = new ChatMessage();
+                   chatmsg.setAmp(amp);
+                   chatmsg.setChattimelong(time);
+		           chatmsg.setName(name);
+		           chatmsg.setPath(path);
+		           list.add(chatmsg);
+                    }
 
 			}
 		});
