@@ -22,8 +22,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +37,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.utils.PoiRecordPopup;
 
@@ -87,9 +90,13 @@ public class InformationCollectionFragment extends Fragment{
 	 */
 	private PoiRecordPopup mVoicePop;
 	/**
-	 * 聊天信息数组
+	 * 录音信息数组
 	 */
 	private ArrayList<ChatMessage> list;
+	/**
+	 * 录音信息adapter
+	 */
+	private ChatAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -117,6 +124,8 @@ public class InformationCollectionFragment extends Fragment{
 		savetolocal=(Button)view.findViewById(R.id.savetolocal);
 		recordvoice= (Button)view.findViewById(R.id.recordvoice);
 		report_at_once = (Button) view.findViewById(R.id.report_at_once);
+		adapter=new ChatAdapter(getActivity(), list);
+		voice_collection_lv.setAdapter(adapter);
 
 
 	}
@@ -143,6 +152,9 @@ public class InformationCollectionFragment extends Fragment{
 		           chatmsg.setName(name);
 		           chatmsg.setPath(path);
 		           list.add(chatmsg);
+		           adapter.setData(list);
+		           adapter.notifadataset();
+		           resetListView();
                     }
 
 			}
@@ -201,8 +213,28 @@ public class InformationCollectionFragment extends Fragment{
 			}
 		});
 
-
-
+		
 	}
+	//重新计算高度
+			private  void resetListView(){
+
+				int count = this.adapter.getCount() ;
+
+				View itemView = this.adapter.getView(0, null, null);
+				if(itemView!=null){
+					itemView.measure(
+							MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+							MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
+
+					int defHeight = count
+							* (itemView.getMeasuredHeight() + voice_collection_lv
+									.getDividerHeight());
+					LayoutParams lp = voice_collection_lv.getLayoutParams();
+					lp.height =defHeight ;
+					voice_collection_lv.setLayoutParams(lp);
+				}
+
+			}
+
 
 }
