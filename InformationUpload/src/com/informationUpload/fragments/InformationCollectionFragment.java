@@ -173,7 +173,7 @@ public class InformationCollectionFragment extends Fragment{
 		list=new ArrayList<ChatMessage>();
 		select_position=(TextView)view.findViewById(R.id.select_position);
 		hliv=(ImageView) view.findViewById(R.id.hliv);    
-		voice_collection_lv=(ListView) view.findViewById(R.id.voice_collction_lv);
+		voice_collection_lv=(ListView) view.findViewById(R.id.voice_collection_lv);
 		hscrollview=(HorizontalScrollView)view.findViewById(R.id.hscrollview);
 		hlinearlayout=(LinearLayout)view.findViewById(R.id.hlinearlayout);                   
 		additional_remarks_sv=(ScrollView)view.findViewById(R.id.additional_remarks_sv);

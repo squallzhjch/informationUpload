@@ -88,14 +88,7 @@ public class MainActivity extends BaseActivity implements OnClickListener{
             myFragmentManager.init(getApplicationContext(), getSupportFragmentManager());
             mVoiceSpeechManager = VoiceSpeechManager.getInstance();
 
-            mPhoto = (Button) findViewById(R.id.photo);
-            mPhoto.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    doTakePicture();
-                }
-               
-            });
+            
         setParam();
 
 
@@ -104,7 +97,7 @@ public class MainActivity extends BaseActivity implements OnClickListener{
         ImageTool.setDisplayMetrics(dm);
         
         
-       startActivity(new Intent(MainActivity.this,InformationCollectionActivity.class));
+      
         
     }
     }
