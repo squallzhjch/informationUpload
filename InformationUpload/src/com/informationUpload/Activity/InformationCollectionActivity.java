@@ -14,7 +14,7 @@ public class InformationCollectionActivity extends FragmentActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(arg0);
 		setContentView(R.layout.informationcollectionactivity);
-		getSupportFragmentManager().beginTransaction().replace(R.id.tab_container,new InformationCollectionFragment()).commit();
+		getSupportFragmentManager().beginTransaction().addToBackStack(null).replace(R.id.tab_container,new InformationCollectionFragment(R.id.tab_container)).commit();
 	}
 
 }
