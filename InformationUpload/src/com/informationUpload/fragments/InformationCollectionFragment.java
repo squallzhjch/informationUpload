@@ -154,7 +154,7 @@ public class InformationCollectionFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view =inflater.inflate(R.layout.information_collection,null);
+		view =inflater.inflate(R.layout.fragment1_information_collection,null);
 		DisplayMetrics metric = new DisplayMetrics();  
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);  
 	    width = metric.widthPixels;     // 屏幕宽度（像素） 

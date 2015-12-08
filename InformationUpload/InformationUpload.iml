@@ -81,11 +81,12 @@
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 18 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="TencentLocationSDK_v4.1.1_r175129" level="project" />
     <orderEntry type="library" exported="" name="Msc" level="project" />
+    <orderEntry type="library" exported="" name="TencentSearch1.1.2.16095" level="project" />
     <orderEntry type="library" exported="" name="Sunflower" level="project" />
     <orderEntry type="library" exported="" name="TencentMapSDK_Raster_v1.1.2.15850" level="project" />
   </component>
