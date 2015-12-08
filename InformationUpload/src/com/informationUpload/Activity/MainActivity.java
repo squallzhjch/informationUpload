@@ -34,6 +34,7 @@ import com.iflytek.cloud.SpeechUtility;
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
 import com.informationUpload.fragments.BusReportFragment;
 import com.informationUpload.fragments.InformationCollectionFragment;
+import com.informationUpload.fragments.MainFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 
@@ -63,44 +64,36 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class MainActivity extends BaseActivity implements OnClickListener{
+public class MainActivity extends BaseActivity implements OnClickListener, ActivityInstanceStateListener {
 
-    private Button mVoice;
-    private Button mPhoto;
-
-    private EditText editTextKDXF;
-    private Button mSubmitBtn;
     private MapManager mMapManager;
     private VoiceSpeechManager mVoiceSpeechManager;
     private MyFragmentManager myFragmentManager;
-
+    private volatile boolean mOnSaveInstanceStateInvoked;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(savedInstanceState == null) {
+        mOnSaveInstanceStateInvoked = false;
+        if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
 
             MapView mapView = (MapView) findViewById(R.id.mapView);
             mMapManager = MapManager.getInstance();
             mMapManager.init(this, mapView);
             myFragmentManager = MyFragmentManager.getInstance();
-            myFragmentManager.init(getApplicationContext(), getSupportFragmentManager());
+            myFragmentManager.init(getApplicationContext(), getSupportFragmentManager(), this);
             mVoiceSpeechManager = VoiceSpeechManager.getInstance();
 
-            
-        setParam();
+            setParam();
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            ImageTool.setDisplayMetrics(dm);
 
+            myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+//       startActivity(new Intent(MainActivity.this,InformationCollectionActivity.class));
+        }
+    }
 
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        ImageTool.setDisplayMetrics(dm);
-        
-        
-      
-        
-    }
-    }
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
 
     public void setParam() {
@@ -139,7 +132,7 @@ public class MainActivity extends BaseActivity implements OnClickListener{
 
     @Override
     protected void onDestroy() {
-        if(mMapManager != null){
+        if (mMapManager != null) {
             mMapManager.onDestroy();
         }
         mVoiceSpeechManager.onDestroy();
@@ -148,7 +141,7 @@ public class MainActivity extends BaseActivity implements OnClickListener{
 
     @Override
     protected void onPause() {
-        if(mMapManager != null) {
+        if (mMapManager != null) {
             mMapManager.onPause();
         }
         mVoiceSpeechManager.onPause();
@@ -157,25 +150,27 @@ public class MainActivity extends BaseActivity implements OnClickListener{
 
     @Override
     protected void onResume() {
-        if(mMapManager != null) {
+        if (mMapManager != null) {
             mMapManager.onResume();
         }
+        mOnSaveInstanceStateInvoked = false;
         super.onResume();
     }
 
     @Override
     protected void onStop() {
-        if(mMapManager != null) {
+        if (mMapManager != null) {
             mMapManager.onStop();
         }
         super.onStop();
     }
 
     private static final int TAKE_PICTURE_CODE = 505;
+
     private void doTakePicture() {
         // 拍照
         Uri uri = getImageUri();
-        if(uri == null){
+        if (uri == null) {
             Toast.makeText(this, "资源存放位置分配失败", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -196,7 +191,9 @@ public class MainActivity extends BaseActivity implements OnClickListener{
                     Environment.getExternalStorageDirectory() + "/FastMap/", imagefilename));
         }
     }
-    public static final int RESULT_OK       = -1;
+
+    public static final int RESULT_OK = -1;
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
@@ -214,11 +211,11 @@ public class MainActivity extends BaseActivity implements OnClickListener{
 
 
     private void setImageView(Uri uri, boolean need) {
-        if(uri == null){
+        if (uri == null) {
             Toast.makeText(this, "资源存放位置分配失败", Toast.LENGTH_SHORT).show();
             return;
         }
-        ImageViewEx view = (ImageViewEx)View.inflate(this, R.layout.image_ex_layout, null);
+        ImageViewEx view = (ImageViewEx) View.inflate(this, R.layout.image_ex_layout, null);
 //        ImageViewEx imageViewEx = (ImageViewEx) view.findViewById(R.id.imageViewEx);
 
 
@@ -250,10 +247,10 @@ public class MainActivity extends BaseActivity implements OnClickListener{
 //        CommonToolkit.renameFile(uri.getPath(), path);
 
     }
-
     @Override
-    public boolean isInstanceStateSaved() {
-        return false;
+    protected void onSaveInstanceState(Bundle bundle) {
+        mOnSaveInstanceStateInvoked = true;
+        super.onSaveInstanceState(bundle);
     }
 
     @Override
@@ -269,9 +266,12 @@ public class MainActivity extends BaseActivity implements OnClickListener{
     @Override
     public void onBackPressed() {
         if (!myFragmentManager.back()) {
-                finish();
-                System.exit(0);
+            finish();
+            System.exit(0);
         }
     }
+    @Override
+    public boolean isInstanceStateSaved() {
+        return mOnSaveInstanceStateInvoked;
+    }
 }
-
