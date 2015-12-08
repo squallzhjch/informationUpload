@@ -2,29 +2,22 @@ package com.informationUpload.fragments;
 
 
 
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
+import com.informationUpload.Activity.ActivityInstanceStateListener;
+import com.informationUpload.Activity.MainActivity;
+import com.informationUpload.Activity.MyApplication;
 import com.informationUpload.R;
 
-import android.graphics.drawable.AnimationDrawable;
-import android.media.MediaPlayer;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -33,15 +26,20 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.adapter.ChatAdapter;
+import com.informationUpload.contents.AbstractOnContentUpdateListener;
+import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.entity.ChatMessage;
+import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.widget.TitleView;
 
-public class InformationCollectionFragment extends Fragment{
+public class InformationCollectionFragment extends BaseFragment{
 
 
 	private View view;
@@ -68,7 +66,7 @@ public class InformationCollectionFragment extends Fragment{
 	/**
 	 * 补充说明的scrollview
 	 */
-	private ScrollView additional_remarks_sv;
+//	private ScrollView additional_remarks_sv;
 	/**
 	 * 补充说明的edittext
 	 */
@@ -98,11 +96,43 @@ public class InformationCollectionFragment extends Fragment{
 	 */
 	private ChatAdapter adapter;
 
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
+			@Override
+			public void onContentUpdated(List<Object[]> values) {
+				if (values != null) {
+					String address = (String) values.get(0)[0];
+					select_position.setText(address);
+				}
+			}
+
+			@Override
+			public boolean isActive() {
+				return mIsActive;
+			}
+
+			@Override
+			public String getKey() {
+				return SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS;
+			}
+		});
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view =inflater.inflate(R.layout.information_collection,null);
-		
+		view =inflater.inflate(R.layout.fragment_information_collection,null);
+		TitleView title = (TitleView)view.findViewById(R.id.title_view);
+		title.setOnLeftAreaClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragmentManager.back();
+			}
+		});
 		//初始化
 		init();
 		//添加监听器
@@ -119,15 +149,13 @@ public class InformationCollectionFragment extends Fragment{
 		voice_collection_lv=(ListView) view.findViewById(R.id.voice_collection_lv);
 		hscrollview=(HorizontalScrollView)view.findViewById(R.id.hscrollview);
 		hlinearlayout=(LinearLayout)view.findViewById(R.id.hlinearlayout);                   
-		additional_remarks_sv=(ScrollView)view.findViewById(R.id.additional_remarks_sv);
+//		additional_remarks_sv=(ScrollView)view.findViewById(R.id.additional_remarks_sv);
 		additional_remarks_et  = (EditText) view.findViewById(R.id.additional_remarks_et);
 		savetolocal=(Button)view.findViewById(R.id.savetolocal);
 		recordvoice= (Button)view.findViewById(R.id.recordvoice);
 		report_at_once = (Button) view.findViewById(R.id.report_at_once);
 		adapter=new ChatAdapter(getActivity(), list);
 		voice_collection_lv.setAdapter(adapter);
-
-
 	}
 	/**
 	 * 添加监听器
@@ -180,8 +208,9 @@ public class InformationCollectionFragment extends Fragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-
+				Bundle bundle = new Bundle();
+				bundle.putBoolean(SystemConfig.HIDE_OTHER_FRAGMENT, true);
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(SelectPointFragment.class, bundle));
 			}
 		});
 		//照相添加图片

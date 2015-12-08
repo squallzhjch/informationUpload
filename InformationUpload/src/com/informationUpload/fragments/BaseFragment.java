@@ -8,9 +8,14 @@ import android.support.v4.app.Fragment;
 import com.informationUpload.Activity.ActivityInstanceStateListener;
 import com.informationUpload.Activity.MainActivity;
 import com.informationUpload.Activity.MyApplication;
+import com.informationUpload.contents.AbstractOnContentUpdateListener;
+import com.informationUpload.contents.ContentsManager;
+import com.informationUpload.contents.OnContentUpdateListener;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhjch
@@ -23,8 +28,13 @@ public abstract class BaseFragment extends Fragment {
     protected ActivityInstanceStateListener mActivityInstanceStateListener;
 
     protected MyFragmentManager mFragmentManager;
+    protected ContentsManager mContentsManager;
     protected MyApplication mApplication;
     protected MainActivity mMainActivity;
+    protected boolean mIsActive = true;
+    private List<AbstractOnContentUpdateListener> mOnContentUpdateListeners = new ArrayList<AbstractOnContentUpdateListener>();
+    private volatile boolean mIsFragmentMarkDisposed = false;
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -34,6 +44,7 @@ public abstract class BaseFragment extends Fragment {
         mMainActivity = (MainActivity) activity;
         mApplication = (MyApplication) mMainActivity.getApplicationContext();
         mFragmentManager = MyFragmentManager.getInstance();
+        mContentsManager = ContentsManager.getInstance();
     }
 
     @Override
@@ -49,31 +60,34 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-//        for (OnContentUpdateListener listener : mOnContentUpdateListeners) {
-//            mContentsManager.unregisterOnContentUpdateListener(listener);
-//        }
-//        mOnContentUpdateListeners.clear();
+        for (OnContentUpdateListener listener : mOnContentUpdateListeners) {
+            mContentsManager.unregisterOnContentUpdateListener(listener);
+        }
+        mOnContentUpdateListeners.clear();
     }
 
     public void onFragmentActive() {
+        mIsActive = true;
+        for (AbstractOnContentUpdateListener listener : mOnContentUpdateListeners) {
+            if (listener.isUpdateHappened()) {
+                listener.onContentUpdated(listener.getCachedObjects());
+                listener.clearCache();
+            }
+        }
+    }
 
-//        if (mMapControl != null
-//                && !isFragmentAllowedSwitch()) {
-//            mMapControl.pause();
-//        }
-//        mIsActive = true;
-//        mLog.d(LOG_TAG, "onResume.called, this: %s, mIsActive: %b, mOnContentUpdateListeners.size: %d", this, mIsActive, mOnContentUpdateListeners.size());
-//        for (AbstractOnContentUpdateListener listener : mOnContentUpdateListeners) {
-//            if (listener.isUpdateHappened()) {
-//                listener.onContentUpdated(listener.getCachedObjects());
-//                listener.clearCache();
-//            }
-//        }
-//
-//        for (WeakReference<OnViewVisualChangedListener> viewVisualChangedListenerRef : mOnViewVisualChangedListeners) {
-//            if (viewVisualChangedListenerRef != null && viewVisualChangedListenerRef.get() != null) {
-//                viewVisualChangedListenerRef.get().setViewVisualState(OnViewVisualChangedListener.ViewVisualState.FOREGROUND);
-//            }
-//        }
+
+    public void onFragmentDeactive() {
+        mIsActive = false;
+    }
+
+    protected void registerOnContentUpdateListener(AbstractOnContentUpdateListener listener) {
+        if (mContentsManager.registerOnContentUpdateListener(listener)) {
+            mOnContentUpdateListeners.add(listener);
+        }
+    }
+
+    public  void markFragmentDisposed() {
+        mIsFragmentMarkDisposed = true;
     }
 }

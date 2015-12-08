@@ -2,6 +2,8 @@ package com.informationUpload.contentproviders;
 
 import android.net.Uri;
 
+import com.informationUpload.contentproviders.columns.InformationColumns;
+
 /**
  * @author zhjch
  * @version V1.0

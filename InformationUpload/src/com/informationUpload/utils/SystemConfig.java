@@ -13,4 +13,8 @@ public class SystemConfig {
 
     public static String DATA_SDCRAD_PATH = Environment
             .getExternalStorageDirectory() + "/InformationUpload/data/";
+
+    public static String HIDE_OTHER_FRAGMENT = "fragment_hide_other";
+
+    public static String FRAGMENT_UPDATE_SELECT_POINT_ADDRESS = "fragment_update_select_point_address";
 }
