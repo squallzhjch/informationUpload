@@ -5,8 +5,10 @@ import java.util.List;
 
 
 import com.informationUpload.R;
+import com.informationUpload.utils.SystemConfig;
 
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -43,13 +45,17 @@ public class PhotoViewpagerFragment extends BaseFragment{
 	 */
 	private int position;
 	
+	  @Override
+	    public void onAttach(Activity activity) {
+		  super.onAttach(activity);
+		  Bundle arg = getArguments();
+		  if(arg != null){
+			  position=arg.getInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM);
+			  
+			  listViews=(ArrayList<View>) arg.getSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST);
+		  }
 	
-	
-	public  PhotoViewpagerFragment(int position,ArrayList<View> list){
-		this.position=position;
-		this.listViews=list;
-		
-	}
+	  }
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {

@@ -35,6 +35,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.VoiceSpeech.VoiceSpeechManager.parseListener;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
@@ -97,10 +99,7 @@ public class InformationCollectionFragment extends BaseFragment {
      * 添加图片横向的LinearLayout
      */
     private LinearLayout hlinearlayout;
-    /**
-     * 补充说明的scrollview
-     */
-//	private ScrollView additional_remarks_sv;
+   
     /**
      * 补充说明的edittext
      */
@@ -133,19 +132,22 @@ public class InformationCollectionFragment extends BaseFragment {
      * 屏幕宽度
      */
     private int width;
-    /**
-     * 主布局
-     */
+    
 
     /**
      * 该条信息的唯一标识
      */
     private String mRowkey;
+    /**
+     * 科达讯飞语音转文字管理类
+     */
+	private VoiceSpeechManager voiceManager;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-
+        voiceManager= VoiceSpeechManager.getInstance();
+        
         registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
             @Override
             public void onContentUpdated(List<Object[]> values) {
@@ -227,18 +229,29 @@ public class InformationCollectionFragment extends BaseFragment {
         mVoicePop.setMaxLeng(1000 * 60);
         mVoicePop.setRecordListener(new PoiRecordPopup.RecorListener() {
             @Override
-            public void stopListener(double amp, String path, String name, long time) {
+            public void stopListener(String parsestr,String path, String name, long time) {
                 if (time > 1000 && time < 6000) {
+                	additional_remarks_et.setText(parsestr);
                     ChatMessage chatmsg = new ChatMessage();
-                    chatmsg.setAmp(amp);
+                     
                     chatmsg.setChattimelong(time);
                     chatmsg.setName(name);
                     chatmsg.setPath(path);
                     chatmsg.setRowkey(mRowkey);
                     chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-                    chatmsg.setLat(mLocationManager.getCurrentPoint().getLon());
+                    chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
                     chatmsg.setTime(System.currentTimeMillis());
                     mChatList.add(chatmsg);
+                    for(int i=0;i<mChatList.size();i++){
+                    	Log.i("chentao","setChattimelong"+i+":"+mChatList.get(i).getChattimelong());
+                    	Log.i("chentao","setName"+i+":"+mChatList.get(i).getName());
+                    	Log.i("chentao","setPath"+i+":"+mChatList.get(i).getPath());
+                    	Log.i("chentao","setRowkey"+i+":"+mChatList.get(i).getRowkey());
+                    	Log.i("chentao","setLat"+i+":"+mChatList.get(i).getLat());
+                    	Log.i("chentao","setLon"+i+":"+mChatList.get(i).getLon());
+                    	Log.i("chentao","setTime"+i+":"+mChatList.get(i).getTime());
+                    
+                    }
                     adapter.setData(mChatList);
                     adapter.notifadataset();
                     resetListView();
@@ -382,7 +395,11 @@ public class InformationCollectionFragment extends BaseFragment {
                     @Override
                     public void onClick(View arg0) {
                         int num = (Integer) arg0.getTag();
-                        //	getFragmentManager().beginTransaction().addToBackStack(null).replace(tab_container,new PhotoViewpagerFragment(num,listview)).commit();
+                        Bundle bundle=new Bundle();
+                        bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
+                        bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, listview);
+                        mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
+                      
 
                     }
                 });
@@ -404,7 +421,8 @@ public class InformationCollectionFragment extends BaseFragment {
     }
    private void  saveLocal(){
        InformationMessage message = new InformationMessage();
+       message.setRowkey(mRowkey);
        message.setChatMessageList(mChatList);
-       mInformationManager.saveInformation(mApplication.getUserId(),message);
+       mInformationManager.saveInformation(mApplication.getUserId(), message);
    }
 }

@@ -28,4 +28,8 @@ public class SystemConfig {
      */
     //传递ROWKEY 显示相应的数据
     public static String BUNDLE_DATA_ROWKEY = "bundle_data_rowkey";
+    
+    public static String BUNDLE_DATA_PICTURE_NUM = "bundle_data_picture_num";
+    
+    public static String BUNDLE_DATA_PICTURE_LIST ="bundle_data_picture_list";
 }
