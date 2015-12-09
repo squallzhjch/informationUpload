@@ -38,7 +38,9 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <LinearLayout style="@style/user_center_style" >
+    <LinearLayout
+        android:id="@+id/upl"
+        style="@style/user_center_style" >
 
         <TextView
             android:layout_width="0dp"

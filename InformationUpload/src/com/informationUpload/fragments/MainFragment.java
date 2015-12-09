@@ -19,7 +19,7 @@ import com.informationUpload.fragments.utils.IntentHelper;
  */
 public class MainFragment extends BaseFragment {
     private Button mSubmitBtn;
-
+    private Button mCenterBtn;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View view = inflater.inflate(R.layout.fragment_main, null, true);
         mSubmitBtn = (Button)view.findViewById(R.id.submit_btn);
@@ -29,6 +29,15 @@ public class MainFragment extends BaseFragment {
                 mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, null));
             }
         });
+
+        mCenterBtn = (Button)view.findViewById(R.id.center_btn);
+        mCenterBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(CenterFragment.class, null));
+            }
+        });
+
         return view;
     }
 
