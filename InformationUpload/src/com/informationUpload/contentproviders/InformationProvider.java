@@ -23,7 +23,6 @@ import java.util.HashMap;
  */
 public class InformationProvider extends ContentProvider{
 
-    private static final String LOG_TAG = "InformationProvider";
     private static final String DATABASE_NAME = "informationsDB.db";
     private static final int DATABASE_VERSION = 1;
     private static final String INFORMATION_TABLE_NAME = "informationTable";
