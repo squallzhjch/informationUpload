@@ -5,17 +5,10 @@ import java.util.List;
 
 
 import com.informationUpload.R;
-import com.informationUpload.utils.Bimp;
-import com.informationUpload.utils.FileUtils;
 
 
-
-
-import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -23,15 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 
 import android.widget.RelativeLayout;
 /**
  * 点击图片，可放大，可删除界面
  * @author  chentao
  */
-@SuppressLint("ValidFragment") 
-public class PhotoViewpagerFragment extends Fragment{
+public class PhotoViewpagerFragment extends BaseFragment{
 	private ArrayList<View> listViews = new ArrayList<View>();
 	private ViewPager pager;
 	private MyPageAdapter adapter;
@@ -63,13 +54,7 @@ public class PhotoViewpagerFragment extends Fragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view =inflater.inflate(R.layout.photoviewpagerfragment,null);
-		
-		
 
-		
-
-		
-		
 
 		pager = (ViewPager) view.findViewById(R.id.viewpager);
 		pager.setOnPageChangeListener(pageChangeListener);

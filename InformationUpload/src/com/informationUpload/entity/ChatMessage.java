@@ -2,14 +2,9 @@ package com.informationUpload.entity;
 
 import java.io.Serializable;
 
-public class ChatMessage implements Serializable {
+public class ChatMessage extends DataBaseMessage {
 	
 	private long chattimelong;//录音时间长度 
-	
-	private String name;//音频名字
-	
-	private String path;//路径
-	
 	private double amp;//音量
 
 	public long getChattimelong() {
@@ -20,22 +15,6 @@ public class ChatMessage implements Serializable {
 		this.chattimelong = chattimelong;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
 	public double getAmp() {
 		return amp;
 	}
@@ -44,8 +23,4 @@ public class ChatMessage implements Serializable {
 		this.amp = amp;
 	}
 	
-	
-	
-	
-
 }

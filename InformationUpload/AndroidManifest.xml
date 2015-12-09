@@ -17,7 +17,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <meta-data android:name="TencentMapSDK" android:value="XHNBZ-N63HD-JJG4W-PWJUV-RXKV7-OQBK2"/>
+        <meta-data android:name="TencentMapSDK"
+            android:value="XHNBZ-N63HD-JJG4W-PWJUV-RXKV7-OQBK2"/>
 
         <activity
             android:name=".Activity.MainActivity"

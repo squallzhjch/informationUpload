@@ -194,7 +194,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
 
     public static final int RESULT_OK = -1;
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
             return;
@@ -208,7 +208,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+*/
 
     private void setImageView(Uri uri, boolean need) {
         if (uri == null) {

@@ -9,7 +9,23 @@ package com.informationUpload.contentproviders.columns;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public interface InformationColumns extends MyBaseColumns {
-    String ROWKEY = "information_rowkey";
+    /**
+     * 用户ID
+     */
+    String USER_ID = "information_userId";
+    /**
+     * 情报类型
+     */
+    String TYPE = "information_type";
+    /**
+     * 作业状态
+     * 0：未上传
+     * 1：已上传
+     */
+    String STATUS = "information_status";
+    /**
+     * 预留
+     */
     String DATA_1 = "information_data1";
     String DATA_2 = "information_data2";
     String DATA_3 = "information_data3";
