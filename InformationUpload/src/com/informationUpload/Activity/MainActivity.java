@@ -123,9 +123,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
 		if (savedInstanceState == null) {
 			setContentView(R.layout.activity_main);
 
-			//			            MapView mapView = (MapView) findViewById(R.id.mapView);
-			//			            mMapManager = MapManager.getInstance();
-			//			            mMapManager.init(this, mapView);
+						            MapView mapView = (MapView) findViewById(R.id.mapView);
+						            mMapManager = MapManager.getInstance();
+						            mMapManager.init(this, mapView);
 
 			// 地图初始化
 			mMapView = (MapView) findViewById(R.id.mapView);
