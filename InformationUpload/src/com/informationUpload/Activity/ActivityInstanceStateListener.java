@@ -1,4 +1,4 @@
-package com.informationUpload.Activity;
+package com.informationUpload.activity;
 
 /**
  * Created by lolo on 15/4/1.

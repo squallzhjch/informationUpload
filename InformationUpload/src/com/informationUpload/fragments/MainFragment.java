@@ -34,7 +34,7 @@ public class MainFragment extends BaseFragment {
         mCenterBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(CenterFragment.class, null));
+                mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(UserCenterFragment.class, null));
             }
         });
 

@@ -1,4 +1,4 @@
-package com.informationUpload.Activity;
+package com.informationUpload.activity;
 
 import android.app.Application;
 

@@ -85,7 +85,7 @@ public class InformationManager {
                     values.put(Informations.VideoData.LONGITUDE, message1.getLon());
                     values.put(Informations.VideoData.TIME, message1.getTime());
                     values.put(Informations.VideoData.TYPE, Informations.VideoData.TYPE_CHAT);
-                    contentResolver.insert(Informations.Information.CONTENT_URI, values);
+                    contentResolver.insert(Informations.VideoData.CONTENT_URI, values);
                 }
                }
                 return result;

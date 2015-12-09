@@ -5,9 +5,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import com.informationUpload.Activity.ActivityInstanceStateListener;
-import com.informationUpload.Activity.MainActivity;
-import com.informationUpload.Activity.MyApplication;
+import com.informationUpload.activity.ActivityInstanceStateListener;
+import com.informationUpload.activity.MainActivity;
+import com.informationUpload.activity.MyApplication;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.contents.ContentsManager;
@@ -15,7 +15,6 @@ import com.informationUpload.contents.OnContentUpdateListener;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.map.LocationManager;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 

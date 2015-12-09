@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.informationUpload.Activity.ActivityInstanceStateListener;
+import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.R;
 import com.informationUpload.fragments.BaseFragment;
 import com.informationUpload.utils.SystemConfig;

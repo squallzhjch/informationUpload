@@ -1,10 +1,9 @@
-package com.informationUpload.Activity;
+package com.informationUpload.activity;
 
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
 import com.informationUpload.fragments.BusReportFragment;
 import com.informationUpload.fragments.MainFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
