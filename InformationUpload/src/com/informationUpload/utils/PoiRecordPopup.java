@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import com.informationUpload.R;
+import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.VoiceSpeech.VoiceSpeechManager.parseListener;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
@@ -38,7 +40,7 @@ public class PoiRecordPopup {
 	private String path_name;//声音文件的
 	private View touchView;// 控件录音的控件
 	private View showView;
-	private SoundMeter mSensor;//录音工具
+//	private SoundMeter mSensor;//录音工具
 	long startVoiceT;
 	View voice_rcd_hint_rcding;
 	ImageView volume;
@@ -46,9 +48,17 @@ public class PoiRecordPopup {
 	private boolean isLoading=false;
 	private long endVoiceT;
 	private boolean bo;
+	/**
+	 * 科达讯飞声音管理类
+	 */
+	private VoiceSpeechManager voiceManager;
+	/**
+	 * 科大讯飞解析后的字符串
+	 */
+	private String parsestring="";
 	public PoiRecordPopup(Context context) {
 		this.context = context;
-		mSensor = new SoundMeter();//录音初始化
+//		mSensor = new SoundMeter();//录音初始化
 		pop = new PopupWindow();
 		pop.setWidth(LayoutParams.WRAP_CONTENT);
 		pop.setHeight(LayoutParams.WRAP_CONTENT);
@@ -99,56 +109,16 @@ public class PoiRecordPopup {
 	 */
 	public void setViewTouch(View view) {
 		this.touchView = view;
+		
 		view.setOnTouchListener(touchListener);
+        voiceManager=VoiceSpeechManager.getInstance();
+        voiceManager.setParseListener(new parseListener() {
+			
+			
 
-	}
-
-	/**
-	 * 触摸事件
-	 */
-	private View.OnTouchListener touchListener = new View.OnTouchListener() {
-
-
-
-
-		private MediaPlayer md;
-		private int timeLong;
-		private double amp;
-
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-				Toast.makeText(context, "没有SD卡", Toast.LENGTH_SHORT).show();
-				return false;
-			}
-			if(!isLoading){//非录音状态下
-				if(TextUtils.isEmpty(path)||!new File(path).isDirectory()){
-					path = Environment.getExternalStorageDirectory()+"/";
-
-				}
-				voiceName = SystemClock.currentThreadTimeMillis()+ ".amr";
-				//				path += voiceName;
-				path_name=path+voiceName;
-
-			}
-			switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				startVoiceT = System.currentTimeMillis();
-				pop.showAtLocation(v, Gravity.CENTER, 0, 0);
-				volume.setBackgroundResource(R.anim.pop_voice_img);
-				AnimationDrawable animation = (AnimationDrawable)volume.getBackground();
-				isLoading = true;
-				animation.start();
-
-
-
-				mSensor.start(path_name);//开始录音
-				Log.w(TAG, "开始录音"+startVoiceT);
-				break;
-			case MotionEvent.ACTION_MOVE:
-				break;
-
-			default:
+			@Override
+			public void parseString(String parsestr) {
+				parsestring=parsestr;
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
@@ -158,17 +128,20 @@ public class PoiRecordPopup {
 				volume.setBackgroundResource(R.drawable.amp1);
 
 				isLoading=false;
-
-				mSensor.stop();
-				pop.dismiss();
+				voiceManager.stop();
+//				mSensor.stop();
+				
 
 
 
 				if(listener!=null){
-					amp = mSensor.getAmplitude();
+//					amp = mSensor.getAmplitude();
 
 					Handler handler = new Handler();
 					handler.post(new Runnable() {
+
+						private MediaPlayer md;
+						private int timeLong;
 
 						@Override
 						public void run() {
@@ -182,7 +155,7 @@ public class PoiRecordPopup {
 								md.release();
 								
 								//listener.stopListener(amp,path, voiceName, endVoiceT-startVoiceT);
-								listener.stopListener(amp,path, voiceName, timeLong);
+								listener.stopListener(parsestring,path, voiceName, timeLong);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -195,6 +168,62 @@ public class PoiRecordPopup {
 
 
 				}
+				
+			}
+		});
+	}
+
+	/**
+	 * 触摸事件
+	 */
+	private View.OnTouchListener touchListener = new View.OnTouchListener() {
+
+
+
+
+		private MediaPlayer md;
+		private int timeLong;
+		
+		private long voice;
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
+				Toast.makeText(context, "没有SD卡", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+			if(!isLoading){//非录音状态下
+				if(TextUtils.isEmpty(path)||!new File(path).isDirectory()){
+					path = Environment.getExternalStorageDirectory()+"/";
+
+				}
+				voice=SystemClock.currentThreadTimeMillis();
+				voiceName = voice+ ".wav";
+				//				path += voiceName;
+				path_name=path+voiceName;
+
+			}
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				startVoiceT = System.currentTimeMillis();
+				pop.showAtLocation(v, Gravity.CENTER, 0, 0);
+				volume.setBackgroundResource(R.anim.pop_voice_img);
+				AnimationDrawable animation = (AnimationDrawable)volume.getBackground();
+				isLoading = true;
+				animation.start();
+              
+               voiceManager.setName(""+voice);
+               voiceManager.start();
+                
+//				mSensor.start(path_name);//开始录音
+				Log.w(TAG, "开始录音"+startVoiceT);
+				break;
+			case MotionEvent.ACTION_MOVE:
+				break;
+
+			default:
+				pop.dismiss();
+				
 				break;
 			}
 
@@ -219,16 +248,17 @@ public class PoiRecordPopup {
 			Toast.makeText(context, "录音超时长", Toast.LENGTH_SHORT).show();
 			Log.w(TAG, "时间过长停止"+"最大时长"+MaxLeng);
 			pop.dismiss();
-			double amp = mSensor.getAmplitude();
+//			double amp = mSensor.getAmplitude();
 			if(listener!=null){
-				listener.stopListener(amp,path, name, endVoiceT-startVoiceT);
+				listener.stopListener(parsestring,path, name, endVoiceT-startVoiceT);
 			}
 			if(new File(path_name).isFile()){//删除
 				Log.w(TAG, "时间过长  最大时长"+MaxLeng+"   录音时长"+(endVoiceT-startVoiceT));
 				new File(path_name).delete();
 			}
 			isLoading = false;
-			mSensor.stop();
+//			mSensor.stop();
+			voiceManager.stop();
 			dismiss();
 		}
 	}
@@ -251,16 +281,17 @@ public class PoiRecordPopup {
 			Toast.makeText(context, "录音超时长", Toast.LENGTH_SHORT).show();
 			Log.w(TAG, "时间过长停止"+"最大时长"+MaxLeng);
 			pop.dismiss();
-			double amp = mSensor.getAmplitude();
+//			double amp = mSensor.getAmplitude();
 			if(listener!=null){
-				listener.stopListener(amp,path, name, longtime);
+				listener.stopListener(parsestring,path, name, longtime);
 			}
 			if(new File(path_name).isFile()){//删除
 				Log.w(TAG, "时间过长  最大时长"+MaxLeng+"   录音时长"+ longtime);
 				new File(path_name).delete();
 			}
 			isLoading = false;
-			mSensor.stop();
+//			mSensor.stop();
+			voiceManager.stop();
 			dismiss();
 		}
 	}
@@ -300,11 +331,11 @@ public class PoiRecordPopup {
 	public interface RecorListener{
 		/**
 		 * 录音停止
-		 * @param amp 音量值
+		 * 
 		 * @param path 路径
 		 * @param time 录音时长
 		 */
-		public void stopListener(double amp,String path,String name, long time);
+		public void stopListener(String str,String path,String name, long time);
 		/**
 		 * 录音过程中
 		 * @param amp 音量值

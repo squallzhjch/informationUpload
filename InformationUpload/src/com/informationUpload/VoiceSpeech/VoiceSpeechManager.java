@@ -32,6 +32,8 @@ public class VoiceSpeechManager {
     private SpeechRecognizer mIat;
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
 	private String name;
+	private parseListener listener_parse;
+	
 
 
     private static volatile VoiceSpeechManager mInstance;
@@ -48,6 +50,7 @@ public class VoiceSpeechManager {
 
     public void init(Context context){
         mContext = context;
+      
         SpeechUtility.createUtility(context, SpeechConstant.APPID + "=565eb095");
         //1.创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
         mIat = SpeechRecognizer.createRecognizer(context, null);
@@ -87,8 +90,7 @@ public class VoiceSpeechManager {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         iat.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
-        iat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/FastMap/"+name+".wav");
-
+      
         // 设置听写结果是否结果动态修正，为“1”则在听写过程中动态递增地返回结果，否则只在听写结束之后返回最终结果
         // 注：该参数暂时只对在线听写有效
         iat.setParameter(SpeechConstant.ASR_DWA, "0");
@@ -97,7 +99,9 @@ public class VoiceSpeechManager {
     }
     //设置科达讯飞的音效名字
     public void setName(String name){
-    	this.name=name;
+    	
+    	mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/FastMap/"+name+".wav");
+
     }
 
     //听写监听器
@@ -107,7 +111,7 @@ public class VoiceSpeechManager {
         //关于解析Json的代码可参见MscDemo中JsonParser类；
         //isLast等于true时会话结束。
         public void onResult(RecognizerResult results, boolean isLast) {
-            Log.d("Result:", results.getResultString());
+            Log.i("chentao", "result:"+results.getResultString());
             if(results != null) {
                 String text = JsonParser.parseIatResult(results.getResultString());
 
@@ -123,6 +127,9 @@ public class VoiceSpeechManager {
                 StringBuffer resultBuffer = new StringBuffer();
                 for (String key : mIatResults.keySet()) {
                     resultBuffer.append(mIatResults.get(key));
+                }
+                if(listener_parse!=null){
+                listener_parse.parseString(resultBuffer.toString());
                 }
             }
         }
@@ -162,8 +169,12 @@ public class VoiceSpeechManager {
     public void stop() {
         mIat.stopListening();
     }
-    public interface parseString{
+    public interface parseListener{
+    	public void parseString(String parsestr);
+    }
     	
+    public void setParseListener(parseListener listener){
+    	this.listener_parse=listener;
     }
     	
     
