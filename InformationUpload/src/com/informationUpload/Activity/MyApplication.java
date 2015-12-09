@@ -3,6 +3,7 @@ package com.informationUpload.Activity;
 import android.app.Application;
 import android.util.DisplayMetrics;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -21,19 +22,20 @@ public class MyApplication extends Application{
     private VoiceSpeechManager mVoiceSpeechManager;
     private String mUserId;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		// 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
+		SDKInitializer.initialize(this);
+		mVoiceSpeechManager = VoiceSpeechManager.getInstance();
+		mVoiceSpeechManager.init(this);
 
-        mVoiceSpeechManager = VoiceSpeechManager.getInstance();
-        mVoiceSpeechManager.init(this);
 
         IntentHelper.getInstance().init(this);
         InformationManager.getInstance().init(this);
         LocationManager.getInstance().init(this);
         setUserId("10000");
-    }
-
+	}
     public String getUserId() {
         return mUserId;
     }
