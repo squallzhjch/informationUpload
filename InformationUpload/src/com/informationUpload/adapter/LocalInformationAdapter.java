@@ -65,7 +65,7 @@ public class LocalInformationAdapter extends CursorAdapter {
                 holder.rowkey.setText(rowkey);
             }
 
-            holder.time.setText(getCursor().getLong(1) + "");
+            holder.time.setText(getCursor().getInt(1) + "");
         }
         return convertView;
     }

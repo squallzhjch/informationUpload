@@ -23,7 +23,7 @@ public interface VideoDataColumns extends MyBaseColumns{
     String CONTENT = "video_content";
 
     /**
-     * 文件名称
+     * 资源唯一id
      */
-    String NAME = "video_name";
+    String PARENT_ID = "parent_id";
 }

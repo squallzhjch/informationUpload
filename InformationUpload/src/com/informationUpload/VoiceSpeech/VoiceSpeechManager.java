@@ -161,6 +161,7 @@ public class VoiceSpeechManager {
     }
 
     public void onDestroy() {
+        mIat.cancel();
         mIat.destroy();
     }
 

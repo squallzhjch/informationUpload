@@ -15,6 +15,15 @@ public class BaseMessage implements Serializable {
     private double lat;
     private double lon;
     private long Time;
+    private String remark;
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
 
     public String getRowkey() {
         return rowkey;
