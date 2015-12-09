@@ -31,6 +31,7 @@ public class VoiceSpeechManager {
     private Context mContext;
     private SpeechRecognizer mIat;
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
+	private String name;
 
 
     private static volatile VoiceSpeechManager mInstance;
@@ -86,7 +87,7 @@ public class VoiceSpeechManager {
         // 设置音频保存路径，保存音频格式支持pcm、wav，设置路径为sd卡请注意WRITE_EXTERNAL_STORAGE权限
         // 注：AUDIO_FORMAT参数语记需要更新版本才能生效
         iat.setParameter(SpeechConstant.AUDIO_FORMAT,"wav");
-        iat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/FastMap/iat.wav");
+        iat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/FastMap/"+name+".wav");
 
         // 设置听写结果是否结果动态修正，为“1”则在听写过程中动态递增地返回结果，否则只在听写结束之后返回最终结果
         // 注：该参数暂时只对在线听写有效
@@ -94,7 +95,10 @@ public class VoiceSpeechManager {
 
         iat.setParameter(SpeechConstant.ASR_WBEST, "5");
     }
-
+    //设置科达讯飞的音效名字
+    public void setName(String name){
+    	this.name=name;
+    }
 
     //听写监听器
     private RecognizerListener mRecoListener = new RecognizerListener(){
@@ -140,7 +144,7 @@ public class VoiceSpeechManager {
         //扩展用接口
         public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {}
     };
-
+   
     public void start(){
         mIat.cancel();
         mIatResults.clear();
@@ -158,4 +162,9 @@ public class VoiceSpeechManager {
     public void stop() {
         mIat.stopListening();
     }
+    public interface parseString{
+    	
+    }
+    	
+    
 }

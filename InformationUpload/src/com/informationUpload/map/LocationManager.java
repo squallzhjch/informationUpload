@@ -29,18 +29,18 @@ public class LocationManager implements TencentLocationListener {
 
     private static volatile LocationManager mInstance;
 
-    public static LocationManager getInstance(Context context) {
+    public static LocationManager getInstance() {
         if (mInstance == null) {
             synchronized (LocationManager.class) {
                 if (mInstance == null) {
-                    mInstance = new LocationManager(context);
+                    mInstance = new LocationManager();
                 }
             }
         }
         return mInstance;
     }
 
-    private LocationManager(Context context) {
+    public void init(Context context){
         mContext = context;
         mLocationManager = TencentLocationManager.getInstance(mContext);
     }
@@ -127,5 +127,14 @@ public class LocationManager implements TencentLocationListener {
     public void onDestroy() {
         stopLocation();
         mOnLocationListeners.clear();
+    }
+
+    public GeoPoint getCurrentPoint(){
+        GeoPoint point = new GeoPoint();
+        if(mCurrentLocation != null){
+            point.setLat(mCurrentLocation.getLatitude());
+            point.setLon(mCurrentLocation.getLongitude());
+        }
+        return point;
     }
 }

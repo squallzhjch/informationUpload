@@ -27,6 +27,7 @@ public class InformationProvider extends ContentProvider{
     private static final String DATABASE_NAME = "informationsDB.db";
     private static final int DATABASE_VERSION = 1;
     private static final String INFORMATION_TABLE_NAME = "informationTable";
+    private static final String VIDEO_DATA_TABLE_NAME = "videoDataTable";
 
     public static class InformationDbHelper extends SQLiteOpenHelper{
 
@@ -51,21 +52,48 @@ public class InformationProvider extends ContentProvider{
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + INFORMATION_TABLE_NAME + " ("
-            + Informations.Information.ID + "  INTEGER PRIMARY KEY"
+                    + Informations.Information.ID + "  INTEGER PRIMARY KEY,"
+                    + Informations.Information.ROWKEY + " TEXT,"
+                    + Informations.Information.TIME + " INTEGER,"
+                    + Informations.Information.USER_ID + " TEXT,"
+                    + Informations.Information.TYPE + " INTEGER,"
+                    + Informations.Information.STATUS + " INTEGER,"
+                    + Informations.Information.LATITUDE + " DOUBLE,"
+                    + Informations.Information.LONGITUDE + " DOUBLE,"
+                    + Informations.Information.REMARK + " TEXT"
+            + ");");
+
+            db.execSQL("CREATE TABLE " + VIDEO_DATA_TABLE_NAME + " ("
+                    + Informations.VideoData.ID + " INTEGER PRIMARY KEY,"
+                    + Informations.VideoData.ROWKEY + " TEXT,"
+                    + Informations.VideoData.TIME + " INTEGER,"
+                    + Informations.VideoData.TYPE + " INTEGER,"
+                    + Informations.VideoData.CONTENT + " TEXT,"
+                    + Informations.VideoData.LATITUDE + " DOUBLE,"
+                    + Informations.VideoData.LONGITUDE + " DOUBLE,"
+                    + Informations.VideoData.NAME + " TEXT"
+                    + Informations.VideoData.REMARK + " TEXT"
             + ");");
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + INFORMATION_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + VIDEO_DATA_TABLE_NAME);
             onCreate(db);
         }
 
         public void deleteDb(){
             close();
             SQLiteDatabase db = getWritableDatabase();
+
             try {
                 db.delete(INFORMATION_TABLE_NAME, null, null);
+            } catch (Exception e) {
+            }
+
+            try {
+                db.delete(VIDEO_DATA_TABLE_NAME, null, null);
             } catch (Exception e) {
             }
         }
@@ -76,6 +104,7 @@ public class InformationProvider extends ContentProvider{
     private static final int INFORMATION = 1;
     private static final int INFORMATION_ID = 2;
 
+    private static final int VIDEO_DATA = 3;
 
     private static HashMap<String, String> maps;
     static {
@@ -85,6 +114,24 @@ public class InformationProvider extends ContentProvider{
 
         maps = new HashMap<String, String>();
         maps.put(Informations.Information.ID, Informations.Information.ID);
+        maps.put(Informations.Information.ROWKEY, Informations.Information.ROWKEY);
+        maps.put(Informations.Information.TIME,  Informations.Information.TIME);
+        maps.put(Informations.Information.USER_ID, Informations.Information.USER_ID);
+        maps.put(Informations.Information.TYPE, Informations.Information.TYPE);
+        maps.put(Informations.Information.STATUS, Informations.Information.STATUS);
+        maps.put(Informations.Information.LONGITUDE, Informations.Information.LONGITUDE);
+        maps.put(Informations.Information.LATITUDE, Informations.Information.LATITUDE);
+        maps.put(Informations.Information.REMARK, Informations.Information.REMARK);
+
+        maps.put(Informations.VideoData.ID, Informations.VideoData.ID);
+        maps.put(Informations.VideoData.ROWKEY, Informations.VideoData.ROWKEY);
+        maps.put(Informations.VideoData.TIME, Informations.VideoData.TIME);
+        maps.put(Informations.VideoData.TYPE,  Informations.VideoData.TYPE);
+        maps.put(Informations.VideoData.CONTENT, Informations.VideoData.CONTENT);
+        maps.put(Informations.VideoData.LONGITUDE, Informations.VideoData.LONGITUDE);
+        maps.put(Informations.VideoData.LATITUDE, Informations.VideoData.LATITUDE);
+        maps.put(Informations.VideoData.NAME, Informations.VideoData.NAME);
+        maps.put(Informations.VideoData.REMARK, Informations.VideoData.REMARK);
     }
 
 
@@ -135,6 +182,14 @@ public class InformationProvider extends ContentProvider{
                 long _id = db.insert(INFORMATION_TABLE_NAME, null, values);
                 if (_id > 0) {
                     Uri uri1 = ContentUris.withAppendedId(Informations.Information.CONTENT_URI, _id);
+                    getContext().getContentResolver().notifyChange(uri1, null);
+                    return uri1;
+                }
+                break;
+            case VIDEO_DATA:
+                 _id = db.insert(VIDEO_DATA_TABLE_NAME, null, values);
+                if (_id > 0) {
+                    Uri uri1 = ContentUris.withAppendedId(Informations.VideoData.CONTENT_URI, _id);
                     getContext().getContentResolver().notifyChange(uri1, null);
                     return uri1;
                 }

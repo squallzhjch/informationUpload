@@ -60,7 +60,7 @@ public class MapManager {
         mMapView = mapView;
         mMapView.getMap().setZoom(15);
         addLocationOverlay();
-        mLocationManager = LocationManager.getInstance(mContext);
+        mLocationManager = LocationManager.getInstance();
         mLocationManager.startLocation();
 
         mLocationManager.setOnLocationListener(listener);

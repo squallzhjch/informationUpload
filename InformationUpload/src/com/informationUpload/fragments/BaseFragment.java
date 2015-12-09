@@ -8,10 +8,12 @@ import android.support.v4.app.Fragment;
 import com.informationUpload.Activity.ActivityInstanceStateListener;
 import com.informationUpload.Activity.MainActivity;
 import com.informationUpload.Activity.MyApplication;
+import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.contents.OnContentUpdateListener;
 import com.informationUpload.fragments.utils.MyFragmentManager;
+import com.informationUpload.map.LocationManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -31,6 +33,9 @@ public abstract class BaseFragment extends Fragment {
     protected ContentsManager mContentsManager;
     protected MyApplication mApplication;
     protected MainActivity mMainActivity;
+    protected InformationManager mInformationManager;
+    protected LocationManager mLocationManager;
+
     protected boolean mIsActive = true;
     private List<AbstractOnContentUpdateListener> mOnContentUpdateListeners = new ArrayList<AbstractOnContentUpdateListener>();
     private volatile boolean mIsFragmentMarkDisposed = false;
@@ -45,6 +50,8 @@ public abstract class BaseFragment extends Fragment {
         mApplication = (MyApplication) mMainActivity.getApplicationContext();
         mFragmentManager = MyFragmentManager.getInstance();
         mContentsManager = ContentsManager.getInstance();
+        mInformationManager = InformationManager.getInstance();
+        mLocationManager = LocationManager.getInstance();
     }
 
     @Override
@@ -75,7 +82,6 @@ public abstract class BaseFragment extends Fragment {
             }
         }
     }
-
 
     public void onFragmentDeactive() {
         mIsActive = false;
