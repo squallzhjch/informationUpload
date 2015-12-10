@@ -35,7 +35,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
@@ -45,7 +44,6 @@ import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
-import com.informationUpload.map.LocationManager;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.SystemConfig;
@@ -142,18 +140,10 @@ public class InformationCollectionFragment extends BaseFragment {
      * 该条信息的唯一标识
      */
     private String mRowkey;
-    /**
-     * 科达讯飞语音转文字管理类
-     */
-	private VoiceSpeechManager voiceManager;
-	/**
-	 * 定位管理类
-	 */
-	private LocationManager locationManager;
 	/**
 	 * 位置坐标点
 	 */
-	private GeoPoint point;
+	private GeoPoint mPoint;
 	/**
 	 * 地图管理类
 	 */
@@ -161,13 +151,12 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 地址
 	 */
-	private String address;
+	private String mAddress;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        voiceManager= VoiceSpeechManager.getInstance();
-         
+
          
         registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
            
@@ -175,9 +164,9 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
             public void onContentUpdated(List<Object[]> values) {
                 if (values != null) {
-                    address = (String) values.get(0)[0];
-                    select_position.setText(address);
-                    point=(GeoPoint)values.get(0)[1];
+                    mAddress = (String) values.get(0)[0];
+                    select_position.setText(mAddress);
+                    mPoint=(GeoPoint)values.get(0)[1];
                 }
             }
 
@@ -194,7 +183,10 @@ public class InformationCollectionFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
-            point=(GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
+            mPoint = (GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
+        }else{
+            mRowkey = null;
+            mPoint = null;
         }
     }
 
@@ -214,22 +206,20 @@ public class InformationCollectionFragment extends BaseFragment {
         });
         //初始化
         init();
-        locationManager= LocationManager.getInstance();
         mapManager=MapManager.getInstance();
-        if(point == null){
-        point = locationManager.getCurrentPoint();
+        if(mPoint == null){
+            mPoint = mLocationManager.getCurrentPoint();
         }
-        mapManager.searchAddress(point, new OnSearchAddressListener() {
+        mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 			
 			@Override
 			public void onFailure() {
-				// TODO Auto-generated method stub
-				
+                select_position.setText("");
 			}
 			
 			@Override
 			public void OnSuccess(String address) {
-				InformationCollectionFragment.this.address=address;
+				mAddress = address;
 				select_position.setText(address);
 				
 			}
@@ -251,14 +241,13 @@ public class InformationCollectionFragment extends BaseFragment {
         voice_collection_lv = (ListView) view.findViewById(R.id.voice_collection_lv);
         hscrollview = (HorizontalScrollView) view.findViewById(R.id.hscrollview);
         hlinearlayout = (LinearLayout) view.findViewById(R.id.hlinearlayout);
-//		additional_remarks_sv=(ScrollView)view.findViewById(R.id.additional_remarks_sv);
         additional_remarks_et = (EditText) view.findViewById(R.id.additional_remarks_et);
         savetolocal = (Button) view.findViewById(R.id.savetolocal);
         recordvoice = (Button) view.findViewById(R.id.recordvoice);
         report_at_once = (Button) view.findViewById(R.id.report_at_once);
         adapter = new ChatAdapter(getActivity(), mChatList);
         voice_collection_lv.setAdapter(adapter);
-        select_position.setText(address);
+        select_position.setText(mAddress);
     }
 
     /**
@@ -460,11 +449,11 @@ public class InformationCollectionFragment extends BaseFragment {
     }
    private void  saveLocal(){
        InformationMessage message = new InformationMessage();
-       message.setAddress(address);
+       message.setAddress(mAddress);
        message.setType(0);
        message.setRowkey(mRowkey);
-       message.setLat(point.getLat());
-       message.setLon(point.getLon());
+       message.setLat(mPoint.getLat());
+       message.setLon(mPoint.getLon());
        message.setChatMessageList(mChatList);
        message.setPictureMessageList(mPictureList);
        mInformationManager.saveInformation(mApplication.getUserId(), message);

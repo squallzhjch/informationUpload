@@ -29,7 +29,14 @@ public class InformationManager {
 
     private final static String WHERE_ROWKEY = Informations.Information.ROWKEY + " = ? ";
     private final static String[] INFORMATION_PROJECTION = new String[]{
-            Informations.Information.ROWKEY
+            Informations.Information.ROWKEY, // 0
+            Informations.Information.STATUS, //1
+            Informations.Information.TIME, //2
+            Informations.Information.LONGITUDE, //3
+            Informations.Information.LATITUDE, //4
+            Informations.Information.TYPE, //5
+            Informations.Information.REMARK, //6
+            Informations.Information.ADDRESS, //7
     };
     public static InformationManager getInstance() {
 
@@ -159,19 +166,31 @@ public class InformationManager {
 
     }
 
-    public void saveInformation(String rowkey, String userId) {
-        mThreadManager.getHandler().post(new ThreadManager.OnDatabaseOperationRunnable<Boolean>() {
-            @Override
-            public Boolean doInBackground() {
-                return null;
+    public InformationMessage getInformation(String rowkey){
+        InformationMessage informationMessage = null;
+        ContentResolver contentResolver = mContext.getContentResolver();
+        Cursor cursor = null;
+        try {
+            cursor = contentResolver.query(Informations.Information.CONTENT_URI, INFORMATION_PROJECTION, WHERE_ROWKEY, new String[]{rowkey}, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                informationMessage = new InformationMessage();
+                informationMessage.setRowkey(rowkey);
+                informationMessage.setStatus(cursor.getInt(1));
+                informationMessage.setTime(cursor.getLong(2));
+                informationMessage.setLon(cursor.getDouble(3));
+                informationMessage.setLat(cursor.getDouble(4));
+                informationMessage.setType(cursor.getInt(5));
+                informationMessage.setRemark(cursor.getString(6));
+                informationMessage.setAddress(cursor.getString(7));
             }
-
-            @Override
-            public void onSuccess(Boolean value) {
-
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+                cursor = null;
             }
-        });
+        }
+        return informationMessage;
     }
-
 
 }

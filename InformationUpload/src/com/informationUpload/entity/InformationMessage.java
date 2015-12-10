@@ -15,6 +15,15 @@ public class InformationMessage extends  BaseMessage{
     private List<ChatMessage> chatMessageList;
     private String address;
     private int type;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 
     public String getAddress() {
         return address;
