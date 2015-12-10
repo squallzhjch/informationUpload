@@ -79,20 +79,15 @@ public class ReportRecordFragment extends BaseFragment{
             }
         });
 
-        mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String rowkey = (String) view.getTag(R.id.rowkey_id);
                 if(!TextUtils.isEmpty(rowkey)){
                     Bundle bundle = new Bundle();
                     bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
                     mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
                 }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
     }
