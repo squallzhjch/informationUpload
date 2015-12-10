@@ -2,6 +2,7 @@ package com.informationUpload.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,11 +56,16 @@ public class LocalInformationAdapter extends CursorAdapter {
                 convertView = LayoutInflater.from(mContext).inflate(R.layout.adapter_local_information, null);
                 holder.rowkey = (TextView) convertView.findViewById(R.id.rowkey);
                 holder.time = (TextView)convertView.findViewById(R.id.time);
+                convertView.setTag(holder);
             }else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.rowkey.setText(getCursor().getString(2));
-            holder.time.setText(getCursor().getLong(1) + "");
+            String rowkey = getCursor().getString(2);
+            if(!TextUtils.isEmpty(rowkey)) {
+                holder.rowkey.setText(rowkey);
+            }
+
+            holder.time.setText(getCursor().getInt(1) + "");
         }
         return convertView;
     }

@@ -23,7 +23,6 @@ import java.util.HashMap;
  */
 public class InformationProvider extends ContentProvider{
 
-    private static final String LOG_TAG = "InformationProvider";
     private static final String DATABASE_NAME = "informationsDB.db";
     private static final int DATABASE_VERSION = 1;
     private static final String INFORMATION_TABLE_NAME = "informationTable";
@@ -71,7 +70,7 @@ public class InformationProvider extends ContentProvider{
                     + Informations.VideoData.CONTENT + " TEXT,"
                     + Informations.VideoData.LATITUDE + " DOUBLE,"
                     + Informations.VideoData.LONGITUDE + " DOUBLE,"
-                    + Informations.VideoData.NAME + " TEXT"
+                    + Informations.VideoData.PARENT_ID + " TEXT"
                     + Informations.VideoData.REMARK + " TEXT"
             + ");");
         }
@@ -130,7 +129,7 @@ public class InformationProvider extends ContentProvider{
         maps.put(Informations.VideoData.CONTENT, Informations.VideoData.CONTENT);
         maps.put(Informations.VideoData.LONGITUDE, Informations.VideoData.LONGITUDE);
         maps.put(Informations.VideoData.LATITUDE, Informations.VideoData.LATITUDE);
-        maps.put(Informations.VideoData.NAME, Informations.VideoData.NAME);
+        maps.put(Informations.VideoData.PARENT_ID, Informations.VideoData.PARENT_ID);
         maps.put(Informations.VideoData.REMARK, Informations.VideoData.REMARK);
     }
 

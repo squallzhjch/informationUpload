@@ -40,6 +40,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         if (mMapManager != null) {
             mMapManager.onDestroy();
         }
+
         super.onDestroy();
     }
 

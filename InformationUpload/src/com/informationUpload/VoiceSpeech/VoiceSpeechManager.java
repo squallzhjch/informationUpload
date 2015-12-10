@@ -112,6 +112,7 @@ public class VoiceSpeechManager {
         //isLast等于true时会话结束。
         public void onResult(RecognizerResult results, boolean isLast) {
             Log.i("chentao", "result:"+results.getResultString());
+            StringBuffer resultBuffer = new StringBuffer();
             if(results != null) {
                 String text = JsonParser.parseIatResult(results.getResultString());
 
@@ -124,13 +125,14 @@ public class VoiceSpeechManager {
                     e.printStackTrace();
                 }
                 mIatResults.put(sn, text);
-                StringBuffer resultBuffer = new StringBuffer();
+
                 for (String key : mIatResults.keySet()) {
                     resultBuffer.append(mIatResults.get(key));
                 }
-                if(listener_parse!=null){
+
+            }
+            if(listener_parse!=null){
                 listener_parse.parseString(resultBuffer.toString());
-                }
             }
         }
         //会话发生错误回调接口
@@ -159,6 +161,7 @@ public class VoiceSpeechManager {
     }
 
     public void onDestroy() {
+        mIat.cancel();
         mIat.destroy();
     }
 
