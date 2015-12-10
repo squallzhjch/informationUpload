@@ -171,12 +171,12 @@ public class MapManager {
         void onFailure();
     }
 
-    public void searchAddress(final LatLng latLng, final OnSearchAddressListener listener){
+    public void searchAddress(final GeoPoint latLng, final OnSearchAddressListener listener){
         if(latLng == null)
             return;
         TencentSearch api = new TencentSearch(mContext);
         Geo2AddressParam param = new Geo2AddressParam().location(new Location()
-                .lat((float) latLng.getLatitude()).lng((float) latLng.getLongitude()));
+                .lat((float) latLng.getLat()).lng((float) latLng.getLon()));
         api.geo2address(param, new HttpResponseListener() {
 
             @Override
@@ -185,8 +185,8 @@ public class MapManager {
                 String result = "";
                 if(object != null){
                     Geo2AddressResultObject oj = (Geo2AddressResultObject)object;
-                    result = "坐标转地址：lat:"+String.valueOf(latLng.getLatitude())+"  lng:"+
-                            String.valueOf(latLng.getLongitude()) + "\n\n";
+                    result = "坐标转地址：lat:"+String.valueOf(latLng.getLat())+"  lng:"+
+                            String.valueOf(latLng.getLon()) + "\n\n";
                     if(oj.result != null){
                         result += oj.result.address;
                     }

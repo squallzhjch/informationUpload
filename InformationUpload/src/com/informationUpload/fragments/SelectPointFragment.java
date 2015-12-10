@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.informationUpload.R;
+import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.SystemConfig;
@@ -27,6 +28,7 @@ public class SelectPointFragment extends BaseFragment implements OnMapClickListe
     private MapManager mMapManager;
     private SelectPointView mSelectView;
     private String mAddress;
+	private GeoPoint point;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -52,7 +54,7 @@ public class SelectPointFragment extends BaseFragment implements OnMapClickListe
         mSelectView.setOnSubmitListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress);
+                mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress,point);
                 mFragmentManager.back();
             }
         });
@@ -68,7 +70,11 @@ public class SelectPointFragment extends BaseFragment implements OnMapClickListe
 
     @Override
     public void onMapClick(LatLng latLng) {
-        mMapManager.searchAddress(latLng, new OnSearchAddressListener() {
+         point = new GeoPoint();
+         
+         point.setLat(latLng.getLatitude());
+         point.setLon(latLng.getLongitude());
+         mMapManager.searchAddress(point,new OnSearchAddressListener() {
             @Override
             public void OnSuccess(String address) {
                 mAddress = address;

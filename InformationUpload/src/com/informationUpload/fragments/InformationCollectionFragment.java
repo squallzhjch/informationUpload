@@ -11,6 +11,7 @@ import com.informationUpload.R;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,10 +42,13 @@ import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
-import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.map.GeoPoint;
+import com.informationUpload.map.LocationManager;
+import com.informationUpload.map.MapManager;
+import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.SystemConfig;
 import com.informationUpload.widget.TitleView;
 
@@ -78,7 +82,7 @@ public class InformationCollectionFragment extends BaseFragment {
      * 存照片的list
      */
     private ArrayList<View> listview;
-    private ArrayList<PictureMessage> mPictureList;
+
     private View view;
     /**
      * 显示位置textview
@@ -142,19 +146,39 @@ public class InformationCollectionFragment extends BaseFragment {
     /**
      * 科达讯飞语音转文字管理类
      */
-	private VoiceSpeechManager mVoiceManager;
+	private VoiceSpeechManager voiceManager;
+	/**
+	 * 定位管理类
+	 */
+	private LocationManager locationManager;
+	/**
+	 * 位置坐标点
+	 */
+	private GeoPoint point;
+	/**
+	 * 地图管理类
+	 */
+	private MapManager mapManager;
+	/**
+	 * 地址
+	 */
+	private String address;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mVoiceManager= VoiceSpeechManager.getInstance();
-        
+        voiceManager= VoiceSpeechManager.getInstance();
+         
+         
         registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
-            @Override
+           
+
+			@Override
             public void onContentUpdated(List<Object[]> values) {
                 if (values != null) {
-                    String address = (String) values.get(0)[0];
+                    address = (String) values.get(0)[0];
                     select_position.setText(address);
+                    point=(GeoPoint)values.get(0)[1];
                 }
             }
 
@@ -171,6 +195,7 @@ public class InformationCollectionFragment extends BaseFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
+            point=(GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
         }
     }
 
@@ -190,6 +215,26 @@ public class InformationCollectionFragment extends BaseFragment {
         });
         //初始化
         init();
+        locationManager= LocationManager.getInstance();
+        mapManager=MapManager.getInstance();
+        if(point == null){
+        point = locationManager.getCurrentPoint();
+        }
+        mapManager.searchAddress(point, new OnSearchAddressListener() {
+			
+			@Override
+			public void onFailure() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void OnSuccess(String address) {
+				InformationCollectionFragment.this.address=address;
+				select_position.setText(address);
+				
+			}
+		});
         //添加监听器
         addListeners();
         return view;
@@ -200,7 +245,6 @@ public class InformationCollectionFragment extends BaseFragment {
      */
     private void init() {
         listview = new ArrayList<View>();
-        mPictureList = new ArrayList<PictureMessage>();
         mChatList = new ArrayList<ChatMessage>();
         select_position = (TextView) view.findViewById(R.id.select_position);
         hliv = (ImageView) view.findViewById(R.id.hliv);
@@ -214,6 +258,7 @@ public class InformationCollectionFragment extends BaseFragment {
         report_at_once = (Button) view.findViewById(R.id.report_at_once);
         adapter = new ChatAdapter(getActivity(), mChatList);
         voice_collection_lv.setAdapter(adapter);
+        select_position.setText(address);
     }
 
     /**
@@ -225,6 +270,7 @@ public class InformationCollectionFragment extends BaseFragment {
         boolean path_boolean = mVoicePop.setPath(Environment.getExternalStorageDirectory() + "/FastMap/");
         if (!path_boolean) {
             Toast.makeText(getActivity(), Environment.getExternalStorageDirectory() + "/FastMap/" + "文件夹创建不成功，不能使用，谢谢！", Toast.LENGTH_SHORT).show();
+
         }
         mVoicePop.setMinLeng(1000);
         mVoicePop.setMaxLeng(1000 * 60);
@@ -234,14 +280,25 @@ public class InformationCollectionFragment extends BaseFragment {
                 if (time > 1000 && time < 6000) {
                 	additional_remarks_et.setText(parsestr);
                     ChatMessage chatmsg = new ChatMessage();
+                     
                     chatmsg.setChattimelong(time);
+                    chatmsg.setName(name);
                     chatmsg.setPath(path);
                     chatmsg.setRowkey(mRowkey);
                     chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
                     chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
                     chatmsg.setTime(System.currentTimeMillis());
-                    chatmsg.setRemark(parsestr);
                     mChatList.add(chatmsg);
+                    for(int i=0;i<mChatList.size();i++){
+                    	Log.i("chentao","setChattimelong"+i+":"+mChatList.get(i).getChattimelong());
+                    	Log.i("chentao","setName"+i+":"+mChatList.get(i).getName());
+                    	Log.i("chentao","setPath"+i+":"+mChatList.get(i).getPath());
+                    	Log.i("chentao","setRowkey"+i+":"+mChatList.get(i).getRowkey());
+                    	Log.i("chentao","setLat"+i+":"+mChatList.get(i).getLat());
+                    	Log.i("chentao","setLon"+i+":"+mChatList.get(i).getLon());
+                    	Log.i("chentao","setTime"+i+":"+mChatList.get(i).getTime());
+                    
+                    }
                     adapter.setData(mChatList);
                     adapter.notifadataset();
                     resetListView();
@@ -367,13 +424,6 @@ public class InformationCollectionFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TAKE_PICTURE:
-                PictureMessage message = new PictureMessage();
-                message.setParentId(mRowkey);
-                message.setPath(picturepath);
-                message.setTime(System.currentTimeMillis());
-                message.setLat(mLocationManager.getCurrentPoint().getLat());
-                message.setLon(mLocationManager.getCurrentPoint().getLon());
-                mPictureList.add(message);
 
                 ImageView imageView = new ImageView(getActivity());
                 imageView.setLayoutParams(new LayoutParams(150, 150));
@@ -419,19 +469,9 @@ public class InformationCollectionFragment extends BaseFragment {
    private void  saveLocal(){
        InformationMessage message = new InformationMessage();
        message.setRowkey(mRowkey);
+       message.setLat(point.getLat());
+       message.setLon(point.getLon());
        message.setChatMessageList(mChatList);
-       message.setPictureMessageList(mPictureList);
        mInformationManager.saveInformation(mApplication.getUserId(), message);
    }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mVoiceManager.onDestroy();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mVoiceManager.onPause();
-    }
 }

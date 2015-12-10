@@ -32,4 +32,6 @@ public class SystemConfig {
     public static String BUNDLE_DATA_PICTURE_NUM = "bundle_data_picture_num";
     
     public static String BUNDLE_DATA_PICTURE_LIST ="bundle_data_picture_list";
+    
+    public static String  BUNDLE_DATA_GEOPOINT="bundle_data_geopoint";
 }
