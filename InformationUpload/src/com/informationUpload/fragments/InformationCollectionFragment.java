@@ -11,7 +11,6 @@ import com.informationUpload.R;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,11 +36,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager.parseListener;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
+import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -82,7 +81,7 @@ public class InformationCollectionFragment extends BaseFragment {
      * 存照片的list
      */
     private ArrayList<View> listview;
-
+    private ArrayList<PictureMessage> mPictureList;
     private View view;
     /**
      * 显示位置textview
@@ -246,6 +245,7 @@ public class InformationCollectionFragment extends BaseFragment {
     private void init() {
         listview = new ArrayList<View>();
         mChatList = new ArrayList<ChatMessage>();
+        mPictureList = new ArrayList<PictureMessage>();
         select_position = (TextView) view.findViewById(R.id.select_position);
         hliv = (ImageView) view.findViewById(R.id.hliv);
         voice_collection_lv = (ListView) view.findViewById(R.id.voice_collection_lv);
@@ -276,11 +276,11 @@ public class InformationCollectionFragment extends BaseFragment {
         mVoicePop.setMaxLeng(1000 * 60);
         mVoicePop.setRecordListener(new PoiRecordPopup.RecorListener() {
             @Override
-            public void stopListener(String parsestr,String path, String name, long time) {
+            public void stopListener(String parsestr, String path, String name, long time) {
                 if (time > 1000 && time < 6000) {
-                	additional_remarks_et.setText(parsestr);
+                    additional_remarks_et.setText(parsestr);
                     ChatMessage chatmsg = new ChatMessage();
-                     
+
                     chatmsg.setChattimelong(time);
                     chatmsg.setName(name);
                     chatmsg.setPath(path);
@@ -289,15 +289,15 @@ public class InformationCollectionFragment extends BaseFragment {
                     chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
                     chatmsg.setTime(System.currentTimeMillis());
                     mChatList.add(chatmsg);
-                    for(int i=0;i<mChatList.size();i++){
-                    	Log.i("chentao","setChattimelong"+i+":"+mChatList.get(i).getChattimelong());
-                    	Log.i("chentao","setName"+i+":"+mChatList.get(i).getName());
-                    	Log.i("chentao","setPath"+i+":"+mChatList.get(i).getPath());
-                    	Log.i("chentao","setRowkey"+i+":"+mChatList.get(i).getRowkey());
-                    	Log.i("chentao","setLat"+i+":"+mChatList.get(i).getLat());
-                    	Log.i("chentao","setLon"+i+":"+mChatList.get(i).getLon());
-                    	Log.i("chentao","setTime"+i+":"+mChatList.get(i).getTime());
-                    
+                    for (int i = 0; i < mChatList.size(); i++) {
+                        Log.i("chentao", "setChattimelong" + i + ":" + mChatList.get(i).getChattimelong());
+                        Log.i("chentao", "setName" + i + ":" + mChatList.get(i).getName());
+                        Log.i("chentao", "setPath" + i + ":" + mChatList.get(i).getPath());
+                        Log.i("chentao", "setRowkey" + i + ":" + mChatList.get(i).getRowkey());
+                        Log.i("chentao", "setLat" + i + ":" + mChatList.get(i).getLat());
+                        Log.i("chentao", "setLon" + i + ":" + mChatList.get(i).getLon());
+                        Log.i("chentao", "setTime" + i + ":" + mChatList.get(i).getTime());
+
                     }
                     adapter.setData(mChatList);
                     adapter.notifadataset();
@@ -306,21 +306,6 @@ public class InformationCollectionFragment extends BaseFragment {
 
             }
         });
-
-
-        //		//录音
-        //		recordvoice.setOnTouchListener(new OnTouchListener() {
-        //
-        //			@Override
-        //			public boolean onTouch(View arg0, MotionEvent arg1) {
-        //				// TODO Auto-generated method stub
-        //				return false;
-        //			}
-        //
-        //
-        //
-        //
-        //		});
 
         //选择位置点击
         select_position.setOnClickListener(new OnClickListener() {
@@ -424,6 +409,13 @@ public class InformationCollectionFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case TAKE_PICTURE:
+                PictureMessage message = new PictureMessage();
+                message.setParentId(mRowkey);
+                message.setPath(picturepath);
+                message.setTime(System.currentTimeMillis());
+                message.setLat(mLocationManager.getCurrentPoint().getLat());
+                message.setLon(mLocationManager.getCurrentPoint().getLon());
+                mPictureList.add(message);
 
                 ImageView imageView = new ImageView(getActivity());
                 imageView.setLayoutParams(new LayoutParams(150, 150));
@@ -468,10 +460,24 @@ public class InformationCollectionFragment extends BaseFragment {
     }
    private void  saveLocal(){
        InformationMessage message = new InformationMessage();
+       message.setAddress(address);
+       message.setType(0);
        message.setRowkey(mRowkey);
        message.setLat(point.getLat());
        message.setLon(point.getLon());
        message.setChatMessageList(mChatList);
+       message.setPictureMessageList(mPictureList);
        mInformationManager.saveInformation(mApplication.getUserId(), message);
    }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mVoicePop.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mVoicePop.onPause();
+    }
 }

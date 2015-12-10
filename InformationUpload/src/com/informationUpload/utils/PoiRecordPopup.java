@@ -374,4 +374,11 @@ public class PoiRecordPopup {
 		MaxLeng = maxLeng;
 	}
 
+	public void onDestroy(){
+		voiceManager.onDestroy();
+	}
+
+	public void onPause(){
+		voiceManager.onPause();
+	}
 }
