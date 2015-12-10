@@ -10,4 +10,5 @@ import java.io.Serializable;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class PictureMessage extends DataBaseMessage{
+	
 }

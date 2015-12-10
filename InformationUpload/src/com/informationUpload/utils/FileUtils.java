@@ -10,7 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 
 public class FileUtils {
-	
+
 	public static String SDPATH = Environment.getExternalStorageDirectory()
 			+ "/formats/";
 
@@ -52,20 +52,49 @@ public class FileUtils {
 		file.isFile();
 		return file.exists();
 	}
-	
+
 	public static void delFile(String fileName){
 		File file = new File(SDPATH + fileName);
 		if(file.isFile()){
 			file.delete();
-        }
+		}
 		file.exists();
 	}
+	/**
+	 * 将sd卡中指定文件夹中的文件删除，保留文件夹
+	 * @param file
+	 */
+	public static void  deleteFile(File file)
+	{
+		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+		{
+			if (file.exists())
+			{
+				if (file.isFile())
+				{
+					file.delete();
+				}
+				// 如果它是一个目录
+				else if (file.isDirectory())
+				{
+					// 声明目录下所有的文件 files[];
+					File files[] = file.listFiles();
+					for (int i = 0; i < files.length; i++)
+					{ // 遍历目录下所有的文件
+						deleteFile(files[i]); // 把每个文件 用这个方法进行迭代
+					}
+				}
+
+			}
+		}
+		}
+
 
 	public static void deleteDir() {
 		File dir = new File(SDPATH);
 		if (dir == null || !dir.exists() || !dir.isDirectory())
 			return;
-		
+
 		for (File file : dir.listFiles()) {
 			if (file.isFile())
 				file.delete(); // 删除所有文件
