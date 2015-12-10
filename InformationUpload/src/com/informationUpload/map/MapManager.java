@@ -185,14 +185,12 @@ public class MapManager {
                 String result = "";
                 if(object != null){
                     Geo2AddressResultObject oj = (Geo2AddressResultObject)object;
-                    result = "坐标转地址：lat:"+String.valueOf(latLng.getLat())+"  lng:"+
-                            String.valueOf(latLng.getLon()) + "\n\n";
                     if(oj.result != null){
-                        result += oj.result.address;
+                        result = oj.result.address;
                     }
-                    if(listener != null){
-                        listener.OnSuccess(result);
-                    }
+                }
+                if(listener != null){
+                    listener.OnSuccess(result);
                 }
             }
 
