@@ -26,6 +26,7 @@ public final class Informations {
 
     public static class Information extends InformationsBase implements InformationColumns {
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/Information");
+        public static final Uri CONTENT_URI_WITH_VIDEO = Uri.parse("content://" + AUTHORITY + "/Information_With_Video");
     }
 
     public static class VideoData extends InformationsBase implements VideoDataColumns {

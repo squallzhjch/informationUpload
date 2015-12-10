@@ -9,15 +9,4 @@ package com.informationUpload.contentproviders.columns;
  */
 public interface MyBaseColumns {
     String ID = "_id";
-    String ROWKEY = "information_rowkey";
-    String TIME = "information_time";
-    /**
-     * 经纬度
-     */
-    String LATITUDE = "information_latitude";
-    String LONGITUDE = "information_longitude";
-    /**
-     * 备注
-     */
-    String REMARK = "information_remark";
 }

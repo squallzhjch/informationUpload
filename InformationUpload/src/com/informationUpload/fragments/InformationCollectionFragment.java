@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 
@@ -161,8 +162,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 图片名称
 	 */
 	private PictureMessage picMsg;
-
-
+	/**
+	 *  上报类型
+	 */
+	private int mType;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -192,7 +195,17 @@ public class InformationCollectionFragment extends BaseFragment {
 		Bundle bundle = getArguments();
 		if (bundle != null) {
             mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
-            mPoint = (GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
+			mType = bundle.getInt(SystemConfig.BUNDLE_DATA_TYPE);
+			if(!TextUtils.isEmpty(mRowkey)) {
+				InformationMessage message = mInformationManager.getInformation(mRowkey);
+				if(message == null){
+					mRowkey = null;
+					mPoint = null;
+				}
+			}else{
+				mRowkey = null;
+				mPoint = null;
+			}
         }else{
             mRowkey = null;
             mPoint = null;
@@ -458,7 +471,7 @@ public class InformationCollectionFragment extends BaseFragment {
    private void  saveLocal(){
        InformationMessage message = new InformationMessage();
        message.setAddress(mAddress);
-       message.setType(0);
+       message.setType(mType);
        message.setRowkey(mRowkey);
        message.setLat(mPoint.getLat());
        message.setLon(mPoint.getLon());
