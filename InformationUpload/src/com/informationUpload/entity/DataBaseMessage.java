@@ -8,17 +8,8 @@ package com.informationUpload.entity;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class DataBaseMessage extends BaseMessage{
-    private String name;//名字
     private String path;//路径
     private String parentId;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getPath() {
         return path;

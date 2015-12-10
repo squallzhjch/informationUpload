@@ -65,10 +65,6 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private static final int TAKE_PICTURE = 0x000000;
 	/**
-	 * 图片保存路劲
-	 */
-	private String picturepath = "";
-	/**
 	 * 图片uri
 	 */
 	private Uri imageUri;
@@ -144,7 +140,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 该条信息的唯一标识
 	 */
 	private String mRowkey;
-   
+
 	/**
 	 * 位置坐标点
 	 */
@@ -179,7 +175,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				if (values != null) {
 					mAddress = (String) values.get(0)[0];
 					select_position.setText(mAddress);
-					mPoint=(GeoPoint)values.get(0)[1];
+					mPoint = (GeoPoint) values.get(0)[1];
 				}
 			}
 
@@ -286,8 +282,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					Log.i("chentao","voicepath:"+path);
 					Log.i("chentao","voicename:"+name);
 					chatmsg.setChattimelong(time);
-					chatmsg.setName(name);
-					chatmsg.setPath(path);
+					chatmsg.setPath(path + name);
 					chatmsg.setParentId(mRowkey);
 					chatmsg.setRemark(additional_remarks_et.getText().toString());
 					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
@@ -320,7 +315,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onClick(View arg0) {
 				//拍照
-				photo();
+				startCamera();
 
 			}
 		});
@@ -342,8 +337,6 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			}
 		});
-
-
 	}
 
 	//重新计算高度
@@ -366,44 +359,45 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 	}
 
-
-	public void photo() {
-		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+	public void startCamera(){
 
 		StringBuffer sDir = new StringBuffer();
 		if (hasSDcard()) {
 			sDir.append(Environment.getExternalStorageDirectory() + "/MyPicture/");
 		} else {
-			String dataPath = Environment.getRootDirectory().getPath();
-			sDir.append(dataPath + "/MyPicture/");
+			Toast.makeText(mApplication, "没有检测到存储卡", Toast.LENGTH_SHORT).show();
+			return;
 		}
 
 		File fileDir = new File(sDir.toString());
 		Log.i("chentao","sDir.toString():"+sDir.toString());
 		if (!fileDir.exists()) {
 			boolean a = fileDir.mkdirs();
-
+			if(!a){
+				Toast.makeText(mApplication, "手机存储空间不足", Toast.LENGTH_SHORT).show();
+				return;
+			}
 		}
-		picMsg = new PictureMessage(); 
 
+		File file = new File(fileDir,picName+".jpg");
+		imageUri = Uri.fromFile(file);
+
+		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileDir);
+		startActivityForResult(openCameraIntent, TAKE_PICTURE);
+	}
+
+	public void photo() {
+		picMsg = new PictureMessage();
 		picName=String.valueOf(System.currentTimeMillis()) ;
 		picMsg.setParentId(mRowkey);
-		picMsg.setName(picName);
+		picMsg.setPath(imageUri.toString());
 
-		picMsg.setPath(sDir.toString());
 		picMsg.setLat(mLocationManager.getCurrentPoint().getLat());
 		picMsg.setLon(mLocationManager.getCurrentPoint().getLon());
-		picMsg.setTime(Long.parseLong(picName));
+		picMsg.setTime(System.currentTimeMillis());
 		mPicList.add(picMsg);
-		Log.i("chentao","fileDir.getPath():"+fileDir.getPath());
-		File file = new File(fileDir,picName+".jpg");
-
-
-
-		imageUri = Uri.fromFile(file);
-		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-		startActivityForResult(openCameraIntent, TAKE_PICTURE);
 	}
 
 	public static boolean hasSDcard() {
@@ -418,12 +412,11 @@ public class InformationCollectionFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case TAKE_PICTURE:
-
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setLayoutParams(new LayoutParams(150, 150));
 
 			try {
-				bitmap = Bimp.revitionImageSize(picturepath);
+				bitmap = Bimp.revitionImageSize(imageUri.toString());
 			} catch (IOException e) {
 				// TODO Auto-generated catch blockd
 				e.printStackTrace();
@@ -456,6 +449,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					}
 				});
 			}
+			photo();
 			break;
 		}
 	}

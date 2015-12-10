@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class LocationManager implements TencentLocationListener {
 
-    private TencentLocation mCurrentLocation;
+    private static volatile TencentLocation mCurrentLocation;
     private TencentLocationManager mLocationManager;
     private Context mContext;
 
@@ -132,8 +132,10 @@ public class LocationManager implements TencentLocationListener {
     public GeoPoint getCurrentPoint(){
         GeoPoint point = new GeoPoint();
         if(mCurrentLocation != null){
-            point.setLat(mCurrentLocation.getLatitude());
-            point.setLon(mCurrentLocation.getLongitude());
+            synchronized (mCurrentLocation) {
+                point.setLat(mCurrentLocation.getLatitude());
+                point.setLon(mCurrentLocation.getLongitude());
+            }
         }
         return point;
     }

@@ -105,7 +105,7 @@ public class ChatAdapter extends BaseAdapter {
 			
 				if (getItem(position)!=null) {
 				  
-					playMusic(getItem(position).getPath()+getItem(position).getName()) ;
+					playMusic(getItem(position).getPath()) ;
 				}
 			}
 		});
