@@ -11,7 +11,6 @@ import com.informationUpload.R;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -36,8 +35,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager.parseListener;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
@@ -47,7 +44,6 @@ import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
-import com.informationUpload.map.LocationManager;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.SystemConfig;
@@ -148,18 +144,11 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 该条信息的唯一标识
 	 */
 	private String mRowkey;
-	/**
-	 * 科达讯飞语音转文字管理类
-	 */
-	private VoiceSpeechManager voiceManager;
-	/**
-	 * 定位管理类
-	 */
-	private LocationManager locationManager;
+   
 	/**
 	 * 位置坐标点
 	 */
-	private GeoPoint point;
+	private GeoPoint mPoint;
 	/**
 	 * 地图管理类
 	 */
@@ -167,7 +156,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 地址
 	 */
-	private String address;
+	private String mAddress;
 	/**
 	 * 图片名称
 	 */
@@ -177,11 +166,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private PictureMessage picMsg;
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		voiceManager= VoiceSpeechManager.getInstance();
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
 
 		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
 
@@ -189,9 +177,9 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onContentUpdated(List<Object[]> values) {
 				if (values != null) {
-					address = (String) values.get(0)[0];
-					select_position.setText(address);
-					point=(GeoPoint)values.get(0)[1];
+					mAddress = (String) values.get(0)[0];
+					select_position.setText(mAddress);
+					mPoint=(GeoPoint)values.get(0)[1];
 				}
 			}
 
@@ -207,9 +195,12 @@ public class InformationCollectionFragment extends BaseFragment {
 		});
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-			mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
-			point=(GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
-		}
+            mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
+            mPoint = (GeoPoint) bundle.getSerializable(SystemConfig.BUNDLE_DATA_GEOPOINT);
+        }else{
+            mRowkey = null;
+            mPoint = null;
+        }
 	}
 
 	@Override
@@ -228,22 +219,20 @@ public class InformationCollectionFragment extends BaseFragment {
 		});
 		//初始化
 		init();
-		locationManager= LocationManager.getInstance();
 		mapManager=MapManager.getInstance();
-		if(point == null){
-			point = locationManager.getCurrentPoint();
+		if(mPoint == null){
+			mPoint = mLocationManager.getCurrentPoint();
 		}
-		mapManager.searchAddress(point, new OnSearchAddressListener() {
+		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 
 			@Override
 			public void onFailure() {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void OnSuccess(String address) {
-				InformationCollectionFragment.this.address=address;
+				mAddress = address;
 				select_position.setText(address);
 
 			}
@@ -272,7 +261,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		report_at_once = (Button) view.findViewById(R.id.report_at_once);
 		adapter = new ChatAdapter(getActivity(), mChatList);
 		voice_collection_lv.setAdapter(adapter);
-		select_position.setText(address);
+		select_position.setText(mAddress);
 	}
 
 	/**
@@ -314,20 +303,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		});
 
-
-		//		//录音
-		//		recordvoice.setOnTouchListener(new OnTouchListener() {
-		//
-		//			@Override
-		//			public boolean onTouch(View arg0, MotionEvent arg1) {
-		//				// TODO Auto-generated method stub
-		//				return false;
-		//			}
-		//
-		//
-		//
-		//
-		//		});
 
 		//选择位置点击
 		select_position.setOnClickListener(new OnClickListener() {
@@ -466,7 +441,6 @@ public class InformationCollectionFragment extends BaseFragment {
 					bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, listview);
 					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
 
-
 				}
 			});
 			hlinearlayout.addView(imageView, 0);
@@ -485,14 +459,28 @@ public class InformationCollectionFragment extends BaseFragment {
 			break;
 		}
 	}
-	private void  saveLocal(){
-		InformationMessage message = new InformationMessage();
-		message.setRowkey(mRowkey);
-		message.setLat(point.getLat());
-		message.setLon(point.getLon());
 
-		message.setChatMessageList(mChatList);
-        message.setPictureMessageList(mPicList);
-		mInformationManager.saveInformation(mApplication.getUserId(), message);
-	}
+
+   private void  saveLocal(){
+       InformationMessage message = new InformationMessage();
+       message.setAddress(mAddress);
+       message.setType(0);
+       message.setRowkey(mRowkey);
+       message.setLat(mPoint.getLat());
+       message.setLon(mPoint.getLon());
+       message.setChatMessageList(mChatList);
+       message.setPictureMessageList(mPicList);
+       mInformationManager.saveInformation(mApplication.getUserId(), message);
+   }
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mVoicePop.onDestroy();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mVoicePop.onPause();
+    }
 }

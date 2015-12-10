@@ -11,10 +11,28 @@ import java.util.List;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class InformationMessage extends  BaseMessage{
-    List<PictureMessage> pictureMessageList;
-    List<ChatMessage> chatMessageList;
-
+    private List<PictureMessage> pictureMessageList;
+    private List<ChatMessage> chatMessageList;
+    private String address;
     private int type;
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public int getType() {
 		return type;
 	}

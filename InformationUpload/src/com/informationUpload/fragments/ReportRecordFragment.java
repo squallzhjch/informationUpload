@@ -5,15 +5,19 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.informationUpload.R;
 import com.informationUpload.adapter.LocalInformationAdapter;
 import com.informationUpload.contentproviders.Informations;
+import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.utils.SystemConfig;
 
 /**
  * @author zhjch
@@ -72,6 +76,23 @@ public class ReportRecordFragment extends BaseFragment{
             @Override
             public void onLoaderReset(Loader<Cursor> loader) {
                 mLocalAdapter.swapCursor(null);
+            }
+        });
+
+        mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String rowkey = (String) view.getTag(R.id.rowkey_id);
+                if(!TextUtils.isEmpty(rowkey)){
+                    Bundle bundle = new Bundle();
+                    bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
+                    mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
