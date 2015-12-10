@@ -93,7 +93,6 @@ public class InformationManager {
                             } else {
                                 contentResolver.insert(Informations.Information.CONTENT_URI, values);
                             }
-                            contentResolver.update(Informations.Information.CONTENT_URI, values, null, null);
                         } catch (Exception e) {
                             result = false;
                         } finally {
