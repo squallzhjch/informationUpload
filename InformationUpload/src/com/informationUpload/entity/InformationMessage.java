@@ -14,7 +14,16 @@ public class InformationMessage extends  BaseMessage{
     List<PictureMessage> pictureMessageList;
     List<ChatMessage> chatMessageList;
 
-    public void addPictureMessage(PictureMessage message){
+    private int type;
+    public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public void addPictureMessage(PictureMessage message){
         if(message == null)
             return;
         if(pictureMessageList == null){

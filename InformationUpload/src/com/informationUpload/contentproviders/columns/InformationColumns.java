@@ -9,6 +9,7 @@ package com.informationUpload.contentproviders.columns;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public interface InformationColumns extends MyBaseColumns {
+	String ADDRESS="information_address";
     /**
      * 用户ID
      */
