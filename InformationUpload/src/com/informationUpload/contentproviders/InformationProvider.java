@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -27,6 +28,12 @@ public class InformationProvider extends ContentProvider{
     private static final int DATABASE_VERSION = 1;
     private static final String INFORMATION_TABLE_NAME = "informationTable";
     private static final String VIDEO_DATA_TABLE_NAME = "videoDataTable";
+
+    private static final String INFORMATION_VIDEO_TABLES = INFORMATION_TABLE_NAME + " AS T1 LEFT JOIN "
+            + VIDEO_DATA_TABLE_NAME + " AS T2 ON T1." + Informations.Information.ROWKEY + " = T2." + Informations.VideoData.PARENT_ID;
+
+
+    private static final String ID_WITH_SPACE = " " + Informations.Information.ID;
 
     public static class InformationDbHelper extends SQLiteOpenHelper{
 
@@ -104,12 +111,15 @@ public class InformationProvider extends ContentProvider{
     private static final int INFORMATION_ID = 2;
 
     private static final int VIDEO_DATA = 3;
+    private static final int INFORMATION_WITH_VIDEO = 4;
 
     private static HashMap<String, String> maps;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(Informations.AUTHORITY, "Information", INFORMATION);
         uriMatcher.addURI(Informations.AUTHORITY, "Information/#", INFORMATION_ID);
+        uriMatcher.addURI(Informations.AUTHORITY, "VideoData", VIDEO_DATA);
+        uriMatcher.addURI(Informations.AUTHORITY, "InformationWith_Video", INFORMATION_WITH_VIDEO);
 
         maps = new HashMap<String, String>();
         maps.put(Informations.Information.ID, Informations.Information.ID);
@@ -144,19 +154,79 @@ public class InformationProvider extends ContentProvider{
     public synchronized Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         SQLiteQueryBuilder sqb = new SQLiteQueryBuilder();
         int count = 0;
+        String formattedSelection = getFormattedSelection(selection, selectionArgs);
         switch (uriMatcher.match(uri)) {
             case INFORMATION:
                 sqb.setTables(INFORMATION_TABLE_NAME);
                 sqb.setProjectionMap(maps);
+                sqb.setDistinct(true);
                 return queryDb(sqb, mInformationDbHelper, uri, projection, selection, selectionArgs, sortOrder);
             case INFORMATION_ID:
                 sqb.setTables(INFORMATION_TABLE_NAME);
                 sqb.setProjectionMap(maps);
+                sqb.setDistinct(true);
                 sqb.appendWhere(Informations.Information.ID + "=" + uri.getPathSegments().get(1));
                 return queryDb(sqb, mInformationDbHelper, uri, projection, selection, selectionArgs, sortOrder);
+            case VIDEO_DATA:
+                sqb.setTables(VIDEO_DATA_TABLE_NAME);
+                sqb.setProjectionMap(maps);
+                sqb.setDistinct(true);
+                return queryDb(sqb, mInformationDbHelper, uri, projection, selection, selectionArgs, sortOrder);
+
+            case INFORMATION_WITH_VIDEO:
+                sqb.setTables(INFORMATION_VIDEO_TABLES);
+                sqb.setProjectionMap(maps);
+                sqb.setDistinct(true);
+                formattedSelection = getFormattedSelection(selection, selectionArgs);
+                if (!TextUtils.isEmpty(formattedSelection)) {
+                    String regularQuery = getUpdatedQueryStringWithTableAlias(sqb.buildQuery(projection, formattedSelection, null, null, null, null)).toString();
+                    Cursor cursor = mInformationDbHelper.getReadableDatabase().rawQuery(regularQuery, null);
+                    cursor.setNotificationUri(getContext().getContentResolver(), uri);
+                    return cursor;
+                } else {
+                    return null;
+                }
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+
+    private String getFormattedSelection(String selection, String[] selectionArgs) {
+        // Only support = format style like: "A = ? OP B = ? OP C = ?" currently
+        // all args must be set in selectionArgs
+        String[] selections = selection.split("(=)|(<>)");
+        if (selections != null && selections.length > 0
+                && selections.length == selectionArgs.length + 1) {
+            StringBuilder formattedSelection =new StringBuilder();
+            formattedSelection.append(selection);
+            for (int idx = 0; idx < selectionArgs.length; idx++) {
+                int idxOfQ = formattedSelection.indexOf("?");
+                if (idxOfQ > -1) {
+                    formattedSelection.replace(idxOfQ, idxOfQ+1, "'" + selectionArgs[idx] + "'");
+                }
+            }
+            String formattedSelectionString = formattedSelection.toString();
+            return formattedSelectionString;
+        }
+        else {
+        }
+        return null;
+    }
+
+    private StringBuffer getUpdatedQueryStringWithTableAlias(String queryString) {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(queryString);
+        if (queryString != null) {
+
+            int idxOfId = queryString.indexOf(ID_WITH_SPACE);
+            if (idxOfId > -1) {
+                stringBuffer.replace(idxOfId + 1, idxOfId + Informations.Information.ID.length() + 1, " T1." + Informations.Information.ID);
+            }
+
+            return stringBuffer;
+        }
+        return stringBuffer;
     }
 
     private Cursor queryDb(SQLiteQueryBuilder sqb, SQLiteOpenHelper helper, Uri uri, String[] projection, String selection,
@@ -213,6 +283,9 @@ public class InformationProvider extends ContentProvider{
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection
                         + ')' : ""), selectionArgs);
                 break;
+            case VIDEO_DATA:
+                count = db.delete(VIDEO_DATA_TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -235,6 +308,10 @@ public class InformationProvider extends ContentProvider{
                         + "="
                         + id
                         + (!TextUtils.isEmpty(selection) ? " AND (" + selection+ ')' : ""), selectionArgs);
+                break;
+            case VIDEO_DATA:
+                count = db.update(VIDEO_DATA_TABLE_NAME, values, selection,
+                        selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException();

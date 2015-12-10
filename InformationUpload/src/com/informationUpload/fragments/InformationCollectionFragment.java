@@ -235,6 +235,7 @@ public class InformationCollectionFragment extends BaseFragment {
                 	additional_remarks_et.setText(parsestr);
                     ChatMessage chatmsg = new ChatMessage();
                     chatmsg.setChattimelong(time);
+                    chatmsg.setName(name);
                     chatmsg.setPath(path);
                     chatmsg.setRowkey(mRowkey);
                     chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
