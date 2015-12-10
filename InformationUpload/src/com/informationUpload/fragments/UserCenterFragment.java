@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.informationUpload.R;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -132,9 +133,15 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				File file=new File(Environment.getExternalStorageDirectory() + "/MyPicture/");
-				FileUtils.deleteFile(file);
-
+				try {
+					File file=new File(Environment.getExternalStorageDirectory() + "/MyPicture/");
+					FileUtils.deleteFile(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+					Toast.makeText(getActivity(),"删除失败",Toast.LENGTH_SHORT).show();
+				}
+				
+				Toast.makeText(getActivity(),"清除缓存成功！",Toast.LENGTH_SHORT).show();
 			}
 		});
 		//意见反馈
