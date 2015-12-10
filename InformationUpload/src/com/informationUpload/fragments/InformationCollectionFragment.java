@@ -166,6 +166,12 @@ public class InformationCollectionFragment extends BaseFragment {
 	 *  上报类型
 	 */
 	private int mType;
+	/**
+	 *图片文件
+	 */
+	private File file;
+
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -373,7 +379,8 @@ public class InformationCollectionFragment extends BaseFragment {
 	}
 
 	public void startCamera(){
-
+		final Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 		StringBuffer sDir = new StringBuffer();
 		if (hasSDcard()) {
 			sDir.append(Environment.getExternalStorageDirectory() + "/MyPicture/");
@@ -391,19 +398,23 @@ public class InformationCollectionFragment extends BaseFragment {
 				return;
 			}
 		}
-
-		File file = new File(fileDir,picName+".jpg");
+		picName=String.valueOf(System.currentTimeMillis()) ;
+		 file = new File(fileDir,picName+".jpg");
 		imageUri = Uri.fromFile(file);
+		
+		Log.i("chentao","imageUri:"+imageUri.toString());
 
-		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, fileDir);
-		startActivityForResult(openCameraIntent, TAKE_PICTURE);
+		
+				openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+				startActivityForResult(openCameraIntent, TAKE_PICTURE);
+				
+		
+		
 	}
 
 	public void photo() {
 		picMsg = new PictureMessage();
-		picName=String.valueOf(System.currentTimeMillis()) ;
+		
 		picMsg.setParentId(mRowkey);
 		picMsg.setPath(imageUri.toString());
 
@@ -429,7 +440,8 @@ public class InformationCollectionFragment extends BaseFragment {
 			imageView.setLayoutParams(new LayoutParams(150, 150));
 
 			try {
-				bitmap = Bimp.revitionImageSize(imageUri.toString());
+				
+				bitmap = Bimp.revitionImageSize(file.getPath());
 			} catch (IOException e) {
 				// TODO Auto-generated catch blockd
 				e.printStackTrace();

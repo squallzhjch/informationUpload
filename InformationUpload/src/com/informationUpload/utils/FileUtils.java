@@ -64,7 +64,7 @@ public class FileUtils {
 	 * 将sd卡中指定文件夹中的文件删除，保留文件夹
 	 * @param file
 	 */
-	public static void  deleteFile(File file)
+	public static void  deleteFile (File file)
 	{
 		if(Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
 		{
