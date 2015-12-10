@@ -149,7 +149,7 @@ public class InformationManager {
         values.clear();
         values.put(Informations.VideoData.ROWKEY, UUID.randomUUID().toString());
         values.put(Informations.VideoData.PARENT_ID, message.getParentId());
-        values.put(Informations.VideoData.CONTENT, message.getPath() + message.getName());
+        values.put(Informations.VideoData.CONTENT, message.getPath());
         values.put(Informations.VideoData.LATITUDE, message.getLat());
         values.put(Informations.VideoData.LONGITUDE, message.getLon());
         values.put(Informations.VideoData.TIME, message.getTime());

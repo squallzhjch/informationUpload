@@ -51,7 +51,6 @@ import com.informationUpload.widget.TitleView;
 
 public class InformationCollectionFragment extends BaseFragment {
 
-
     /**
      * 点击的拍照LinearLayout中 的哪一个
      */
@@ -269,25 +268,13 @@ public class InformationCollectionFragment extends BaseFragment {
                 if (time > 1000 && time < 6000) {
                     additional_remarks_et.setText(parsestr);
                     ChatMessage chatmsg = new ChatMessage();
-
                     chatmsg.setChattimelong(time);
-                    chatmsg.setName(name);
-                    chatmsg.setPath(path);
+                    chatmsg.setPath(path + name);
                     chatmsg.setRowkey(mRowkey);
                     chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
                     chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
                     chatmsg.setTime(System.currentTimeMillis());
                     mChatList.add(chatmsg);
-                    for (int i = 0; i < mChatList.size(); i++) {
-                        Log.i("chentao", "setChattimelong" + i + ":" + mChatList.get(i).getChattimelong());
-                        Log.i("chentao", "setName" + i + ":" + mChatList.get(i).getName());
-                        Log.i("chentao", "setPath" + i + ":" + mChatList.get(i).getPath());
-                        Log.i("chentao", "setRowkey" + i + ":" + mChatList.get(i).getRowkey());
-                        Log.i("chentao", "setLat" + i + ":" + mChatList.get(i).getLat());
-                        Log.i("chentao", "setLon" + i + ":" + mChatList.get(i).getLon());
-                        Log.i("chentao", "setTime" + i + ":" + mChatList.get(i).getTime());
-
-                    }
                     adapter.setData(mChatList);
                     adapter.notifadataset();
                     resetListView();
@@ -330,12 +317,9 @@ public class InformationCollectionFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-                // TODO Auto-generated method stub
 
             }
         });
-
-
     }
 
     //重新计算高度
