@@ -1,14 +1,19 @@
 package com.informationUpload.fragments;
 
+import java.io.File;
+
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 
 import com.informationUpload.R;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.utils.FileUtils;
 
 /**
  * @author zhjch
@@ -29,22 +34,29 @@ public class UserCenterFragment extends BaseFragment{
 	/**
 	 * 我的战绩
 	 */
-    private RelativeLayout my_recordLayout;
-    /**
-     * 离线地图
-     */
-	private RelativeLayout offline_mapLayout;
+	private RelativeLayout mMyRecordLayout;
+	/**
+	 * 离线地图
+	 */
+	private RelativeLayout mOfflineMapLayout;
 	/**
 	 * 新闻中心
 	 */
-	private RelativeLayout news_centerLayout;
+	private RelativeLayout mNewsCenterLayout;
 	/**
 	 * 清除缓存
 	 */
-	private RelativeLayout clear_cacheLayout;
-	private RelativeLayout feedbackLayout;
+	private RelativeLayout mClearCacheLayout;
+	/**
+	 * 意见反馈
+	 */
+	private RelativeLayout 	mFeedBackLayout;
+	/**
+	 * 关于
+	 */
+	private RelativeLayout mAboutLayout;
 
-	
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		view = inflater.inflate(R.layout.fragment_user_center, null, true);
 		//初始化
@@ -60,19 +72,19 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private void init() {
 		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
-		my_recordLayout = (RelativeLayout) view.findViewById(R.id.my_record);
+		mMyRecordLayout = (RelativeLayout) view.findViewById(R.id.my_record);
 
-		offline_mapLayout = (RelativeLayout) view.findViewById(R.id.offline_map);
+		mOfflineMapLayout = (RelativeLayout) view.findViewById(R.id.offline_map);
 
-		news_centerLayout = (RelativeLayout) view.findViewById(R.id.news_center);
+		mNewsCenterLayout = (RelativeLayout) view.findViewById(R.id.news_center);
 
-		clear_cacheLayout = (RelativeLayout) view.findViewById(R.id.clear_cache);
+		mClearCacheLayout = (RelativeLayout) view.findViewById(R.id.clear_cache);
 
-		feedbackLayout = (RelativeLayout) view.findViewById(R.id.feedback);
+		mFeedBackLayout = (RelativeLayout) view.findViewById(R.id.feedback);
 
-		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
+		mAboutLayout = (RelativeLayout) view.findViewById(R.id.about);
 
-		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
+
 
 
 
@@ -86,6 +98,61 @@ public class UserCenterFragment extends BaseFragment{
 			@Override
 			public void onClick(View v) {
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(ReportRecordFragment.class, null));
+			}
+		});
+		//我的战绩
+		mMyRecordLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		//离线地图
+		mOfflineMapLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		//新闻中心
+		mNewsCenterLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		//清除缓存
+		mClearCacheLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				File file=new File(Environment.getExternalStorageDirectory() + "/MyPicture/");
+				FileUtils.deleteFile(file);
+
+			}
+		});
+		//意见反馈
+		mFeedBackLayout.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		// 关于
+		mAboutLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 
