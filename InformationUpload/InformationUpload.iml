@@ -86,8 +86,15 @@
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
     <orderEntry type="library" exported="" name="TencentLocationSDK_v4.1.1_r175129" level="project" />
     <orderEntry type="library" exported="" name="Msc" level="project" />
-    <orderEntry type="library" exported="" name="TencentSearch1.1.2.16095" level="project" />
-    <orderEntry type="library" exported="" name="Sunflower" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_radar_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_base_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_util_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="locSDK_6.13" level="project" />
     <orderEntry type="library" exported="" name="TencentMapSDK_Raster_v1.1.2.15850" level="project" />
+    <orderEntry type="library" exported="" name="TencentSearch1.1.2.16095" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_search_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_map_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="Sunflower" level="project" />
   </component>
 </module>

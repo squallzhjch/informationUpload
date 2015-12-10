@@ -147,7 +147,7 @@ public class InformationManager {
     private final static String[] INFORMATION_PROJECTION = new String[]{
             Informations.Information.ROWKEY
     };
-    
+
 //    private boolean saveInfromation(ContentResolver contentResolver){
 //        if()
 //    }
