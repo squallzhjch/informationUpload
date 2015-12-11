@@ -4,8 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import com.informationUpload.fragments.BusReportFragment;
+
 import com.informationUpload.fragments.MainFragment;
+import com.informationUpload.fragments.ResetPasswordFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 
@@ -79,7 +80,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.submit_btn: {
-                myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(BusReportFragment.class, null));
+                myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(ResetPasswordFragment.class, null));
                 break;
             }
         }
