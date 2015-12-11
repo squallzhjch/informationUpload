@@ -81,7 +81,8 @@ public class InformationProvider extends ContentProvider{
                     + Informations.VideoData.CONTENT + " TEXT,"
                     + Informations.VideoData.LATITUDE + " DOUBLE,"
                     + Informations.VideoData.LONGITUDE + " DOUBLE,"
-                    + Informations.VideoData.REMARK + " TEXT"
+                    + Informations.VideoData.REMARK + " TEXT,"
+                    + Informations.VideoData.PARENT_ID + " TEXT"
                     
             + ");");
         }
@@ -123,7 +124,7 @@ public class InformationProvider extends ContentProvider{
         uriMatcher.addURI(Informations.AUTHORITY, "Information", INFORMATION);
         uriMatcher.addURI(Informations.AUTHORITY, "Information/#", INFORMATION_ID);
         uriMatcher.addURI(Informations.AUTHORITY, "VideoData", VIDEO_DATA);
-        uriMatcher.addURI(Informations.AUTHORITY, "InformationWith_Video", INFORMATION_WITH_VIDEO);
+        uriMatcher.addURI(Informations.AUTHORITY, "Information_With_Video", INFORMATION_WITH_VIDEO);
 
         maps = new HashMap<String, String>();
         maps.put(Informations.Information.ID, Informations.Information.ID);
@@ -145,6 +146,7 @@ public class InformationProvider extends ContentProvider{
         maps.put(Informations.VideoData.LONGITUDE, Informations.VideoData.LONGITUDE);
         maps.put(Informations.VideoData.LATITUDE, Informations.VideoData.LATITUDE);
         maps.put(Informations.VideoData.REMARK, Informations.VideoData.REMARK);
+        maps.put(Informations.VideoData.PARENT_ID, Informations.VideoData.PARENT_ID);
     }
 
 

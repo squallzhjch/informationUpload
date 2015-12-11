@@ -34,4 +34,6 @@ public class SystemConfig {
     
     public static String BUNDLE_DATA_GEOPOINT="bundle_data_geopoint";
 
+    public static String BUNDLE_DATA_TYPE="bundle_data_type";
+
 }

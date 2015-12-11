@@ -25,5 +25,22 @@ public interface VideoDataColumns extends MyBaseColumns{
     /**
      * 资源唯一id
      */
-    String PARENT_ID = "parent_id";
+    String PARENT_ID = "video_parent_id";
+
+    String ROWKEY = "video_rowkey";
+
+    /**
+     * 创建修改时间
+     */
+    String TIME = "video_time";
+
+    /**
+     * 经纬度
+     */
+    String LATITUDE = "video_latitude";
+    String LONGITUDE = "video_longitude";
+    /**
+     * 备注
+     */
+    String REMARK = "video_remark";
 }

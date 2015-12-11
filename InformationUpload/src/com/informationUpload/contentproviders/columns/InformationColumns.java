@@ -25,16 +25,22 @@ public interface InformationColumns extends MyBaseColumns {
      */
     String STATUS = "information_status";
     /**
-     * 预留
+     * 唯一标示，子表的父id
      */
-    String DATA_1 = "information_data1";
-    String DATA_2 = "information_data2";
-    String DATA_3 = "information_data3";
-    String DATA_4 = "information_data4";
-    String DATA_5 = "information_data5";
-    String DATA_6 = "information_data6";
-    String DATA_7 = "information_data7";
-    String DATA_8 = "information_data8";
-    String DATA_9 = "information_data9";
-    String DATA_10 = "information_data10";
+    String ROWKEY = "information_rowkey";
+
+    /**
+     * 创建修改时间
+     */
+    String TIME = "information_time";
+
+    /**
+     * 经纬度
+     */
+    String LATITUDE = "information_latitude";
+    String LONGITUDE = "information_longitude";
+    /**
+     * 备注
+     */
+    String REMARK = "information_remark";
 }
