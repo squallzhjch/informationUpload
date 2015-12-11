@@ -76,7 +76,7 @@ public class FindPasswordActivity  extends BaseActivity{
 				
 				@Override
 				public void onClick(View arg0) {
-					getSupportFragmentManager().beginTransaction()
+					FindPasswordActivity.this.getSupportFragmentManager().beginTransaction()
 					.replace(R.id.all_ll,new ResetPasswordFragment()).addToBackStack(null).commit();
 					
 				}
