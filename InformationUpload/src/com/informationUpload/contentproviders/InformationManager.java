@@ -32,6 +32,7 @@ public class InformationManager {
     private Context mContext;
 
     private final static String WHERE_ROWKEY = Informations.Information.ROWKEY + " = ? ";
+    private final static String WHERE_PARENT = Informations.VideoData.PARENT_ID + " = ? ";
     private final static String[] INFORMATION_PROJECTION = new String[]{
             Informations.Information.STATUS, //0
             Informations.Information.TIME, //1
@@ -180,6 +181,59 @@ public class InformationManager {
         }
 
     }
+
+    public void deleteInformation(final String rowkey){
+        if(TextUtils.isEmpty(rowkey))
+            return;
+        mThreadManager.getHandler().post(
+                new ThreadManager.OnDatabaseOperationRunnable<Boolean>() {
+
+                    @Override
+                    public Boolean doInBackground() {
+                        InformationMessage message = getInformation(rowkey);
+                        if(message.getPictureMessageList() != null && message.getPictureMessageList().size() > 0){
+                            for(PictureMessage message1: message.getPictureMessageList()){
+                                message1.getPath();
+                            }
+                        }
+
+                        ContentResolver contentResolver = mContext.getContentResolver();
+
+                        contentResolver.delete(Informations.Information.CONTENT_URI, WHERE_ROWKEY, new String[]{rowkey});
+                        contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_PARENT, new String[]{rowkey});
+                        return true;
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean value) {
+
+                    }
+                });
+
+    }
+
+    public void deleteVideo(final String rowkey, String path){
+        if(TextUtils.isEmpty(rowkey))
+            return;
+        mThreadManager.getHandler().post(
+                new ThreadManager.OnDatabaseOperationRunnable<Boolean>() {
+
+                    @Override
+                    public Boolean doInBackground() {
+                        ContentResolver contentResolver = mContext.getContentResolver();
+                        contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_ROWKEY, new String[]{rowkey});
+                        return true;
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean value) {
+
+                    }
+                });
+
+    }
+
+
 
     public InformationMessage getInformation(String rowkey) {
         InformationMessage informationMessage = null;
