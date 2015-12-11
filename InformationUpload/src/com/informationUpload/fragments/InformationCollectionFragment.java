@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.adapter.ChatAdapter;
+import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -233,6 +234,7 @@ public class InformationCollectionFragment extends BaseFragment {
                 mFragmentManager.back();
             }
         });
+        title.setTitleText(getTitleText());
         //初始化
         init();
         mapManager = MapManager.getInstance();
@@ -256,6 +258,21 @@ public class InformationCollectionFragment extends BaseFragment {
         //添加监听器
         addListeners();
         return view;
+    }
+
+    private String getTitleText(){
+        switch (mType){
+            case Informations.Information.INFORMATION_TYPE_BUS:
+                return "公交上报";
+            case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
+                return "设施上报";
+            case Informations.Information.INFORMATION_TYPE_ROAD:
+                return "道路上报";
+            case Informations.Information.INFORMATION_TYPE_AROUND:
+                return "周边变化";
+            default:
+                return "上报";
+        }
     }
 
     /**
@@ -397,7 +414,7 @@ public class InformationCollectionFragment extends BaseFragment {
         openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         StringBuffer sDir = new StringBuffer();
         if (hasSDcard()) {
-            sDir.append(Environment.getExternalStorageDirectory() + "/MyPicture/");
+            sDir.append(SystemConfig.DATA_PICTURE_PATH);
         } else {
             Toast.makeText(mApplication, "没有检测到存储卡", Toast.LENGTH_SHORT).show();
             return;
@@ -425,7 +442,7 @@ public class InformationCollectionFragment extends BaseFragment {
         picMsg = new PictureMessage();
 
         picMsg.setParentId(mRowkey);
-        picMsg.setPath(imageUri.toString());
+        picMsg.setPath(file.getPath());
 
         picMsg.setLat(mLocationManager.getCurrentPoint().getLat());
         picMsg.setLon(mLocationManager.getCurrentPoint().getLon());
@@ -449,7 +466,6 @@ public class InformationCollectionFragment extends BaseFragment {
                 imageView.setLayoutParams(new LayoutParams(150, 150));
 
                 try {
-
                     bitmap = Bimp.revitionImageSize(file.getPath());
                 } catch (IOException e) {
                     // TODO Auto-generated catch blockd
@@ -498,6 +514,7 @@ public class InformationCollectionFragment extends BaseFragment {
         message.setLon(mPoint.getLon());
         message.setChatMessageList(mChatList);
         message.setPictureMessageList(mPicList);
+        message.setRemark(additional_remarks_et.getText().toString());
         mInformationManager.saveInformation(mApplication.getUserId(), message);
     }
 

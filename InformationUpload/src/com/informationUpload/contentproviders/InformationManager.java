@@ -123,13 +123,13 @@ public class InformationManager {
                         if (message.getChatMessageList() != null) {
                             for (ChatMessage message1 : message.getChatMessageList()) {
                                 message1.setParentId(rowkey);
-                                insertVideoData(contentResolver, values, message1, Informations.VideoData.TYPE_CHAT);
+                                insertVideoData(contentResolver, values, message1, Informations.VideoData.VIDEO_TYPE_CHAT);
                             }
                         }
 
                         if (message.getPictureMessageList() != null) {
                             for (PictureMessage message1 : message.getPictureMessageList()) {
-                                insertVideoData(contentResolver, values, message1, Informations.VideoData.TYPE_PICTURE);
+                                insertVideoData(contentResolver, values, message1, Informations.VideoData.VIDEO_TYPE_PICTURE);
                             }
                         }
                         return result;
@@ -151,9 +151,9 @@ public class InformationManager {
     public boolean saveVideoData(DataBaseMessage message) {
         ContentResolver contentResolver = mContext.getContentResolver();
         if (message instanceof ChatMessage) {
-            return insertVideoData(contentResolver, null, message, Informations.VideoData.TYPE_CHAT);
+            return insertVideoData(contentResolver, null, message, Informations.VideoData.VIDEO_TYPE_CHAT);
         } else if (message instanceof PictureMessage) {
-            return insertVideoData(contentResolver, null, message, Informations.VideoData.TYPE_PICTURE);
+            return insertVideoData(contentResolver, null, message, Informations.VideoData.VIDEO_TYPE_PICTURE);
         }
         return false;
     }
@@ -276,10 +276,10 @@ public class InformationManager {
                     }
                     int type = cursor.getInt(11);
                     DataBaseMessage message = null;
-                    if (type == Informations.VideoData.TYPE_CHAT) {
+                    if (type == Informations.VideoData.VIDEO_TYPE_CHAT) {
                         message = new ChatMessage();
                         chatList.add((ChatMessage) message);
-                    } else if (type == Informations.VideoData.TYPE_PICTURE) {
+                    } else if (type == Informations.VideoData.VIDEO_TYPE_PICTURE) {
                         message = new PictureMessage();
                         picList.add((PictureMessage) message);
                     }
