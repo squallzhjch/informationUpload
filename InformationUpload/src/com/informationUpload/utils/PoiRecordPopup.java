@@ -197,7 +197,7 @@ public class PoiRecordPopup {
 					path = Environment.getExternalStorageDirectory()+"/";
 
 				}
-				voice=SystemClock.currentThreadTimeMillis();
+				voice=System.currentTimeMillis();
 				voiceName = voice+ ".wav";
 				//				path += voiceName;
 				path_name=path+voiceName;
