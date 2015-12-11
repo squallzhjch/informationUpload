@@ -44,8 +44,8 @@ public class ImageTool {
         if (!file.exists()) {
             return;
         }
-        String newfname = SystemConfig.DATA_SDCRAD_PATH + "temp"
-                + filename.replace(SystemConfig.DATA_SDCRAD_PATH, "");
+        String newfname = SystemConfig.DATA_PICTURE_PATH + "temp"
+                + filename.replace(SystemConfig.DATA_PICTURE_PATH, "");
         String srcFile = newfname;
         if (!renameFile(filename, newfname)) {
             srcFile = filename;

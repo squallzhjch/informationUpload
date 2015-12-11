@@ -13,6 +13,7 @@ import com.informationUpload.entity.DataBaseMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.thread.ThreadManager;
+import com.informationUpload.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,12 +194,16 @@ public class InformationManager {
                         InformationMessage message = getInformation(rowkey);
                         if(message.getPictureMessageList() != null && message.getPictureMessageList().size() > 0){
                             for(PictureMessage message1: message.getPictureMessageList()){
-                                message1.getPath();
+                                try {
+                                    FileUtils.delFile(message1.getPath());
+                                }catch (Exception e){
+
+                                }
+
                             }
                         }
 
                         ContentResolver contentResolver = mContext.getContentResolver();
-
                         contentResolver.delete(Informations.Information.CONTENT_URI, WHERE_ROWKEY, new String[]{rowkey});
                         contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_PARENT, new String[]{rowkey});
                         return true;
@@ -212,7 +217,7 @@ public class InformationManager {
 
     }
 
-    public void deleteVideo(final String rowkey, String path){
+    public void deleteVideo(final String rowkey, final String path){
         if(TextUtils.isEmpty(rowkey))
             return;
         mThreadManager.getHandler().post(
@@ -222,6 +227,11 @@ public class InformationManager {
                     public Boolean doInBackground() {
                         ContentResolver contentResolver = mContext.getContentResolver();
                         contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_ROWKEY, new String[]{rowkey});
+                        try {
+                            FileUtils.delFile(path);
+                        }catch (Exception e){
+
+                        }
                         return true;
                     }
 
@@ -256,9 +266,14 @@ public class InformationManager {
                     informationMessage.setLon(cursor.getDouble(2));
                     informationMessage.setLat(cursor.getDouble(3));
                     informationMessage.setType(cursor.getInt(4));
-                    informationMessage.setRemark(cursor.getString(5));
-                    informationMessage.setAddress(cursor.getString(6));
-
+                    String remark = cursor.getString(5);
+                    if (!TextUtils.isEmpty(remark)) {
+                        informationMessage.setRemark(remark);
+                    }
+                    String address = cursor.getString(6);
+                    if (!TextUtils.isEmpty(address)) {
+                        informationMessage.setAddress(address);
+                    }
                     int type = cursor.getInt(11);
                     DataBaseMessage message = null;
                     if (type == Informations.VideoData.TYPE_CHAT) {
@@ -268,7 +283,10 @@ public class InformationManager {
                         message = new PictureMessage();
                         picList.add((PictureMessage) message);
                     }
-                    message.setRemark(cursor.getString(7));
+                    remark = cursor.getString(7);
+                    if (!TextUtils.isEmpty(remark)){
+                        message.setRemark(remark);
+                     }
                     message.setPath(cursor.getString(8));
                     message.setLat(cursor.getDouble(9));
                     message.setLon(cursor.getDouble(10));

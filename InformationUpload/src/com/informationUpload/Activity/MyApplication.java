@@ -7,6 +7,8 @@ import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.LocationManager;
 import com.informationUpload.thread.ThreadManager;
+import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.SystemConfig;
 
 /**
  * @author zhjch
@@ -30,6 +32,8 @@ public class MyApplication extends Application{
         IntentHelper.getInstance().init(this);
         InformationManager.getInstance().init(this);
         LocationManager.getInstance().init(this);
+        PoiRecordPopup.getInstance().init(this, SystemConfig.DATA_CHAT_PATH);
+
         setUserId("10000");
 	}
     public String getUserId() {
