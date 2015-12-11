@@ -8,9 +8,13 @@ import java.util.List;
 
 
 import com.informationUpload.R;
+import com.informationUpload.R.drawable;
 
+import android.R.color;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,12 +30,16 @@ import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+
+
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -172,9 +180,9 @@ public class InformationCollectionFragment extends BaseFragment {
 	private File file;
 
 
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
 		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
 
@@ -200,7 +208,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		});
 		Bundle bundle = getArguments();
 		if (bundle != null) {
-            mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
+			mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
 			mType = bundle.getInt(SystemConfig.BUNDLE_DATA_TYPE);
 			if(!TextUtils.isEmpty(mRowkey)) {
 				InformationMessage message = mInformationManager.getInformation(mRowkey);
@@ -212,16 +220,16 @@ public class InformationCollectionFragment extends BaseFragment {
 				mRowkey = null;
 				mPoint = null;
 			}
-        }else{
-            mRowkey = null;
-            mPoint = null;
-        }
+		}else{
+			mRowkey = null;
+			mPoint = null;
+		}
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
+	
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;     // 屏幕宽度（像素）
@@ -234,6 +242,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		});
 		//初始化
 		init();
+		Log.i("chentao","oncreateview");
 		mapManager=MapManager.getInstance();
 		if(mPoint == null){
 			mPoint = mLocationManager.getCurrentPoint();
@@ -372,7 +381,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			int defHeight = count
 					* (itemView.getMeasuredHeight() + voice_collection_lv
 							.getDividerHeight());
-			LayoutParams lp = voice_collection_lv.getLayoutParams();
+			LayoutParams lp =  voice_collection_lv.getLayoutParams();
 			lp.height = defHeight;
 			voice_collection_lv.setLayoutParams(lp);
 		}
@@ -390,7 +399,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 
 		File fileDir = new File(sDir.toString());
-		Log.i("chentao","sDir.toString():"+sDir.toString());
+
 		if (!fileDir.exists()) {
 			boolean a = fileDir.mkdirs();
 			if(!a){
@@ -399,22 +408,18 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		}
 		picName=String.valueOf(System.currentTimeMillis()) ;
-		 file = new File(fileDir,picName+".jpg");
+		file = new File(fileDir,picName+".jpg");
 		imageUri = Uri.fromFile(file);
-		
-		Log.i("chentao","imageUri:"+imageUri.toString());
+		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+		startActivityForResult(openCameraIntent, TAKE_PICTURE);
 
-		
-				openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-				startActivityForResult(openCameraIntent, TAKE_PICTURE);
-				
-		
-		
+
+
 	}
 
 	public void photo() {
 		picMsg = new PictureMessage();
-		
+
 		picMsg.setParentId(mRowkey);
 		picMsg.setPath(imageUri.toString());
 
@@ -437,18 +442,25 @@ public class InformationCollectionFragment extends BaseFragment {
 		switch (requestCode) {
 		case TAKE_PICTURE:
 			ImageView imageView = new ImageView(getActivity());
-			imageView.setLayoutParams(new LayoutParams(150, 150));
-
+			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
+			
+           
 			try {
-				
+
 				bitmap = Bimp.revitionImageSize(file.getPath());
 			} catch (IOException e) {
 				// TODO Auto-generated catch blockd
 				e.printStackTrace();
 			}
+			Drawable drawable = new BitmapDrawable(bitmap);
+      
+          
+		imageView.setImageBitmap(bitmap);
+		  
+			
 
-			imageView.setImageBitmap(bitmap);
 			imageView.setTag(i);
+			
 			imageView.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -456,11 +468,13 @@ public class InformationCollectionFragment extends BaseFragment {
 					int num = (Integer) arg0.getTag();
 					Bundle bundle=new Bundle();
 					bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
-					bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, listview);
+					bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
 					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
 
 				}
 			});
+			
+			
 			hlinearlayout.addView(imageView, 0);
 			listview.add(imageView);
 			i++;
@@ -479,27 +493,37 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 	}
 
+ 
+	private void  saveLocal(){
+		InformationMessage message = new InformationMessage();
+		message.setAddress(mAddress);
+		message.setType(mType);
+		message.setRowkey(mRowkey);
+		message.setLat(mPoint.getLat());
+		message.setLon(mPoint.getLon());
+		message.setChatMessageList(mChatList);
+		message.setPictureMessageList(mPicList);
+		mInformationManager.saveInformation(mApplication.getUserId(), message);
+	}
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mVoicePop.onDestroy();
+	}
 
-   private void  saveLocal(){
-       InformationMessage message = new InformationMessage();
-       message.setAddress(mAddress);
-       message.setType(mType);
-       message.setRowkey(mRowkey);
-       message.setLat(mPoint.getLat());
-       message.setLon(mPoint.getLon());
-       message.setChatMessageList(mChatList);
-       message.setPictureMessageList(mPicList);
-       mInformationManager.saveInformation(mApplication.getUserId(), message);
-   }
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mVoicePop.onDestroy();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mVoicePop.onPause();
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		mVoicePop.onPause();
+	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+	}
+	@Override
+	public void onViewStateRestored(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewStateRestored(savedInstanceState);
+	}
 }

@@ -21,8 +21,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="公交"
                 android:textColor="@android:color/white"/>
             
@@ -39,8 +39,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="设施"
                 android:textColor="@android:color/white"/>
         </RelativeLayout>
@@ -63,8 +63,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="道路"
                 android:textColor="@android:color/white"/>
         </RelativeLayout>
@@ -80,8 +80,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="周边变化"
                 android:textColor="@android:color/white"/>
         </RelativeLayout>

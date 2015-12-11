@@ -79,20 +79,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp" >
 
-                <LinearLayout
+                 <LinearLayout
                     android:id="@+id/hlinearlayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingLeft="10dp" >
+                    android:paddingLeft="10dp"
+                     >
+              
 
                     <ImageView
                         android:id="@+id/hliv"
                         android:layout_width="150px"
                         android:layout_height="150px"
                         android:background="@drawable/bt_add_pic" />
+                      
                 </LinearLayout>
+              
             </HorizontalScrollView>
 
             <ImageView
