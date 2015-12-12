@@ -5,11 +5,14 @@ import java.util.List;
 
 
 import com.informationUpload.R;
+import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.utils.SystemConfig;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -19,13 +22,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 /**
  * 点击图片，可放大，可删除界面
  * @author  chentao
  */
 public class PhotoViewpagerFragment extends BaseFragment{
-	private ArrayList<View> listViews = new ArrayList<View>();
+	private ArrayList<PictureMessage> listViews = new ArrayList<PictureMessage>();
 	private ViewPager pager;
 	private MyPageAdapter adapter;
 	private int count;
@@ -52,7 +56,7 @@ public class PhotoViewpagerFragment extends BaseFragment{
 		  if(arg != null){
 			  position=arg.getInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM);
 			  
-			  listViews=(ArrayList<View>) arg.getSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST);
+			  listViews=(ArrayList<PictureMessage>) arg.getSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST);
 		  }
 	
 	  }
@@ -92,17 +96,19 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 	class MyPageAdapter extends PagerAdapter {
 
-		private ArrayList<View> listViews;// content
+		private ArrayList<PictureMessage> listViews;// content
 
 		private int size;// 页数
 
-		public MyPageAdapter(ArrayList<View> listViews) {// 构造函数
+		private ImageView iv;
+
+		public MyPageAdapter(ArrayList<PictureMessage> listViews) {// 构造函数
 															// 初始化viewpager的时候给的一个页面
 			this.listViews = listViews;
 			size = listViews == null ? 0 : listViews.size();
 		}
 
-		public void setListViews(ArrayList<View> listViews) {// 自己写的一个方法用来添加数据
+		public void setListViews(ArrayList<PictureMessage> listViews) {// 自己写的一个方法用来添加数据
 			this.listViews = listViews;
 			size = listViews == null ? 0 : listViews.size();
 		}
@@ -116,7 +122,11 @@ public class PhotoViewpagerFragment extends BaseFragment{
 		}
 
 		public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
-			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
+			ImageView iv=new ImageView(getActivity());
+			Uri uri = Uri.parse(listViews.get(arg1 % size).getPath());
+			iv.setImageURI(uri);
+//			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
+			((ViewPager) arg0).removeView(iv);
 		}
 
 		public void finishUpdate(View arg0) {
@@ -124,11 +134,16 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		public Object instantiateItem(View arg0, int arg1) {// 返回view对象
 			try {
-				((ViewPager) arg0).addView(listViews.get(arg1 % size), 0);
+				 iv=new ImageView(getActivity());
+				Uri uri = Uri.parse(listViews.get(arg1 % size).getPath());
+				iv.setImageURI(uri);
+//				((ViewPager) arg0).addView(listViews.get(arg1 % size), 0);
+				((ViewPager) arg0).addView(iv, 0);
 
 			} catch (Exception e) {
 			}
-			return listViews.get(arg1 % size);
+//			return listViews.get(arg1 % size);
+			return iv;
 		}
 
 		public boolean isViewFromObject(View arg0, Object arg1) {

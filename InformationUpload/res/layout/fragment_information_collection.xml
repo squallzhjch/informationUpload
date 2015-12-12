@@ -72,11 +72,11 @@
                 android:textColor="@android:color/black"
                 android:textSize="11sp" />
 
-            <HorizontalScrollView
+          <!--  <HorizontalScrollView
                 android:id="@+id/hscrollview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
+   --> 
                 <LinearLayout
                     android:id="@+id/hlinearlayout"
                     android:layout_width="match_parent"
@@ -91,7 +91,9 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_launcher" />
                 </LinearLayout>
+                <!--
             </HorizontalScrollView>
+             --> 
 
             <ImageView
                 android:layout_width="match_parent"
