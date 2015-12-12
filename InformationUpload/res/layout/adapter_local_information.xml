@@ -22,7 +22,7 @@
         android:layout_marginLeft="5dp"
        
         android:gravity="center"
-        />
+        android:textColor="@android:color/black"/>
     </LinearLayout>
 
     <ImageView

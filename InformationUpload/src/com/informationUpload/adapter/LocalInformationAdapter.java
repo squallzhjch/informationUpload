@@ -73,6 +73,7 @@ public class LocalInformationAdapter extends CursorAdapter {
             }else {
                 holder = (ViewHolder) convertView.getTag();
             }
+           
             rowkey = getCursor().getString(2);
             int type=getCursor().getInt(3);
             if(type==Informations.Information.INFORMATION_TYPE_BUS){
@@ -98,7 +99,7 @@ public class LocalInformationAdapter extends CursorAdapter {
 				public void onClick(View arg0) {
 					Log.i("chentao", "delete1");
 					if(holder.cb.isChecked()==true){
-						Log.i("chentao", "delete2");
+						Log.i("chentao", "delete2:"+rowkey);
 					InformationManager.getInstance().deleteInformation(rowkey);
 					}
 				}
