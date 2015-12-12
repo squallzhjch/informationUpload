@@ -23,6 +23,7 @@ import com.informationUpload.adapter.LocalInformationAdapter;
 import com.informationUpload.contentproviders.InformationCheckData;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.contentproviders.InformationObserver;
+import com.informationUpload.contentproviders.InformationObserver.OnCheckMessageCountListener;
 import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.contents.OnContentUpdateListener;
@@ -63,7 +64,7 @@ public class ReportRecordFragment extends BaseFragment{
         }
         mThreadManager = ThreadManager.getInstance();
         mInformationObserver = new InformationObserver((MyApplication) getActivity().getApplication(), mThreadManager.getHandler());
-        mInformationObserver.addOnCheckMessageListener(new InformationManager.OnCheckMessageCountListener() {
+        mInformationObserver.addOnCheckMessageListener(new OnCheckMessageCountListener() {
             @Override
             public void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs) {
                 mLocalNum.setText(String.valueOf(data.getLocalNum()));
