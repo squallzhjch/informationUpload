@@ -36,7 +36,7 @@ public class InformationObserver extends ContentObserver{
     private volatile long mLastCheckedTime = 0;
     private static final long DEFAULT_MAX_INTERVAL = 120;
     private InformationCheckData mCheckData;
-    private final List<WeakReference<InformationManager.OnCheckMessageCountListener>> mOnCheckMessageCountListeners = new ArrayList<WeakReference<InformationManager.OnCheckMessageCountListener>>();
+    private final List<WeakReference<OnCheckMessageCountListener>> mOnCheckMessageCountListeners = new ArrayList<WeakReference<OnCheckMessageCountListener>>();
 
 
 
@@ -121,7 +121,7 @@ public class InformationObserver extends ContentObserver{
             @Override
             public void run() {
                 synchronized (mOnCheckMessageCountListeners) {
-                    for (WeakReference<InformationManager.OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
+                    for (WeakReference<OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
                         if (weakRef != null
                                 && weakRef.get() != null) {
                             weakRef.get().onCheckNewMessageSucceed(data, false);
@@ -131,16 +131,18 @@ public class InformationObserver extends ContentObserver{
             }
         });
     }
-
-   public InformationCheckData addOnCheckMessageListener(InformationManager.OnCheckMessageCountListener listener) {
+    public  interface OnCheckMessageCountListener {
+        void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs);
+    }
+   public InformationCheckData addOnCheckMessageListener(OnCheckMessageCountListener listener) {
         synchronized (mOnCheckMessageCountListeners) {
-            for (WeakReference<InformationManager.OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
+            for (WeakReference<OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
                 if (weakRef != null
                         && weakRef.get() == listener) {
                     return mCheckData;
                 }
             }
-            mOnCheckMessageCountListeners.add(new WeakReference<InformationManager.OnCheckMessageCountListener>(listener));
+            mOnCheckMessageCountListeners.add(new WeakReference<OnCheckMessageCountListener>(listener));
         }
 
         return mCheckData;

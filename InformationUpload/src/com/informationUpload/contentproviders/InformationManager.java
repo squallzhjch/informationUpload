@@ -304,10 +304,4 @@ public class InformationManager {
         return informationMessage;
     }
 
-    public static interface OnCheckMessageCountListener {
-        void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs);
-    }
-
-
-
 }
