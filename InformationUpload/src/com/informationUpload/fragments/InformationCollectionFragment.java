@@ -45,6 +45,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.adapter.ChatAdapter;
+import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;

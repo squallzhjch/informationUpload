@@ -18,6 +18,7 @@ import com.informationUpload.adapter.LocalInformationAdapter;
 import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.widget.TitleView;
 
 /**
  * @author zhjch
@@ -31,6 +32,7 @@ public class ReportRecordFragment extends BaseFragment{
     private LinearLayout mLocalLayout;
     private LinearLayout mServicLayout;
     private ListView mListView;
+    private TitleView mTitleView;
     private LocalInformationAdapter mLocalAdapter;
     private static final int LOADER_TYPE_LOCAL = 0;
     private static final int LOADER_TYPE_SERVICE = 1;
@@ -46,7 +48,13 @@ public class ReportRecordFragment extends BaseFragment{
         mLocalLayout = (LinearLayout)view.findViewById(R.id.local_layout);
         mServicLayout = (LinearLayout)view.findViewById(R.id.service_layout);
         mListView = (ListView)view.findViewById(R.id.list_view);
-
+        mTitleView = (TitleView)view.findViewById(R.id.title_view);
+        mTitleView.setOnLeftAreaClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentManager.back();
+            }
+        });
     }
 
     private void initLoader() {

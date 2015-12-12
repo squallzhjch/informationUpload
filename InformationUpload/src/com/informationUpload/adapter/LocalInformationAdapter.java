@@ -26,6 +26,7 @@ public class LocalInformationAdapter extends CursorAdapter {
             Informations.Information.ID, // Map to 0
             Informations.Information.TIME,//Map to 1
             Informations.Information.ROWKEY, //Map to 2
+            Informations.Information.TYPE
     };
 
     public static final String WHERE = Informations.Information.USER_ID + " = ? AND " + Informations.Information.STATUS + " = ?";
@@ -66,6 +67,7 @@ public class LocalInformationAdapter extends CursorAdapter {
                 convertView.setTag(R.id.rowkey_id, rowkey);
             }
             holder.time.setText(getCursor().getInt(1) + "");
+            
         }
         return convertView;
     }

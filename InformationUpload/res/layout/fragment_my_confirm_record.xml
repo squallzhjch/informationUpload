@@ -7,6 +7,7 @@
     android:orientation="vertical" >
 
     <com.informationUpload.widget.TitleView
+        android:id="@+id/title_view"
         app:title_text="上报记录"
         style="@style/TitleView"
         />

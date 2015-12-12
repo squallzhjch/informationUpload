@@ -1,8 +1,16 @@
 package com.informationUpload.contentproviders;
 
+import android.app.Application;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Handler;
+import android.os.Looper;
+
+import com.informationUpload.activity.MyApplication;
+
+import java.lang.ref.WeakReference;
 
 /**
  * @author zhjch
@@ -17,8 +25,34 @@ public class InformationObserver extends ContentObserver{
      *
      * @param handler The handler to run {@link #onChange} on, or null if none.
      */
-    public InformationObserver(Handler handler) {
+
+    private final Handler mUIHandler = new Handler(Looper.getMainLooper());
+    private final Handler mBackgroundHandler;
+    private final MyApplication mContext;
+    private ContentResolver mContextResolver;
+    private volatile String mUserId;
+    private volatile long mLastCheckedTime = 0;
+    private static final long DEFAULT_MAX_INTERVAL = 120;
+
+
+    private static final String[] SAMPLE_MESSAGE_PROJECTIONS = new String[] {
+            Informations.Information.ROWKEY // Mapped to 0
+    };
+
+    private static final String SAMPLE_MESSAGE_WHERE = Informations.Information.STATUS + " = ? AND "
+            + Informations.Information.USER_ID + " = ? ";
+
+
+    public InformationObserver(MyApplication application, Handler handler) {
         super(handler);
+        if(handler != null){
+            mBackgroundHandler = handler;
+        }else{
+            mBackgroundHandler = mUIHandler;
+        }
+        mContext = application;
+        mContextResolver = mContext.getContentResolver();
+        checkData();
     }
 
     private Runnable mCheckRunnable = new Runnable() {
@@ -28,46 +62,68 @@ public class InformationObserver extends ContentObserver{
         }
     };
 
+    @Override
+    public void onChange(boolean selfChange) {
+        long timestamp = System.currentTimeMillis();
+        long interval;
+        if ((interval = timestamp - mLastCheckedTime) > DEFAULT_MAX_INTERVAL) {
+            mBackgroundHandler.removeCallbacks(mCheckRunnable);
+            checkData();
+        }
+        else {
+            // remove all existing posted runnable first.
+            mBackgroundHandler.removeCallbacks(mCheckRunnable);
+            mBackgroundHandler.postDelayed(mCheckRunnable, DEFAULT_MAX_INTERVAL - interval);
+        }
+    }
+
     private void checkData() {
-//            Cursor cursor = null;
-//            boolean hasNewPrivateMessage = false;
-//            boolean hasNewNotification = false;
-//            try {
-//                cursor = mContextResolver.query(Messages.SampleMessage.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, SAMPLE_MESSAGE_ARGS, ORDER_BY_LAST_UPDATED_TIME);
-//                if (cursor != null) {
-//
-//                    if (cursor.getCount() > 0) {
-//                        while (cursor.moveToNext()) {
-//                            int messageType = cursor.getInt(0);
-//                            switch (messageType) {
-//                                case Messages.Message.MESSAGE_TYPE_PRIVATE:
-//                                    hasNewPrivateMessage = true;
-//                                    break;
-//                            }
+        mLastCheckedTime = System.currentTimeMillis();
+        Cursor cursor = null;
+        int localMessage = 0;
+        int serviceMessage = 0;
+        try {
+            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_LOCAL), mContext.getUserId()}, null);
+            if (cursor != null) {
+                localMessage = cursor.getCount();
+            }
+
+        } catch (Exception e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        try {
+            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_SERVER), mContext.getUserId()}, null);
+            if (cursor != null) {
+                serviceMessage = cursor.getCount();
+            }
+
+        } catch (Exception e) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+//        mLastGroupNewMessageData = new GroupSettingsManager.GroupNewMessageData(hasNewPrivateMessage, hasNewNotification);
+//        notifyListeners(mLastGroupNewMessageData);
+    }
+
+//    private void notifyListeners(final GroupSettingsManager.GroupNewMessageData data) {
+//        mUIHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                synchronized (mOnCheckNewMessageListeners) {
+//                    for (WeakReference<GroupSettingsManager.OnCheckNewMessageListener> weakRef : mOnCheckNewMessageListeners) {
+//                        if (weakRef != null
+//                                && weakRef.get() != null) {
+//                            weakRef.get().onCheckNewMessageSucceed(data, false);
 //                        }
 //                    }
-//
-//                }
-//
-//            } catch (Exception e) {
-//            } finally {
-//                if (cursor != null) {
-//                    cursor.close();
 //                }
 //            }
-//            if(NOTIFICATION_ARGS != null) {
-//                try {
-//                    cursor = mContextResolver.query(Notifications.Notification.CONTENT_URI, NOTIFICATION_PROJECTIONS, NOTIFICATION_WHERE, NOTIFICATION_ARGS, null);
-//                    if (cursor != null && cursor.getCount() > 0) {
-//                        hasNewNotification = true;
-//                    }
-//                } finally {
-//                    if (cursor != null) {
-//                        cursor.close();
-//                    }
-//                }
-//            }
-//            mLastGroupNewMessageData = new GroupSettingsManager.GroupNewMessageData(hasNewPrivateMessage, hasNewNotification);
-//            notifyListeners(mLastGroupNewMessageData);
-        }
+//        });
+//    }
 }

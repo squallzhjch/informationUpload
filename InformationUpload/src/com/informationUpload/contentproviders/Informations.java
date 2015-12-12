@@ -19,9 +19,15 @@ public final class Informations {
         public static final int STATUS_LOCAL = 0; //数据还在本地没有上传
         public static final int STATUS_SERVER = 1;//已经上传
 
-        public static final int TYPE_TEXT = 0; //备注
-        public static final int TYPE_PICTURE = 1;//图片
-        public static final int TYPE_CHAT = 2; //语音
+        public static final int VIDEO_TYPE_TEXT = 0; //备注
+        public static final int VIDEO_TYPE_PICTURE = 1;//图片
+        public static final int VIDEO_TYPE_CHAT = 2; //语音
+
+        public static final int INFORMATION_TYPE_OTHER = 0;//其他
+        public static final int INFORMATION_TYPE_BUS = 1;//公交上报
+        public static final int INFORMATION_TYPE_ESTABLISHMENT = 2;//设施
+        public static final int INFORMATION_TYPE_ROAD = 3;//道路
+        public static final int INFORMATION_TYPE_AROUND = 4;//周边
     }
 
     public static class Information extends InformationsBase implements InformationColumns {
