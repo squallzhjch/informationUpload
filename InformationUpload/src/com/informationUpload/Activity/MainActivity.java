@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 
+import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.fragments.MainFragment;
 import com.informationUpload.fragments.ResetPasswordFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -41,7 +42,6 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         if (mMapManager != null) {
             mMapManager.onDestroy();
         }
-
         super.onDestroy();
     }
 

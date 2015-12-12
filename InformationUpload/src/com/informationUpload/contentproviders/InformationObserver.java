@@ -11,6 +11,8 @@ import android.os.Looper;
 import com.informationUpload.activity.MyApplication;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhjch
@@ -33,6 +35,9 @@ public class InformationObserver extends ContentObserver{
     private volatile String mUserId;
     private volatile long mLastCheckedTime = 0;
     private static final long DEFAULT_MAX_INTERVAL = 120;
+    private InformationCheckData mCheckData;
+    private final List<WeakReference<OnCheckMessageCountListener>> mOnCheckMessageCountListeners = new ArrayList<WeakReference<OnCheckMessageCountListener>>();
+
 
 
     private static final String[] SAMPLE_MESSAGE_PROJECTIONS = new String[] {
@@ -107,23 +112,39 @@ public class InformationObserver extends ContentObserver{
                 cursor.close();
             }
         }
-//        mLastGroupNewMessageData = new GroupSettingsManager.GroupNewMessageData(hasNewPrivateMessage, hasNewNotification);
-//        notifyListeners(mLastGroupNewMessageData);
+        mCheckData = new InformationCheckData(localMessage, serviceMessage);
+        notifyListeners(mCheckData);
     }
 
-//    private void notifyListeners(final GroupSettingsManager.GroupNewMessageData data) {
-//        mUIHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                synchronized (mOnCheckNewMessageListeners) {
-//                    for (WeakReference<GroupSettingsManager.OnCheckNewMessageListener> weakRef : mOnCheckNewMessageListeners) {
-//                        if (weakRef != null
-//                                && weakRef.get() != null) {
-//                            weakRef.get().onCheckNewMessageSucceed(data, false);
-//                        }
-//                    }
-//                }
-//            }
-//        });
-//    }
+    private void notifyListeners(final InformationCheckData data) {
+        mUIHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (mOnCheckMessageCountListeners) {
+                    for (WeakReference<OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
+                        if (weakRef != null
+                                && weakRef.get() != null) {
+                            weakRef.get().onCheckNewMessageSucceed(data, false);
+                        }
+                    }
+                }
+            }
+        });
+    }
+    public  interface OnCheckMessageCountListener {
+        void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs);
+    }
+   public InformationCheckData addOnCheckMessageListener(OnCheckMessageCountListener listener) {
+        synchronized (mOnCheckMessageCountListeners) {
+            for (WeakReference<OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
+                if (weakRef != null
+                        && weakRef.get() == listener) {
+                    return mCheckData;
+                }
+            }
+            mOnCheckMessageCountListeners.add(new WeakReference<OnCheckMessageCountListener>(listener));
+        }
+
+        return mCheckData;
+    }
 }
