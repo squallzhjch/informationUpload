@@ -304,4 +304,8 @@ public class InformationManager {
         return informationMessage;
     }
 
+    public static interface OnCheckMessageCountListener {
+//        void onCheckNewMessageSucceed(GroupNewMessageData groupNewMessageData, boolean isFirs);
+    }
+
 }
