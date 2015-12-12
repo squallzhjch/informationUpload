@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.informationUpload.entity.BaseMessage;
+import com.informationUpload.activity.MyApplication;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.DataBaseMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -305,7 +305,9 @@ public class InformationManager {
     }
 
     public static interface OnCheckMessageCountListener {
-//        void onCheckNewMessageSucceed(GroupNewMessageData groupNewMessageData, boolean isFirs);
+        void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs);
     }
+
+
 
 }

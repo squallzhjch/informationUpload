@@ -25,11 +25,13 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/local_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="待提交" />
 
             <TextView
+                android:id="@+id/upload_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2" />
