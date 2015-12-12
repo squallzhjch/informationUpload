@@ -1,6 +1,7 @@
 package com.informationUpload.utils;
 
 import android.os.Environment;
+import android.support.v4.os.EnvironmentCompat;
 
 /**
  * @author zhjch
@@ -11,8 +12,11 @@ import android.os.Environment;
  */
 public class SystemConfig {
 
-    public static String DATA_SDCRAD_PATH = Environment
-            .getExternalStorageDirectory() + "/InformationUpload/data/";
+    public static String DATA_BASE_PATH = Environment
+            .getExternalStorageDirectory() + "/InformationUpload/";
+
+    public static String DATA_PICTURE_PATH = DATA_BASE_PATH + "Picture/";
+    public static String DATA_CHAT_PATH = DATA_BASE_PATH + "Chat/";
 
     //隐藏所有其他fragment
     public static String HIDE_OTHER_FRAGMENT = "fragment_hide_other";

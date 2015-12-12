@@ -55,129 +55,130 @@ import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
+import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
 import com.informationUpload.utils.SystemConfig;
 import com.informationUpload.widget.TitleView;
 
 public class InformationCollectionFragment extends BaseFragment {
 
 
-	/**
-	 * 点击的拍照LinearLayout中 的哪一个
-	 */
-	private int i;
-	/**
-	 * 压缩后的bitmap
-	 */
-	private Bitmap bitmap;
-	/**
-	 * 拍照参数返回值
-	 */
-	private static final int TAKE_PICTURE = 0x000000;
-	/**
-	 * 图片uri
-	 */
-	private Uri imageUri;
+    /**
+     * 点击的拍照LinearLayout中 的哪一个
+     */
+    private int i;
+    /**
+     * 压缩后的bitmap
+     */
+    private Bitmap bitmap;
+    /**
+     * 拍照参数返回值
+     */
+    private static final int TAKE_PICTURE = 0x000000;
+    /**
+     * 图片uri
+     */
+    private Uri imageUri;
 
-	/**
-	 * 存照片的list
-	 */
-	private ArrayList<View> listview;
-	/**
-	 * 主view
-	 */
-	private View view;
-	/**
-	 * 显示位置textview
-	 */
-	private TextView select_position;
-	/**
-	 * 点击拍照添加图片
-	 */
-	private ImageView hliv;
-	/**
-	 * 语音的李斯特
-	 */
-	private ListView voice_collection_lv;
-	/**
-	 * 添加图片横向的HorizontalScrollView
-	 */
-	private HorizontalScrollView hscrollview;
-	/**
-	 * 添加图片横向的LinearLayout
-	 */
-	private LinearLayout hlinearlayout;
+    /**
+     * 存照片的list
+     */
+    private ArrayList<View> listview;
+    /**
+     * 主view
+     */
+    private View view;
+    /**
+     * 显示位置textview
+     */
+    private TextView select_position;
+    /**
+     * 点击拍照添加图片
+     */
+    private ImageView hliv;
+    /**
+     * 语音的李斯特
+     */
+    private ListView voice_collection_lv;
+    /**
+     * 添加图片横向的HorizontalScrollView
+     */
+    private HorizontalScrollView hscrollview;
+    /**
+     * 添加图片横向的LinearLayout
+     */
+    private LinearLayout hlinearlayout;
 
-	/**
-	 * 补充说明的edittext
-	 */
-	private EditText additional_remarks_et;
-	/**
-	 * 保存到本地按钮
-	 */
-	private Button savetolocal;
-	/**
-	 * 录音按钮
-	 */
-	private Button recordvoice;
-	/**
-	 * 立刻上报
-	 */
-	private Button report_at_once;
-	/**
-	 * 录音探出框
-	 */
-	private PoiRecordPopup mVoicePop;
-	/**
-	 * 录音信息数组
-	 */
-	private ArrayList<ChatMessage> mChatList;
-	/**
-	 * 图片数组
-	 */
-	private ArrayList<PictureMessage> mPicList;
-	/**
-	 * 录音信息adapter
-	 */
-	private ChatAdapter adapter;
-	/**
-	 * 屏幕宽度
-	 */
-	private int width;
+    /**
+     * 补充说明的edittext
+     */
+    private EditText additional_remarks_et;
+    /**
+     * 保存到本地按钮
+     */
+    private Button savetolocal;
+    /**
+     * 录音按钮
+     */
+    private Button recordvoice;
+    /**
+     * 立刻上报
+     */
+    private Button report_at_once;
+    /**
+     * 录音探出框
+     */
+    private PoiRecordPopup mVoicePop;
+    /**
+     * 录音信息数组
+     */
+    private ArrayList<ChatMessage> mChatList;
+    /**
+     * 图片数组
+     */
+    private ArrayList<PictureMessage> mPicList;
+    /**
+     * 录音信息adapter
+     */
+    private ChatAdapter adapter;
+    /**
+     * 屏幕宽度
+     */
+    private int width;
 
 
-	/**
-	 * 该条信息的唯一标识
-	 */
-	private String mRowkey;
+    /**
+     * 该条信息的唯一标识
+     */
+    private String mRowkey;
 
-	/**
-	 * 位置坐标点
-	 */
-	private GeoPoint mPoint;
-	/**
-	 * 地图管理类
-	 */
-	private MapManager mapManager;
-	/**
-	 * 地址
-	 */
-	private String mAddress;
-	/**
-	 * 图片名称
-	 */
-	private String picName;
-	/**
-	 * 图片名称
-	 */
-	private PictureMessage picMsg;
-	/**
-	 *  上报类型
-	 */
-	private int mType;
-	/**
-	 *图片文件
-	 */
-	private File file;
+    /**
+     * 位置坐标点
+     */
+    private GeoPoint mPoint;
+    /**
+     * 地图管理类
+     */
+    private MapManager mapManager;
+    /**
+     * 地址
+     */
+    private String mAddress;
+    /**
+     * 图片名称
+     */
+    private String picName;
+    /**
+     * 图片名称
+     */
+    private PictureMessage picMsg;
+    /**
+     * 上报类型
+     */
+    private int mType;
+    /**
+     * 图片文件
+     */
+    private File file;
 
 
 	@Override
@@ -292,40 +293,54 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 添加监听器
 	 */
 	private void addListeners() {
-		mVoicePop = new PoiRecordPopup(getActivity());
-		mVoicePop.setViewTouch(recordvoice);
-		boolean path_boolean = mVoicePop.setPath(Environment.getExternalStorageDirectory() + "/FastMap/");
-		if (!path_boolean) {
-			Toast.makeText(getActivity(), Environment.getExternalStorageDirectory() + "/FastMap/" + "文件夹创建不成功，不能使用，谢谢！", Toast.LENGTH_SHORT).show();
-
-		}
-		mVoicePop.setMinLeng(1000);
-		mVoicePop.setMaxLeng(1000 * 60);
-		mVoicePop.setRecordListener(new PoiRecordPopup.RecorListener() {
-			@Override
-			public void stopListener(String parsestr,String path, String name, long time) {
-				if (time > 1000 && time < 6000) {
-					additional_remarks_et.setText(parsestr);
-					ChatMessage chatmsg = new ChatMessage();
-					Log.i("chentao","voicepath:"+path);
-					Log.i("chentao","voicename:"+name);
-					chatmsg.setChattimelong(time);
-					chatmsg.setPath(path + name);
-					chatmsg.setParentId(mRowkey);
-					chatmsg.setRemark(additional_remarks_et.getText().toString());
-					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-					chatmsg.setTime(System.currentTimeMillis());
-					mChatList.add(chatmsg);
-
-					adapter.setData(mChatList);
-					adapter.notifadataset();
-					resetListView();
-				}
-
-			}
-		});
-
+		mVoicePop = PoiRecordPopup.getInstance();
+        mVoicePop.setViewTouch(recordvoice);
+//        mVoicePop.setMinLeng(1000);
+//        mVoicePop.setMaxLeng(1000 * 60);
+        mVoicePop.setRecordListener(new OnRecorListener() {
+            @Override
+            public void onStopSpeech(String path) {
+                synchronized (mChatList) {
+                    ChatMessage chatmsg = new ChatMessage();
+                    mChatList.add(chatmsg);
+                    chatmsg.setPath(path);
+                    chatmsg.setParentId(mRowkey);
+                    chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+                    chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+                    chatmsg.setTime(System.currentTimeMillis());
+                    adapter.setData(mChatList);
+                    adapter.notifadataset();
+                    resetListView();
+                }
+            }
+            @Override
+            public void onParseResult(String path, String result) {
+                synchronized (mChatList) {
+                    boolean his = false;
+                    for(ChatMessage message:mChatList){
+                        if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
+                            message.setRemark(result);
+                            his = true;
+                            break;
+                        }
+                    }
+                    if(!his){
+                        ChatMessage chatmsg = new ChatMessage();
+                        mChatList.add(chatmsg);
+                        chatmsg.setPath(path);
+                        chatmsg.setParentId(mRowkey);
+                        chatmsg.setRemark(result);
+                        chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+                        chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+                        chatmsg.setTime(System.currentTimeMillis());
+                        adapter.setData(mChatList);
+                        adapter.notifadataset();
+                        resetListView();
+                    }
+                    additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
+                }
+            }
+        });
 
 		//选择位置点击
 		select_position.setOnClickListener(new OnClickListener() {
@@ -392,7 +407,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 		StringBuffer sDir = new StringBuffer();
 		if (hasSDcard()) {
-			sDir.append(Environment.getExternalStorageDirectory() + "/MyPicture/");
+			sDir.append(SystemConfig.DATA_PICTURE_PATH);
 		} else {
 			Toast.makeText(mApplication, "没有检测到存储卡", Toast.LENGTH_SHORT).show();
 			return;

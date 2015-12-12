@@ -26,11 +26,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                 android:textColor="@android:color/black"
                 android:text="待提交" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
                 android:text="2" />
         </LinearLayout>
 
@@ -50,20 +52,28 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                 android:textColor="@android:color/black"
                 android:text="已提交" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                 android:textColor="@android:color/black"
                 android:text="15" />
         </LinearLayout>
     </LinearLayout>
-
+    <ImageView android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"/>
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1" 
+        android:background="#00000000"
+       
+        android:fadingEdge="none"
+        android:scrollbars="@null" >
 
     </ListView>
 
@@ -76,6 +86,7 @@
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+             android:textColor="@android:color/black"
             android:text="全选"
             />
         <TextView

@@ -31,10 +31,7 @@ public class VoiceSpeechManager {
     private Context mContext;
     private SpeechRecognizer mIat;
     private HashMap<String, String> mIatResults = new LinkedHashMap<String, String>();
-	private String name;
-	private parseListener listener_parse;
-	
-
+	private OnParseListener mListener;
 
     private static volatile VoiceSpeechManager mInstance;
     public static VoiceSpeechManager getInstance() {
@@ -54,6 +51,7 @@ public class VoiceSpeechManager {
         SpeechUtility.createUtility(context, SpeechConstant.APPID + "=565eb095");
         //1.创建SpeechRecognizer对象，第二个参数：本地听写时传InitListener
         mIat = SpeechRecognizer.createRecognizer(context, null);
+
         setParam(mIat);
     }
 
@@ -63,10 +61,9 @@ public class VoiceSpeechManager {
         //2.设置听写参数，详见《科大讯飞MSC API手册(Android)》SpeechConstant类
         iat.setParameter(SpeechConstant.DOMAIN, "iat");
         // 设置听写引擎
-        iat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+        iat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_MIX);
         // 设置返回结果格式
         iat.setParameter(SpeechConstant.RESULT_TYPE, "json");
-
         String lag = "mandarin";
         if (lag.equals("en_us")) {
             // 设置语言
@@ -98,10 +95,8 @@ public class VoiceSpeechManager {
         iat.setParameter(SpeechConstant.ASR_WBEST, "5");
     }
     //设置科达讯飞的音效名字
-    public void setName(String name){
-    	
-    	mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, Environment.getExternalStorageDirectory()+"/FastMap/"+name+".wav");
-
+    public void setPath(String path){
+    	mIat.setParameter(SpeechConstant.ASR_AUDIO_PATH, path);
     }
 
     //听写监听器
@@ -111,7 +106,7 @@ public class VoiceSpeechManager {
         //关于解析Json的代码可参见MscDemo中JsonParser类；
         //isLast等于true时会话结束。
         public void onResult(RecognizerResult results, boolean isLast) {
-            Log.i("chentao", "result:"+results.getResultString());
+            Log.i("chentao", "result:" + results.getResultString());
             StringBuffer resultBuffer = new StringBuffer();
             if(results != null) {
                 String text = JsonParser.parseIatResult(results.getResultString());
@@ -131,13 +126,16 @@ public class VoiceSpeechManager {
                 }
 
             }
-            if(listener_parse!=null){
-                listener_parse.parseString(resultBuffer.toString());
+            if(isLast && mListener!=null){
+                mListener.onParseString(resultBuffer.toString());
             }
         }
         //会话发生错误回调接口
         public void onError(SpeechError error) {
             error.getPlainDescription(true); //获取错误码描述
+            if(mListener!=null){
+                mListener.onError();
+            }
         }
 
         @Override
@@ -149,7 +147,11 @@ public class VoiceSpeechManager {
         //音量值0~30
         public void onVolumeChanged(int volume){}
         //结束录音
-        public void onEndOfSpeech() {}
+        public void onEndOfSpeech() {
+            if(mListener != null){
+                mListener.onEndOfSpeech();
+            }
+        }
         //扩展用接口
         public void onEvent(int eventType, int arg1, int arg2, Bundle obj) {}
     };
@@ -172,13 +174,14 @@ public class VoiceSpeechManager {
     public void stop() {
         mIat.stopListening();
     }
-    public interface parseListener{
-    	public void parseString(String parsestr);
+    public interface OnParseListener{
+    	void onParseString(String parsestr);
+        void onEndOfSpeech();
+        void onError();
     }
     	
-    public void setParseListener(parseListener listener){
-    	this.listener_parse=listener;
+    public void setParseListener(OnParseListener listener){
+    	this.mListener = listener;
     }
-    	
-    
+
 }
