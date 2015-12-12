@@ -217,7 +217,10 @@ public class InformationCollectionFragment extends BaseFragment {
 				if(message == null){
 					mRowkey = null;
 					mPoint = null;
-				}
+				}else{
+					mType = message.getType();
+					mRowkey =message.getRowkey();
+				} 
 			}else{
 				mRowkey = null;
 				mPoint = null;
