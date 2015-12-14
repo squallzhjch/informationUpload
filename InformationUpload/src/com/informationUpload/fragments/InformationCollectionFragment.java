@@ -1,8 +1,9 @@
 package com.informationUpload.fragments;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,13 +12,9 @@ import java.util.List;
 
 
 import com.informationUpload.R;
-import com.informationUpload.R.drawable;
 
-import android.R.color;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -40,7 +37,6 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 
 import android.widget.ListView;
@@ -48,7 +44,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.adapter.ChatAdapter;
-import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -63,9 +58,13 @@ import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
 import com.informationUpload.utils.SystemConfig;
 import com.informationUpload.widget.TitleView;
 
+
 public class InformationCollectionFragment extends BaseFragment {
 
-
+	/**
+	 * 返回的字节数组
+	 */
+	private static byte[] byt;
 	/**
 	 * 点击的拍照LinearLayout中 的哪一个
 	 */
@@ -135,11 +134,11 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 录音信息数组
 	 */
-	private ArrayList<ChatMessage> mChatList;
+	private ArrayList<ChatMessage> mChatList=new ArrayList<ChatMessage>();
 	/**
 	 * 图片数组
 	 */
-	private ArrayList<PictureMessage> mPicList;
+	private ArrayList<PictureMessage> mPicList=new ArrayList<PictureMessage>();;
 	/**
 	 * 录音信息adapter
 	 */
@@ -183,6 +182,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 图片文件
 	 */
 	private File file;
+	/**
+	 * 从数据库取出的科大讯飞转译字符串
+	 */
+	private String remark="";
 
 
 	@Override
@@ -221,6 +224,12 @@ public class InformationCollectionFragment extends BaseFragment {
 					mRowkey = null;
 					mPoint = null;
 				}else{
+					mChatList=(ArrayList<ChatMessage>) message.getChatMessageList();
+					
+					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();
+					Log.i("chentao","PicList:"+mPicList.size());
+					 remark = message.getRemark();
+					
 					mType = message.getType();
 					mRowkey =message.getRowkey();
 				} 
@@ -250,7 +259,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		});
 		//初始化
 		init();
-		Log.i("chentao","oncreateview");
+
 		mapManager=MapManager.getInstance();
 		if(mPoint == null){
 			mPoint = mLocationManager.getCurrentPoint();
@@ -279,8 +288,8 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private void init() {
 		listview = new ArrayList<View>();
-		mChatList = new ArrayList<ChatMessage>();
-		mPicList=new ArrayList<PictureMessage>();
+	
+		
 		select_position = (TextView) view.findViewById(R.id.select_position);
 		hliv = (ImageView) view.findViewById(R.id.hliv);
 		voice_collection_lv = (ListView) view.findViewById(R.id.voice_collection_lv);
@@ -291,9 +300,46 @@ public class InformationCollectionFragment extends BaseFragment {
 		savetolocal = (Button) view.findViewById(R.id.savetolocal);
 		recordvoice = (Button) view.findViewById(R.id.recordvoice);
 		report_at_once = (Button) view.findViewById(R.id.report_at_once);
-		adapter = new ChatAdapter(getActivity(), mChatList);
+		additional_remarks_et.setText(remark);
+		adapter = new ChatAdapter(getActivity(),InformationCollectionFragment.this, mChatList);
+		resetListView();
 		voice_collection_lv.setAdapter(adapter);
 		select_position.setText(mAddress);
+		
+		for(int i=0;i<mPicList.size();i++){
+			ImageView imageView = new ImageView(getActivity());
+			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
+			imageView.setImageURI(Uri.parse(mPicList.get(i).getPath()));
+			imageView.setTag(i);
+
+			imageView.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					int num = (Integer) arg0.getTag();
+					Bundle bundle=new Bundle();
+					bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
+					bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
+					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
+
+				}
+			});
+
+
+			hlinearlayout.addView(imageView, 0);
+			listview.add(imageView);
+			
+			if (hscrollview.getWidth() >= width) {
+				new Handler().post(new Runnable() {
+
+					@Override
+					public void run() {
+						hscrollview.scrollTo(hlinearlayout.getWidth() + 20, 0);
+
+					}
+				});
+			}
+		}
 	}
 
 	/**
@@ -334,6 +380,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					if(!his){
 						ChatMessage chatmsg = new ChatMessage();
 						mChatList.add(chatmsg);
+						
 						chatmsg.setPath(path);
 						chatmsg.setParentId(mRowkey);
 						chatmsg.setRemark(result);
@@ -390,22 +437,23 @@ public class InformationCollectionFragment extends BaseFragment {
 	}
 
 	//重新计算高度
-	private void resetListView() {
+	public void resetListView() {
 
 		int count = this.adapter.getCount();
+		if(count!=0){
+			View itemView = this.adapter.getView(0, null, null);
+			if (itemView != null) {
+				itemView.measure(
+						MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+						MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
 
-		View itemView = this.adapter.getView(0, null, null);
-		if (itemView != null) {
-			itemView.measure(
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-					MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-
-			int defHeight = count
-					* (itemView.getMeasuredHeight() + voice_collection_lv
-							.getDividerHeight());
-			LayoutParams lp =  voice_collection_lv.getLayoutParams();
-			lp.height = defHeight;
-			voice_collection_lv.setLayoutParams(lp);
+				int defHeight = count
+						* (itemView.getMeasuredHeight() + voice_collection_lv
+								.getDividerHeight());
+				LayoutParams lp =  voice_collection_lv.getLayoutParams();
+				lp.height = defHeight;
+				voice_collection_lv.setLayoutParams(lp);
+			}
 		}
 	}
 
@@ -443,7 +491,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		picMsg = new PictureMessage();
 
 		picMsg.setParentId(mRowkey);
-		picMsg.setPath(imageUri.toString());
+		picMsg.setPath(file.getPath());
 
 		picMsg.setLat(mLocationManager.getCurrentPoint().getLat());
 		picMsg.setLon(mLocationManager.getCurrentPoint().getLon());
@@ -470,12 +518,19 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			try {
 
-//				InputStream in = Bimp.revitionImageSize(file.getPath());
+				bitmap = Bimp.revitionImageSize(file.getPath());
+
 				if(new File(file.getPath()).exists()){
 					new File(file.getPath()).delete();
-					
-					FileOutputStream out=new FileOutputStream(file.getPath());
-					
+
+					FileOutputStream out = new FileOutputStream(file.getPath());
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+					InputStream isBm = new ByteArrayInputStream(baos.toByteArray());
+					byte[] byt = readInputStream(isBm);
+					out.write(byt);
+					out.flush();
+					out.close();
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch blockd
@@ -531,6 +586,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		message.setRowkey(mRowkey);
 		message.setLat(mPoint.getLat());
 		message.setLon(mPoint.getLon());
+		message.setRemark(additional_remarks_et.getText().toString());
 		message.setChatMessageList(mChatList);
 		message.setPictureMessageList(mPicList);
 		mInformationManager.saveInformation(mApplication.getUserId(), message);
@@ -555,5 +611,30 @@ public class InformationCollectionFragment extends BaseFragment {
 	public void onViewStateRestored(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewStateRestored(savedInstanceState);
+	}
+
+	public static byte[] readInputStream(InputStream inputStream) {
+
+		// 1.建立通道对象
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		// 2.定义存储空间
+		byte[] buffer = new byte[1024];
+		// 3.开始读文件
+		int len = -1;
+		try {
+			if (inputStream != null) {
+				while ((len = inputStream.read(buffer)) != -1) {
+					// 将Buffer中的数据写到outputStream对象中
+					outputStream.write(buffer, 0, len);
+				}
+			}
+			// 4.关闭流
+			byt = outputStream.toByteArray();
+			outputStream.close();
+			inputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return byt;
 	}
 }

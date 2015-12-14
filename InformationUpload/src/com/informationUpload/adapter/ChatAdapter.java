@@ -1,14 +1,18 @@
 package com.informationUpload.adapter;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
 import com.informationUpload.R;
 import com.informationUpload.entity.ChatMessage;
+import com.informationUpload.fragments.InformationCollectionFragment;
 
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,14 +26,17 @@ import android.widget.Toast;
 public class ChatAdapter extends BaseAdapter {
    
 	
-	private Context context;
+
 	private ArrayList<ChatMessage> list;
 	private LayoutInflater inflater;
 	private MediaPlayer mMediaPlayer = new MediaPlayer();
+	private Context context;
+	private InformationCollectionFragment fragm;
 
 	
 
-	public ChatAdapter(Context context,ArrayList<ChatMessage> list){
+	public ChatAdapter(Context context,InformationCollectionFragment fragm,ArrayList<ChatMessage> list){
+		this.fragm=fragm;
 		this.context=context;
 		if(list==null){
 			list=new ArrayList<ChatMessage>();
@@ -87,12 +94,16 @@ public class ChatAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-			
+				File file =new File(getItem(position).getPath());
+				if(file.exists()){
+					file.delete();
+				}
 				list.remove(position);
 				
 				
 				ChatAdapter.this.notifadataset();
-//				context.resetListView();
+				
+				fragm.resetListView();
 				
 				
 				Toast.makeText(context,"已经删除",Toast.LENGTH_LONG).show();
@@ -104,8 +115,11 @@ public class ChatAdapter extends BaseAdapter {
 			public void onClick(View v) {
 			
 				if (getItem(position)!=null) {
-				  
+				    if(new File(getItem(position).getPath()).exists()){
 					playMusic(getItem(position).getPath()) ;
+				    }else{
+				    	Toast.makeText (context, "该文件已经被手动在文件夹中删除",Toast.LENGTH_SHORT).show();
+				    }
 				}
 			}
 		});

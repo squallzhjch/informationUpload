@@ -95,6 +95,7 @@ public class InformationManager {
                         if (!TextUtils.isEmpty(message.getAddress())) {
                             values.put(Informations.Information.ADDRESS, message.getAddress());
                         }
+                        values.put(Informations.Information.TIME, System.currentTimeMillis());
                         values.put(Informations.Information.LATITUDE, message.getLat());
                         values.put(Informations.Information.LONGITUDE, message.getLon());
                         values.put(Informations.Information.TYPE, message.getType());
@@ -129,6 +130,7 @@ public class InformationManager {
 
                         if (message.getPictureMessageList() != null) {
                             for (PictureMessage message1 : message.getPictureMessageList()) {
+                                message1.setParentId(rowkey);
                                 insertVideoData(contentResolver, values, message1, Informations.VideoData.VIDEO_TYPE_PICTURE);
                             }
                         }
@@ -164,7 +166,7 @@ public class InformationManager {
         if (values == null)
             values = new ContentValues();
         values.clear();
-        values.put(Informations.VideoData.ROWKEY, UUID.randomUUID().toString());
+        values.put(Informations.VideoData.ROWKEY, UUID.randomUUID().toString().replaceAll("-", ""));
         values.put(Informations.VideoData.PARENT_ID, message.getParentId());
         values.put(Informations.VideoData.CONTENT, message.getPath());
         values.put(Informations.VideoData.LATITUDE, message.getLat());
@@ -274,6 +276,10 @@ public class InformationManager {
                     if (!TextUtils.isEmpty(address)) {
                         informationMessage.setAddress(address);
                     }
+                    String childRowkey = cursor.getString(12);
+                    if(TextUtils.isEmpty(childRowkey)){
+                        continue;
+                    }
                     int type = cursor.getInt(11);
                     DataBaseMessage message = null;
                     if (type == Informations.VideoData.VIDEO_TYPE_CHAT) {
@@ -287,7 +293,10 @@ public class InformationManager {
                     if (!TextUtils.isEmpty(remark)){
                         message.setRemark(remark);
                      }
-                    message.setPath(cursor.getString(8));
+                    String path = cursor.getString(8);
+                    if(!TextUtils.isEmpty(path)) {
+                        message.setPath(path);
+                    }
                     message.setLat(cursor.getDouble(9));
                     message.setLon(cursor.getDouble(10));
                     message.setRowkey(cursor.getString(12));

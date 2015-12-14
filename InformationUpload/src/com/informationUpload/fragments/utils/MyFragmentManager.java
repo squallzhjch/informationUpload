@@ -101,7 +101,7 @@ public class MyFragmentManager {
     }
 
     public boolean  back(){
-        int fragmentSize = mFragmentManager.getBackStackEntryCount();
+        int fragmentSize =mFragmentList.size();
         boolean canBack = fragmentSize > 1;
         if(canBack) {
             BaseFragment currentFragment = mFragmentList.get(mFragmentList.size() - 1);
