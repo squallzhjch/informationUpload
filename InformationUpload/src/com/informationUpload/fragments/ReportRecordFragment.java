@@ -82,6 +82,11 @@ public class ReportRecordFragment extends BaseFragment{
 				mUploadNum.setText(String.valueOf(data.getUploadNum()));
 			}
 		});
+
+		mApplication.getContentResolver().registerContentObserver(
+				Informations.Information.CONTENT_URI,
+				true,
+				mInformationObserver);
 	}
 
 
