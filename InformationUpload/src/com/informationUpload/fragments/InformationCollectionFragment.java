@@ -309,7 +309,8 @@ public class InformationCollectionFragment extends BaseFragment {
 		for(int i=0;i<mPicList.size();i++){
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
-			imageView.setImageURI(Uri.parse(mPicList.get(i).getPath()));
+			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath()))
+					);
 			imageView.setTag(i);
 
 			imageView.setOnClickListener(new OnClickListener() {
