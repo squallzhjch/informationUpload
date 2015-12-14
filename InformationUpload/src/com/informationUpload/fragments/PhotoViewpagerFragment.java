@@ -1,5 +1,6 @@
 package com.informationUpload.fragments;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,7 +124,8 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
 			ImageView iv=new ImageView(getActivity());
-			Uri uri = Uri.parse(listViews.get(arg1 % size).getPath());
+			
+			Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
 			iv.setImageURI(uri);
 //			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
 			((ViewPager) arg0).removeView(iv);
@@ -135,7 +137,7 @@ public class PhotoViewpagerFragment extends BaseFragment{
 		public Object instantiateItem(View arg0, int arg1) {// 返回view对象
 			try {
 				 iv=new ImageView(getActivity());
-				Uri uri = Uri.parse(listViews.get(arg1 % size).getPath());
+				Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
 				iv.setImageURI(uri);
 //				((ViewPager) arg0).addView(listViews.get(arg1 % size), 0);
 				((ViewPager) arg0).addView(iv, 0);
