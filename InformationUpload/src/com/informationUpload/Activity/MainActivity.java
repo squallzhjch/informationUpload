@@ -5,16 +5,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 
-import com.informationUpload.contentproviders.InformationManager;
+import com.baidu.mapapi.map.MapView;
 import com.informationUpload.fragments.MainFragment;
 import com.informationUpload.fragments.ResetPasswordFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 
-
 import com.informationUpload.map.MapManager;
 import com.informationUpload.R;
-import com.tencent.tencentmap.mapsdk.map.MapView;
 
 public class MainActivity extends BaseActivity implements OnClickListener, ActivityInstanceStateListener {
 

@@ -22,15 +22,9 @@
         android:layout_marginLeft="5dp"
        
         android:gravity="center"
-        />
+        android:textColor="@android:color/black"/>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/delete_item" />
+   
 
 </RelativeLayout>

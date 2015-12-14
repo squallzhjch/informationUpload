@@ -54,6 +54,7 @@ public class FileUtils {
 	}
 
 	public static void delFile(String fileName){
+		
 		File file = new File(SDPATH + fileName);
 		if(file.isFile()){
 			file.delete();

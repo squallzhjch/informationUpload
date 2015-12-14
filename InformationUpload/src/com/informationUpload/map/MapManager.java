@@ -4,28 +4,20 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.informationUpload.R;
-import com.informationUpload.map.Overlay.LocationOverlay;
-import com.informationUpload.utils.Utils;
-import com.tencent.lbssearch.TencentSearch;
-import com.tencent.lbssearch.httpresponse.BaseObject;
-import com.tencent.lbssearch.httpresponse.HttpResponseListener;
-import com.tencent.lbssearch.object.Location;
-import com.tencent.lbssearch.object.param.Geo2AddressParam;
-import com.tencent.lbssearch.object.result.Geo2AddressResultObject;
-import com.tencent.map.geolocation.TencentLocation;
-import com.tencent.map.geolocation.TencentLocationListener;
-import com.tencent.map.geolocation.TencentLocationManager;
-import com.tencent.mapsdk.raster.model.LatLng;
-import com.tencent.tencentmap.mapsdk.map.MapView;
-import com.tencent.tencentmap.mapsdk.map.TencentMap;
-import com.tencent.tencentmap.mapsdk.map.TencentMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
+import com.baidu.mapapi.model.LatLng;
+import com.informationUpload.map.LocationManager.OnLocationListener;
 
-import org.apache.http.Header;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * @author zhjch
@@ -35,7 +27,6 @@ import java.util.List;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class MapManager {
-    private LocationOverlay mLocationOverlay;
     private MapView mMapView;
     private Context mContext;
     private Boolean bFirst = true;
@@ -58,12 +49,11 @@ public class MapManager {
             return;
         mContext = context;
         mMapView = mapView;
-        mMapView.getMap().setZoom(15);
-        addLocationOverlay();
+        mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(15f));
         mLocationManager = LocationManager.getInstance();
         mLocationManager.startLocation();
 
-        mLocationManager.setOnLocationListener(listener);
+        mLocationManager.addOnLocationListener(listener);
 
         mMapView.getMap().setOnMapClickListener(new OnMapClickListener() {
             @Override
@@ -74,31 +64,25 @@ public class MapManager {
                     }
                 }
             }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
+            }
         });
     }
 
-    private  LocationManager.OnLocationListener listener = new LocationManager.OnLocationListener() {
+    private  OnLocationListener listener = new OnLocationListener() {
         @Override
-        public void onLocationChanged(TencentLocation location, int error, String s) {
+        public void onLocationChanged(GeoPoint location, String address) {
             // 更新 location 图层
-            mLocationOverlay.setAccuracy(location.getAccuracy());
-            mLocationOverlay.setGeoCoords(Utils.of(location));
-            if(bFirst == true){
-                mMapView.getMap().animateTo(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
-            mMapView.invalidate();
+            mMapView.getMap().setMyLocationConfigeration(new MyLocationConfiguration(
+                    LocationMode.NORMAL, true, null));
             bFirst = false;
+            mMapView.getMap().setMapStatus(MapStatusUpdateFactory.newLatLng(new LatLng(location.getLat(), location.getLon())));
         }
     };
 
-    private void addLocationOverlay(){
-        Bitmap bmpMarker = BitmapFactory.decodeResource(mContext.getResources(),
-                R.drawable.mark_location);
-        if(bmpMarker != null) {
-            mLocationOverlay = new LocationOverlay(bmpMarker);
-            mMapView.addOverlay(mLocationOverlay);
-        }
-    }
 
     public void onDestroy(){
         if(mMapView != null){
@@ -134,7 +118,6 @@ public class MapManager {
 
     public void onStop() {
         if(mMapView != null){
-            mMapView.onStop();
         }
     }
     public void setOnMapClickListener(OnMapClickListener listener){
@@ -174,33 +157,33 @@ public class MapManager {
     public void searchAddress(final GeoPoint latLng, final OnSearchAddressListener listener){
         if(latLng == null)
             return;
-        TencentSearch api = new TencentSearch(mContext);
-        Geo2AddressParam param = new Geo2AddressParam().location(new Location()
-                .lat((float) latLng.getLat()).lng((float) latLng.getLon()));
-        api.geo2address(param, new HttpResponseListener() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, BaseObject object) {
-                // TODO Auto-generated method stub
-                String result = "";
-                if(object != null){
-                    Geo2AddressResultObject oj = (Geo2AddressResultObject)object;
-                    if(oj.result != null){
-                        result = oj.result.address;
-                    }
-                }
-                if(listener != null){
-                    listener.OnSuccess(result);
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers,
-                                  String responseString, Throwable throwable) {
-                if(listener != null){
-                    listener.onFailure();
-                }
-            }
-        });
+//        TencentSearch api = new TencentSearch(mContext);
+//        Geo2AddressParam param = new Geo2AddressParam().location(new Location()
+//                .lat((float) latLng.getLat()).lng((float) latLng.getLon()));
+//        api.geo2address(param, new HttpResponseListener() {
+//
+//            @Override
+//            public void onSuccess(int statusCode, Header[] headers, BaseObject object) {
+//                // TODO Auto-generated method stub
+//                String result = "";
+//                if(object != null){
+//                    Geo2AddressResultObject oj = (Geo2AddressResultObject)object;
+//                    if(oj.result != null){
+//                        result = oj.result.address;
+//                    }
+//                }
+//                if(listener != null){
+//                    listener.OnSuccess(result);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(int statusCode, Header[] headers,
+//                                  String responseString, Throwable throwable) {
+//                if(listener != null){
+//                    listener.onFailure();
+//                }
+//            }
+//        });
     }
 }

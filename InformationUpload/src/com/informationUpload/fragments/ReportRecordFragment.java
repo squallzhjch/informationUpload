@@ -1,19 +1,28 @@
 package com.informationUpload.fragments;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.informationUpload.R;
 import com.informationUpload.activity.ActivityInstanceStateListener;
@@ -23,6 +32,7 @@ import com.informationUpload.adapter.LocalInformationAdapter;
 import com.informationUpload.contentproviders.InformationCheckData;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.contentproviders.InformationObserver;
+import com.informationUpload.contentproviders.InformationObserver.OnCheckMessageCountListener;
 import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.contents.OnContentUpdateListener;
@@ -44,7 +54,8 @@ import org.w3c.dom.Text;
  */
 public class ReportRecordFragment extends BaseFragment{
 
-    private LinearLayout mLocalLayout;
+    private static HashMap<Integer,Boolean> map=new HashMap<Integer,Boolean>();;
+	private LinearLayout mLocalLayout;
     private LinearLayout mServicLayout;
     private ListView mListView;
     private TitleView mTitleView;
@@ -55,6 +66,7 @@ public class ReportRecordFragment extends BaseFragment{
     private static final int LOADER_TYPE_SERVICE = 1;
     private InformationObserver mInformationObserver;
     private ThreadManager mThreadManager;
+	private CheckBox select_all;
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -63,7 +75,7 @@ public class ReportRecordFragment extends BaseFragment{
         }
         mThreadManager = ThreadManager.getInstance();
         mInformationObserver = new InformationObserver((MyApplication) getActivity().getApplication(), mThreadManager.getHandler());
-        mInformationObserver.addOnCheckMessageListener(new InformationObserver.OnCheckMessageCountListener() {
+        mInformationObserver.addOnCheckMessageListener(new OnCheckMessageCountListener() {
             @Override
             public void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs) {
                 mLocalNum.setText(String.valueOf(data.getLocalNum()));
@@ -75,12 +87,14 @@ public class ReportRecordFragment extends BaseFragment{
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         View view = inflater.inflate(R.layout.fragment_my_confirm_record, null, true);
+        
         initView(view);
         initLoader();
         return view;
     }
 
     public void initView(View view){
+    	select_all=(CheckBox)view.findViewById(R.id.select_all);
         mLocalLayout = (LinearLayout)view.findViewById(R.id.local_layout);
         mServicLayout = (LinearLayout)view.findViewById(R.id.service_layout);
         mListView = (ListView)view.findViewById(R.id.list_view);
@@ -93,6 +107,25 @@ public class ReportRecordFragment extends BaseFragment{
                 mFragmentManager.back();
             }
         });
+        mTitleView.setRightImageResource(R.drawable.delete_item);
+       select_all.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		
+		@Override
+		public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+			if(arg1==true){
+				for( int i=0;i<mLocalAdapter.getCount();i++){
+		            set(i,true);
+		            mLocalAdapter.notifyDataSetChanged();
+		         }
+			}else{
+				for( int i=0;i<mLocalAdapter.getCount();i++){
+		            set(i,false);
+		            mLocalAdapter.notifyDataSetChanged();
+		         }
+			}
+			
+		}
+	});
     }
 
     private void initLoader() {
@@ -103,7 +136,9 @@ public class ReportRecordFragment extends BaseFragment{
                 new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)},
                 LocalInformationAdapter.ORDER_BY
         ), false);
-
+        for( int i=0;i<mLocalAdapter.getCount();i++){
+            set(i,false);
+         }
         mListView.setAdapter(mLocalAdapter);
 
         getLoaderManager().initLoader(LOADER_TYPE_LOCAL, null, new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -124,7 +159,7 @@ public class ReportRecordFragment extends BaseFragment{
                 mLocalAdapter.swapCursor(null);
             }
         });
-
+       
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -136,12 +171,55 @@ public class ReportRecordFragment extends BaseFragment{
                 }
             }
         });
+       
+       mTitleView.setOnRightAreaClickListener(new OnClickListener() {
+			
+			private View view;
+			private int num;
+			
+
+			@Override
+			public void onClick(View arg0) {
+				Log.i("chentao","111111111");
+				for( int i=0;i<mLocalAdapter.getCount();i++){
+					
+					Log.i("chentao","222222222");
+				   view=	mLocalAdapter.getView(i, null,null);
+				   Log.i("chentao","33333333333:"+view);
+				  final String rowkey=(String) view.getTag(R.id.cb);
+				  Log.i("chentao","444444444444:"+rowkey);
+//				   boolean bl=(Boolean) view.getTag(R.id.type_tv);
+				 
+//						  boolean bl=mLocalAdapter.getpo(i);
+				  boolean bl=get(i);
+						   Log.i("chentao","55555555555:"+bl);
+						   
+						   if(bl==true){
+							   Log.i("chentao","6666666666666:"+bl);
+							   InformationManager.getInstance().deleteInformation(rowkey);
+						   }
+						
+			
+				 
+				}
+				
+			}
+		});
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mApplication.getContentResolver().unregisterContentObserver(mInformationObserver);
+    }
+    public static void set(Integer i,Boolean bl){
+//    	if(map==null){
+//    		map=new HashMap<Integer,Boolean>();
+//    	}
+    	map.put(i, bl);
+    }
+    public static Boolean get(Integer po){
+    	return map.get(po);
     }
 
 }

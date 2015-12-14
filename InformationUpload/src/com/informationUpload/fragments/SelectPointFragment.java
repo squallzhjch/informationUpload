@@ -6,15 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.model.LatLng;
 import com.informationUpload.R;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
-import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.SystemConfig;
 import com.informationUpload.widget.SelectPointView;
 import com.informationUpload.widget.TitleView;
-import com.tencent.mapsdk.raster.model.LatLng;
-import com.tencent.tencentmap.mapsdk.map.TencentMap.OnMapClickListener;
 
 /**
  * @author zhjch
@@ -23,7 +23,7 @@ import com.tencent.tencentmap.mapsdk.map.TencentMap.OnMapClickListener;
  * @Date 2015/12/8
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
-public class SelectPointFragment extends BaseFragment implements OnMapClickListener{
+public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapClickListener {
 
     private MapManager mMapManager;
     private SelectPointView mSelectView;
@@ -70,21 +70,27 @@ public class SelectPointFragment extends BaseFragment implements OnMapClickListe
 
     @Override
     public void onMapClick(LatLng latLng) {
-         point = new GeoPoint();
-         
-         point.setLat(latLng.getLatitude());
-         point.setLon(latLng.getLongitude());
-         mMapManager.searchAddress(point,new OnSearchAddressListener() {
-            @Override
-            public void OnSuccess(String address) {
-                mAddress = address;
-                mSelectView.setAddressText(address);
-            }
-
-            @Override
-            public void onFailure() {
-                mSelectView.setAddressText("");
-            }
-        });
+//         point = new GeoPoint();
+//
+//         point.setLat(latLng.getLatitude());
+//         point.setLon(latLng.getLongitude());
+//         mMapManager.searchAddress(point,new OnSearchAddressListener() {
+//            @Override
+//            public void OnSuccess(String address) {
+//                mAddress = address;
+//                mSelectView.setAddressText(address);
+//            }
+//
+//            @Override
+//            public void onFailure() {
+//                mSelectView.setAddressText("");
+//            }
+//        });
     }
+
+    @Override
+    public boolean onMapPoiClick(MapPoi mapPoi) {
+        return false;
+    }
+
 }

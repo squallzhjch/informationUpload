@@ -2,6 +2,7 @@ package com.informationUpload.activity;
 
 import android.app.Application;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -25,7 +26,7 @@ public class MyApplication extends Application{
 	public void onCreate() {
 		super.onCreate();
 		// 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
-//		SDKInitializer.initialize(this);
+		SDKInitializer.initialize(this);
 
         VoiceSpeechManager.getInstance().init(this);
         ThreadManager.getInstance().init(this);
