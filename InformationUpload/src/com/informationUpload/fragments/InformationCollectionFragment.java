@@ -2,7 +2,10 @@ package com.informationUpload.fragments;
 
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,123 +66,123 @@ import com.informationUpload.widget.TitleView;
 public class InformationCollectionFragment extends BaseFragment {
 
 
-    /**
-     * 点击的拍照LinearLayout中 的哪一个
-     */
-    private int i;
-    /**
-     * 压缩后的bitmap
-     */
-    private Bitmap bitmap;
-    /**
-     * 拍照参数返回值
-     */
-    private static final int TAKE_PICTURE = 0x000000;
-    /**
-     * 图片uri
-     */
-    private Uri imageUri;
+	/**
+	 * 点击的拍照LinearLayout中 的哪一个
+	 */
+	private int i;
+	/**
+	 * 压缩后的bitmap
+	 */
+	private Bitmap bitmap;
+	/**
+	 * 拍照参数返回值
+	 */
+	private static final int TAKE_PICTURE = 0x000000;
+	/**
+	 * 图片uri
+	 */
+	private Uri imageUri;
 
-    /**
-     * 存照片的list
-     */
-    private ArrayList<View> listview;
-    /**
-     * 主view
-     */
-    private View view;
-    /**
-     * 显示位置textview
-     */
-    private TextView select_position;
-    /**
-     * 点击拍照添加图片
-     */
-    private ImageView hliv;
-    /**
-     * 语音的李斯特
-     */
-    private ListView voice_collection_lv;
-    /**
-     * 添加图片横向的HorizontalScrollView
-     */
-    private HorizontalScrollView hscrollview;
-    /**
-     * 添加图片横向的LinearLayout
-     */
-    private LinearLayout hlinearlayout;
+	/**
+	 * 存照片的list
+	 */
+	private ArrayList<View> listview;
+	/**
+	 * 主view
+	 */
+	private View view;
+	/**
+	 * 显示位置textview
+	 */
+	private TextView select_position;
+	/**
+	 * 点击拍照添加图片
+	 */
+	private ImageView hliv;
+	/**
+	 * 语音的李斯特
+	 */
+	private ListView voice_collection_lv;
+	/**
+	 * 添加图片横向的HorizontalScrollView
+	 */
+	private HorizontalScrollView hscrollview;
+	/**
+	 * 添加图片横向的LinearLayout
+	 */
+	private LinearLayout hlinearlayout;
 
-    /**
-     * 补充说明的edittext
-     */
-    private EditText additional_remarks_et;
-    /**
-     * 保存到本地按钮
-     */
-    private Button savetolocal;
-    /**
-     * 录音按钮
-     */
-    private Button recordvoice;
-    /**
-     * 立刻上报
-     */
-    private Button report_at_once;
-    /**
-     * 录音探出框
-     */
-    private PoiRecordPopup mVoicePop;
-    /**
-     * 录音信息数组
-     */
-    private ArrayList<ChatMessage> mChatList;
-    /**
-     * 图片数组
-     */
-    private ArrayList<PictureMessage> mPicList;
-    /**
-     * 录音信息adapter
-     */
-    private ChatAdapter adapter;
-    /**
-     * 屏幕宽度
-     */
-    private int width;
+	/**
+	 * 补充说明的edittext
+	 */
+	private EditText additional_remarks_et;
+	/**
+	 * 保存到本地按钮
+	 */
+	private Button savetolocal;
+	/**
+	 * 录音按钮
+	 */
+	private Button recordvoice;
+	/**
+	 * 立刻上报
+	 */
+	private Button report_at_once;
+	/**
+	 * 录音探出框
+	 */
+	private PoiRecordPopup mVoicePop;
+	/**
+	 * 录音信息数组
+	 */
+	private ArrayList<ChatMessage> mChatList;
+	/**
+	 * 图片数组
+	 */
+	private ArrayList<PictureMessage> mPicList;
+	/**
+	 * 录音信息adapter
+	 */
+	private ChatAdapter adapter;
+	/**
+	 * 屏幕宽度
+	 */
+	private int width;
 
 
-    /**
-     * 该条信息的唯一标识
-     */
-    private String mRowkey;
+	/**
+	 * 该条信息的唯一标识
+	 */
+	private String mRowkey;
 
-    /**
-     * 位置坐标点
-     */
-    private GeoPoint mPoint;
-    /**
-     * 地图管理类
-     */
-    private MapManager mapManager;
-    /**
-     * 地址
-     */
-    private String mAddress;
-    /**
-     * 图片名称
-     */
-    private String picName;
-    /**
-     * 图片名称
-     */
-    private PictureMessage picMsg;
-    /**
-     * 上报类型
-     */
-    private int mType;
-    /**
-     * 图片文件
-     */
-    private File file;
+	/**
+	 * 位置坐标点
+	 */
+	private GeoPoint mPoint;
+	/**
+	 * 地图管理类
+	 */
+	private MapManager mapManager;
+	/**
+	 * 地址
+	 */
+	private String mAddress;
+	/**
+	 * 图片名称
+	 */
+	private String picName;
+	/**
+	 * 图片名称
+	 */
+	private PictureMessage picMsg;
+	/**
+	 * 上报类型
+	 */
+	private int mType;
+	/**
+	 * 图片文件
+	 */
+	private File file;
 
 
 	@Override
@@ -234,7 +237,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
-	
+
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;     // 屏幕宽度（像素）
@@ -298,53 +301,53 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private void addListeners() {
 		mVoicePop = PoiRecordPopup.getInstance();
-        mVoicePop.setViewTouch(recordvoice);
-//        mVoicePop.setMinLeng(1000);
-//        mVoicePop.setMaxLeng(1000 * 60);
-        mVoicePop.setRecordListener(new OnRecorListener() {
-            @Override
-            public void onStopSpeech(String path) {
-                synchronized (mChatList) {
-                    ChatMessage chatmsg = new ChatMessage();
-                    mChatList.add(chatmsg);
-                    chatmsg.setPath(path);
-                    chatmsg.setParentId(mRowkey);
-                    chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-                    chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-                    chatmsg.setTime(System.currentTimeMillis());
-                    adapter.setData(mChatList);
-                    adapter.notifadataset();
-                    resetListView();
-                }
-            }
-            @Override
-            public void onParseResult(String path, String result) {
-                synchronized (mChatList) {
-                    boolean his = false;
-                    for(ChatMessage message:mChatList){
-                        if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
-                            message.setRemark(result);
-                            his = true;
-                            break;
-                        }
-                    }
-                    if(!his){
-                        ChatMessage chatmsg = new ChatMessage();
-                        mChatList.add(chatmsg);
-                        chatmsg.setPath(path);
-                        chatmsg.setParentId(mRowkey);
-                        chatmsg.setRemark(result);
-                        chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-                        chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-                        chatmsg.setTime(System.currentTimeMillis());
-                        adapter.setData(mChatList);
-                        adapter.notifadataset();
-                        resetListView();
-                    }
-                    additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
-                }
-            }
-        });
+		mVoicePop.setViewTouch(recordvoice);
+		//        mVoicePop.setMinLeng(1000);
+		//        mVoicePop.setMaxLeng(1000 * 60);
+		mVoicePop.setRecordListener(new OnRecorListener() {
+			@Override
+			public void onStopSpeech(String path) {
+				synchronized (mChatList) {
+					ChatMessage chatmsg = new ChatMessage();
+					mChatList.add(chatmsg);
+					chatmsg.setPath(path);
+					chatmsg.setParentId(mRowkey);
+					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+					chatmsg.setTime(System.currentTimeMillis());
+					adapter.setData(mChatList);
+					adapter.notifadataset();
+					resetListView();
+				}
+			}
+			@Override
+			public void onParseResult(String path, String result) {
+				synchronized (mChatList) {
+					boolean his = false;
+					for(ChatMessage message:mChatList){
+						if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
+							message.setRemark(result);
+							his = true;
+							break;
+						}
+					}
+					if(!his){
+						ChatMessage chatmsg = new ChatMessage();
+						mChatList.add(chatmsg);
+						chatmsg.setPath(path);
+						chatmsg.setParentId(mRowkey);
+						chatmsg.setRemark(result);
+						chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+						chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+						chatmsg.setTime(System.currentTimeMillis());
+						adapter.setData(mChatList);
+						adapter.notifadataset();
+						resetListView();
+					}
+					additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
+				}
+			}
+		});
 
 		//选择位置点击
 		select_position.setOnClickListener(new OnClickListener() {
@@ -446,6 +449,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		picMsg.setLon(mLocationManager.getCurrentPoint().getLon());
 		picMsg.setTime(System.currentTimeMillis());
 		mPicList.add(picMsg);
+		bitmap=null;
 	}
 
 	public static boolean hasSDcard() {
@@ -462,57 +466,64 @@ public class InformationCollectionFragment extends BaseFragment {
 		case TAKE_PICTURE:
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
-			
-           
+
+
 			try {
 
-				bitmap = Bimp.revitionImageSize(file.getPath());
+				InputStream in = Bimp.revitionImageSize(file.getPath());
+				if(new File(file.getPath()).exists()){
+					new File(file.getPath()).delete();
+					
+					FileOutputStream out=new FileOutputStream(file.getPath());
+					
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch blockd
 				e.printStackTrace();
 			}
-			Drawable drawable = new BitmapDrawable(bitmap);
-      
-          
-		imageView.setImageBitmap(bitmap);
-		  
-			
+			if(bitmap!=null){
 
-			imageView.setTag(i);
-			
-			imageView.setOnClickListener(new OnClickListener() {
 
-				@Override
-				public void onClick(View arg0) {
-					int num = (Integer) arg0.getTag();
-					Bundle bundle=new Bundle();
-					bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
-					bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
-					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
+				imageView.setImageBitmap(bitmap);
 
-				}
-			});
-			
-			
-			hlinearlayout.addView(imageView, 0);
-			listview.add(imageView);
-			i++;
-			if (hscrollview.getWidth() >= width) {
-				new Handler().post(new Runnable() {
+
+
+				imageView.setTag(i);
+
+				imageView.setOnClickListener(new OnClickListener() {
 
 					@Override
-					public void run() {
-						hscrollview.scrollTo(hlinearlayout.getWidth() + 20, 0);
+					public void onClick(View arg0) {
+						int num = (Integer) arg0.getTag();
+						Bundle bundle=new Bundle();
+						bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
+						bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
+						mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PhotoViewpagerFragment.class, bundle));
 
 					}
 				});
+
+
+				hlinearlayout.addView(imageView, 0);
+				listview.add(imageView);
+				i++;
+				if (hscrollview.getWidth() >= width) {
+					new Handler().post(new Runnable() {
+
+						@Override
+						public void run() {
+							hscrollview.scrollTo(hlinearlayout.getWidth() + 20, 0);
+
+						}
+					});
+				}
+				photo();
 			}
-			photo();
 			break;
 		}
 	}
 
- 
+
 	private void  saveLocal(){
 		InformationMessage message = new InformationMessage();
 		message.setAddress(mAddress);
