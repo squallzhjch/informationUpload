@@ -63,7 +63,7 @@ public class ReportRecordFragment extends BaseFragment{
         }
         mThreadManager = ThreadManager.getInstance();
         mInformationObserver = new InformationObserver((MyApplication) getActivity().getApplication(), mThreadManager.getHandler());
-        mInformationObserver.addOnCheckMessageListener(new InformationManager.OnCheckMessageCountListener() {
+        mInformationObserver.addOnCheckMessageListener(new InformationObserver.OnCheckMessageCountListener() {
             @Override
             public void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs) {
                 mLocalNum.setText(String.valueOf(data.getLocalNum()));
