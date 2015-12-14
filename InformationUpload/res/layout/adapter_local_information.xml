@@ -12,7 +12,10 @@
         android:id="@+id/cb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true" />
+        android:layout_centerVertical="true"
+        android:focusable="false"
+        android:clickable="false"
+        android:focusableInTouchMode="false" />
 
     <TextView
         android:id="@+id/type_tv"

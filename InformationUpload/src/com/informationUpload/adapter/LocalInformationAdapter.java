@@ -98,8 +98,9 @@ public class LocalInformationAdapter extends CursorAdapter {
             }else if(type==Informations.Information.INFORMATION_TYPE_OTHER){
             	type_str="其他";
             }
+            Log.i("chentao","getViewrowkey:"+rowkey);
             if(!TextUtils.isEmpty(rowkey)) {
-            
+                
                 convertView.setTag(R.id.cb,rowkey);
                convertView.setTag(R.id.type_tv,holder.cb.isChecked());
 //               map.put(position, holder.cb.isChecked());
@@ -121,9 +122,9 @@ public class LocalInformationAdapter extends CursorAdapter {
 //						
 //						convertView.setTag(R.id.type_tv ,arg1);
 //					}else{
-						Log.i("chentao","onCheckedChanged2:"+arg1);
+					
 //						convertView.setTag(R.id.type_tv ,arg1);
-						Log.i("chentao",arg0.getTag()+":onCheckedChanged3");
+					
 						ReportRecordFragment.set((Integer) arg0.getTag(),arg1);
 //					}
 					
