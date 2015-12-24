@@ -1,10 +1,18 @@
 package com.informationUpload.activity;
 
 
+import java.util.HashMap;
+
+import com.alibaba.fastjson.JSON;
 import com.informationUpload.R;
+import com.informationUpload.serviceengin.EnginCallback;
+import com.informationUpload.serviceengin.ServiceEngin;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -43,10 +51,30 @@ public class LoginActivity extends BaseActivity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.acitivity_user_login);
+		
+		
+		
 		//初始化
 		init();
 		//注册监听器
 		addListeners();
+		HashMap<String,String> map=new HashMap<String, String>();
+		map.put("chen","tao");
+		String servicePara = JSON.toJSONString(map);
+		ServiceEngin.Request(LoginActivity.this,"","", servicePara,new EnginCallback(LoginActivity.this){
+			@Override
+			public void onSuccess(ResponseInfo arg0) {
+				// TODO Auto-generated method stub
+				super.onSuccess(arg0);
+				Log.e("请求成功",arg0.result.toString());
+			}
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				// TODO Auto-generated method stub
+				super.onFailure(arg0, arg1);
+				Log.e("请求失败",arg0+"");
+			}
+		});
 	}
 	//初始化
 	private void init() {

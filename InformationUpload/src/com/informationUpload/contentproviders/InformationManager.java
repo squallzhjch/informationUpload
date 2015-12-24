@@ -75,6 +75,42 @@ public class InformationManager {
     private InformationManager() {
         mThreadManager = ThreadManager.getInstance();
     }
+    public void updateInformation(final String rowkey, final ContentValues values) {
+        if (TextUtils.isEmpty(rowkey) || values == null)
+            return;
+        mThreadManager.getHandler().post(
+                new ThreadManager.OnDatabaseOperationRunnable<Boolean>() {
+                    private boolean result;
+
+					@Override
+                    public Boolean doInBackground() {
+                         result=false;
+                        ContentResolver contentResolver = mContext.getContentResolver();
+                        int index ;
+                        try {
+                            index = contentResolver.update(Informations.Information.CONTENT_URI, values,WHERE_ROWKEY, new String[]{rowkey});
+                            if(index>0){
+                            	result=true;
+                            }
+                        } catch (Exception e) {
+                          result=false;
+                        } 
+
+         
+                        return result;
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean value) {
+                        if (value) {
+                            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(mContext, "更新失败", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+    }
 
     public void saveInformation(final String userId, final InformationMessage message) {
         if (TextUtils.isEmpty(userId) || message == null)

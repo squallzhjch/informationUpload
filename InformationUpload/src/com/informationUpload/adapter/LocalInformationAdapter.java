@@ -102,13 +102,12 @@ public class LocalInformationAdapter extends CursorAdapter {
             } else if (type == Informations.Information.INFORMATION_TYPE_OTHER) {
                 type_str = "其他";
             }
-            Log.i("chentao", "getViewrowkey:" + rowkey);
+          
             if (!TextUtils.isEmpty(rowkey)) {
 
                 convertView.setTag(R.id.cb, rowkey);
                 convertView.setTag(R.id.type_tv, holder.cb.isChecked());
-//               map.put(position, holder.cb.isChecked());
-//               ReportRecordFragment.set(position,holder.cb.isChecked());
+
             }
             if (ReportRecordFragment.get(position) == true) {
                 holder.cb.setChecked(true);
@@ -121,16 +120,10 @@ public class LocalInformationAdapter extends CursorAdapter {
 
                 @Override
                 public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-//					if(arg1==true){
-//						Log.i("chentao","onCheckedChanged1:"+arg1);
-//						
-//						convertView.setTag(R.id.type_tv ,arg1);
-//					}else{
 
-//						convertView.setTag(R.id.type_tv ,arg1);
 
                     ReportRecordFragment.set((Integer) arg0.getTag(), arg1);
-//					}
+
 
 
                 }

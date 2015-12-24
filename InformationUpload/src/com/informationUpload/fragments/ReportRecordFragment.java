@@ -3,6 +3,7 @@ package com.informationUpload.fragments;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -67,6 +68,9 @@ public class ReportRecordFragment extends BaseFragment{
 	private InformationObserver mInformationObserver;
 	private ThreadManager mThreadManager;
 	private CheckBox select_all;
+	private TextView mSubmit;
+	private Boolean bsubmit=true;
+	private LocalInformationAdapter mServiceAdapter;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -92,11 +96,71 @@ public class ReportRecordFragment extends BaseFragment{
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		View view = inflater.inflate(R.layout.fragment_my_confirm_record, null, true);
-
+        //初始化
 		initView(view);
 		initLoader();
+		//注册监听器
+		addListeners();
 		return view;
 	}
+    //注册监听器
+	private void addListeners() {
+		//提交
+		mSubmit.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				if(bsubmit){
+					for(int i=0;i<mLocalAdapter.getCount();i++){
+						Boolean bool = map.get(i);
+						if(bool){
+							View view = mLocalAdapter.getView(i, null,null);
+
+							final String rowkey=(String) view.getTag(R.id.cb);
+
+						
+                            ContentValues values=new ContentValues();
+                            values.put(Informations.Information.STATUS,Informations.Information.STATUS_SERVER);
+							InformationManager.getInstance().updateInformation(rowkey, values);
+							
+
+						}
+					}
+					
+				}else{
+					Toast.makeText(getActivity(),"此项是已提交数据，请勿重复提交，谢谢！",Toast.LENGTH_LONG).show();
+				}
+				
+			}
+		});
+		//待提交
+		mLocalLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				bsubmit=true;
+				
+				mListView.setAdapter(mLocalAdapter);
+				
+			}
+		});
+		//已提交
+		mServicLayout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+		      	
+		         bsubmit=false;
+		        
+		         mListView.setAdapter(mServiceAdapter);
+				
+			}
+		});
+		
+	
+	}
+
 
 	public void initView(View view){
 		select_all=(CheckBox)view.findViewById(R.id.select_all);
@@ -105,7 +169,8 @@ public class ReportRecordFragment extends BaseFragment{
 		mListView = (ListView)view.findViewById(R.id.list_view);
 		mTitleView = (TitleView)view.findViewById(R.id.title_view);
 		mLocalNum = (TextView)view.findViewById(R.id.local_num);
-		mUploadNum = (TextView)view.findViewById(R.id.upload_num);
+		mUploadNum = (TextView)view.findViewById(R.id.upload_num); 
+		mSubmit   = (TextView)view.findViewById(R.id.submit);
 		mTitleView.setOnLeftAreaClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -141,6 +206,14 @@ public class ReportRecordFragment extends BaseFragment{
 				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)},
 				LocalInformationAdapter.ORDER_BY
 				), false);
+		
+		mServiceAdapter = new LocalInformationAdapter(mApplication, getActivity().managedQuery(
+				Informations.Information.CONTENT_URI,
+				LocalInformationAdapter.KEY_MAPPING,
+				LocalInformationAdapter.WHERE,
+				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)},
+				LocalInformationAdapter.ORDER_BY
+				), false);
 		for( int i=0;i<mLocalAdapter.getCount();i++){
 			set(i,false);
 		}
@@ -162,6 +235,24 @@ public class ReportRecordFragment extends BaseFragment{
 			@Override
 			public void onLoaderReset(Loader<Cursor> loader) {
 				mLocalAdapter.swapCursor(null);
+			}
+		});
+		getLoaderManager().initLoader(LOADER_TYPE_SERVICE, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+			@Override
+			public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+				return new CursorLoader(mApplication, Informations.Information.CONTENT_URI,
+						mLocalAdapter.KEY_MAPPING, mLocalAdapter.WHERE,
+						new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)}, LocalInformationAdapter.ORDER_BY);
+			}
+
+			@Override
+			public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+				mServiceAdapter.swapCursor(cursor);
+			}
+
+			@Override
+			public void onLoaderReset(Loader<Cursor> loader) {
+				mServiceAdapter.swapCursor(null);
 			}
 		});
 

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@android:color/white">
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_height="50dp"
+    android:layout_gravity="center_vertical"
+    android:gravity="center_vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:textColor="@drawable/default_font_color_xml"
+        android:text="已下载城市 " />
+
+    <TextView
+        android:id="@+id/update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sdfsdf"
+        android:layout_marginLeft="10dp"
+        android:textColor="#FF0000" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="right" >
+            
+       <TextView
+        android:id="@+id/ratio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/holo_red_light"
+        android:text="dsfsd" />
+    
+      <ImageView
+        android:id="@+id/suspend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/offmap_expendbtn_xml"/>
+      
+      </LinearLayout>
+
+    <Button
+        android:id="@+id/display"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="查看" 
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/remove"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="删除" 
+        android:visibility="gone"/>
+</LinearLayout>
+
+ <ProgressBar   
+        android:id="@+id/pb"   
+        android:layout_width="fill_parent"   
+        android:layout_height="6dp"   
+        android:visibility="visible"  
+        android:layout_margin="5dp" 
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_alignParentBottom="true" >  
+    </ProgressBar>   
+
+</LinearLayout>

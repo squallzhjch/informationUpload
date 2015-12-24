@@ -2,6 +2,7 @@ package com.informationUpload.fragments;
 
 import java.io.File;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.informationUpload.R;
+import com.informationUpload.activity.OffLineMapActivity;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.utils.FileUtils;
 
@@ -115,7 +117,7 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				getActivity().startActivity(new Intent(getActivity(),OffLineMapActivity.class));
 
 			}
 		});
