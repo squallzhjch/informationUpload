@@ -2,6 +2,7 @@ package com.informationUpload.serviceengin;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.UUID;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,7 +45,7 @@ public class ServiceEngin {
 	// url="http://10.8.51.59:9090/ncihmobileservice/ServiceEngin.do";
 	private static String RESULT;
 
-    private static String URL="http://220.181.111.188:80";
+    private static String URL="http://172.23.44.11:8081/fos/information/inforegist/";
 	/**
 	 * 异步请求方法,请自行在callback中处理返回结果(callbackde success中自行解析result)
 	 * 
@@ -65,8 +66,9 @@ public class ServiceEngin {
 		
 			// 参数拼接
 			RequestParams params = new RequestParams();
-			params.addBodyParameter("keyVer", "v1");
-			params.addBodyParameter("appID", "1");
+			params.addBodyParameter("uuid",UUID.randomUUID().toString().replace("-",""));
+			params.addBodyParameter("tel","18611062750");
+			params.addBodyParameter("pwd", "111111");
 			EnginBean eb = new EnginBean();
 			eb.setBizId(bizId);
 			String deviceId = ((TelephonyManager) context
@@ -84,7 +86,7 @@ public class ServiceEngin {
 				e1.printStackTrace();
 				RESULT = "请求加密失败";
 			}
-			params.addBodyParameter("para", para);
+//			params.addBodyParameter("para", para);
 			// 请求超时
 			httputil.configTimeout(1000 * 60);
 			httputil.configSoTimeout(1000 * 60);

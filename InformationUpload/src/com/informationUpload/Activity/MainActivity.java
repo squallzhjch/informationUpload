@@ -7,7 +7,7 @@ import android.view.View.OnClickListener;
 
 import com.baidu.mapapi.map.MapView;
 import com.informationUpload.fragments.MainFragment;
-import com.informationUpload.fragments.ResetPasswordFragment;
+//import com.informationUpload.fragments.ResetPasswordFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 
@@ -77,8 +77,8 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.submit_btn: {
-                myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(ResetPasswordFragment.class, null));
+            case R.id.discovery_situation: {
+//                myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(ResetPasswordFragment.class, null));
                 break;
             }
         }

@@ -5,22 +5,109 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/person_center_bg"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/center_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/person_head" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/discovery_situation"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/main_refresh"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/discovery_situation"
+            android:gravity="center" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/main_refresh" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_fix_position"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/discovery_situation"
+            android:gravity="center" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/main_fix_position" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/discovery_situation"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical" >
+
+        <RelativeLayout
+            android:id="@+id/main_enlarge_map"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/discovery_situation"
+            android:gravity="center" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/main_enlarge_map" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/main_reduce_map"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/discovery_situation"
+            android:gravity="center" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:background="@drawable/main_reduce_map" />
+        </RelativeLayout>
+    </LinearLayout>
+
     <Button
-        android:id="@+id/center_btn"
-        android:background="@drawable/shade_wight_bg_gray_frame_4_radius"
-        android:layout_centerHorizontal="true"
-        android:layout_width="200dp"
+        android:id="@+id/discovery_situation"
+        android:layout_width="275dp"
         android:layout_height="50dp"
-        android:layout_marginTop="30dp"
-        android:text="个人中心"/>
-    <Button
-        android:id="@+id/submit_btn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:text="上报"
-        android:background="@drawable/shade_wight_bg_gray_frame_4_radius"
-        android:layout_width="250dp"
-        android:layout_height="50dp" />
+        android:background="@drawable/discovery_situation"
+        android:text="发现情况"
+        android:textColor="@color/discovery_situation_bt_color" />
 
 </RelativeLayout>

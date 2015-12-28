@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 
@@ -25,7 +26,13 @@ import com.informationUpload.utils.SystemConfig;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class MainFragment extends BaseFragment {
-    private Button mSubmitBtn;
+	/**
+	 * 发现情况按钮
+	 */
+    private Button mDiscoverySituationBtn;
+    /**
+     * 个人中心按钮
+     */
     private Button mCenterBtn;
     /**
      * popwindow弹出的view
@@ -55,6 +62,22 @@ public class MainFragment extends BaseFragment {
      * popview周边改变按钮
      */
     private View mChangeNearButton;
+    /**
+     * 刷新地图码点按钮
+     */
+	private RelativeLayout main_refresh;
+	/**
+	 * 重新定位按钮
+	 */
+	private RelativeLayout main_fix_position;
+	/**
+	 * 对地图放大按钮
+	 */
+	private View main_enlarge_map;
+	/**
+	 * 对地图缩小按钮
+	 */
+	private RelativeLayout main_reduce_map;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
         view = inflater.inflate(R.layout.fragment_main, null, true);
@@ -66,9 +89,9 @@ public class MainFragment extends BaseFragment {
         popview.setFocusable(true);//这个和下面的这个命令必须要设置了，才能监听back事件。
         popview.setFocusableInTouchMode(true);
         popview.setOnKeyListener(backlistener);
-        mSubmitBtn = (Button) view.findViewById(R.id.submit_btn);
-
-        mSubmitBtn.setOnClickListener(new OnClickListener() {
+        mDiscoverySituationBtn = (Button) view.findViewById(R.id.discovery_situation);
+        //发现情况按钮
+        mDiscoverySituationBtn.setOnClickListener(new OnClickListener() {
 
 
             @Override
@@ -78,7 +101,7 @@ public class MainFragment extends BaseFragment {
 
             }
         });
-
+      //个人中心按钮
         mCenterBtn = (Button) view.findViewById(R.id.center_btn);
         mCenterBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -86,7 +109,46 @@ public class MainFragment extends BaseFragment {
                 mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(UserCenterFragment.class, null));
             }
         });
-
+        //刷新地图麻点按钮
+        main_refresh=(RelativeLayout)view.findViewById(R.id.main_refresh);
+        main_refresh.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        //重新定位按钮
+        main_fix_position=(RelativeLayout)view.findViewById(R.id.main_fix_position);
+        main_fix_position.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        //对地图放大按钮
+        main_enlarge_map=(RelativeLayout)view.findViewById(R.id.main_enlarge_map);
+        main_enlarge_map.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+        //对地图缩小按钮
+        main_reduce_map=(RelativeLayout)view.findViewById(R.id.main_reduce_map);
+        main_reduce_map.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
         return view;
     }
 
@@ -156,7 +218,7 @@ public class MainFragment extends BaseFragment {
 
     //打开popwindow
     protected void showPopview() {
-        popupWindow = new PopupWindow(popview, 400, 400);
+        popupWindow = new PopupWindow(popview, 700,700);
         //设置popwindow显示位置
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
         //获取popwindow焦点

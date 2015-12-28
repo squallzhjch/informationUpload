@@ -1,54 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="6dp" >
-
-    
+    android:orientation="vertical" >
 
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="5dp" >
-
-        <ImageView
-            android:id="@+id/iv_userhead"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-
-            android:background="@drawable/icon_fm_del_disable"
-             />
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical" >
 
         <TextView
             android:id="@+id/tv_chatcontent"
             style="@style/chat_content_date_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/iv_userhead"
-            android:background="@drawable/chatfrom_bg" 
-           />
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/chatfrom_bg" />
 
         <TextView
             android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="1dp"
             android:layout_toRightOf="@id/tv_chatcontent"
             android:clickable="true"
             android:focusable="true"
             android:gravity="left|center"
             android:lineSpacingExtra="2dp"
-            android:minHeight="50dp"
-            android:textColor="#ff000000"
-            android:textSize="15sp"
             android:text="444444444444"
-             />
+            android:textColor="#ff000000"
+            android:textSize="12sp" />
 
-        
+        <ImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/delete_record_selecter" />
     </RelativeLayout>
 
 </LinearLayout>

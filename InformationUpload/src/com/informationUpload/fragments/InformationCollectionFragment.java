@@ -11,10 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import com.informationUpload.R;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,11 +30,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import android.app.Activity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
 
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,6 +44,8 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.Switch;
 
 
 import android.widget.ListView;
@@ -44,6 +53,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.adapter.ChatAdapter;
+import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -186,6 +196,26 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 从数据库取出的科大讯飞转译字符串
 	 */
 	private String remark="";
+	/**
+	 * 返回按钮
+	 */
+	private TextView title_back;
+	/**
+	 * 头部标题
+	 */
+	private TextView mInformationCollectTitle;
+	/**
+	 * 标题图片
+	 */
+	private Drawable draw_title;
+	/**
+	 * 删除照片按钮
+	 */
+	private TextView delete_photo;
+	/**
+	 * 重新选点按钮
+	 */
+	private TextView select_position_again;
 
 
 	@Override
@@ -225,11 +255,11 @@ public class InformationCollectionFragment extends BaseFragment {
 					mPoint = null;
 				}else{
 					mChatList=(ArrayList<ChatMessage>) message.getChatMessageList();
-					
+
 					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();
 					Log.i("chentao","PicList:"+mPicList.size());
-					 remark = message.getRemark();
-					
+					remark = message.getRemark();
+
 					mType = message.getType();
 					mRowkey =message.getRowkey();
 				} 
@@ -250,30 +280,43 @@ public class InformationCollectionFragment extends BaseFragment {
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;     // 屏幕宽度（像素）
-		TitleView title = (TitleView) view.findViewById(R.id.title_view);
-		title.setOnLeftAreaClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFragmentManager.back();
-			}
-		});
+
+
 		//初始化
 		init();
+		switch(mType){
+		case Informations.Information.INFORMATION_TYPE_BUS:
+			draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
+			draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_ROAD:
+			draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_AROUND:
+			draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
+			break;
+		}
+		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
+				null,null,null);
 
 		mapManager=MapManager.getInstance();
 		if(mPoint == null){
 			mPoint = mLocationManager.getCurrentPoint();
 		}
+		Log.i("chentao",""+mPoint.getLat());
 		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 
 			@Override
 			public void onFailure() {
-				// TODO Auto-generated method stub
+				Log.i("chentao",":onFailure");
 			}
 
 			@Override
 			public void OnSuccess(String address) {
 				mAddress = address;
+				Log.i("chentao",":"+mAddress);
 				select_position.setText(address);
 
 			}
@@ -288,8 +331,11 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private void init() {
 		listview = new ArrayList<View>();
-	
+		title_back = (TextView) view.findViewById(R.id.information_collect_back);
+		delete_photo=(TextView)view.findViewById(R.id.delete_photo);
+		select_position_again=(TextView)view.findViewById(R.id.select_position_again);
 		
+		mInformationCollectTitle= (TextView)view.findViewById(R.id.information_collect_title);
 		select_position = (TextView) view.findViewById(R.id.select_position);
 		hliv = (ImageView) view.findViewById(R.id.hliv);
 		voice_collection_lv = (ListView) view.findViewById(R.id.voice_collection_lv);
@@ -305,7 +351,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		resetListView();
 		voice_collection_lv.setAdapter(adapter);
 		select_position.setText(mAddress);
-		
+
 		for(int i=0;i<mPicList.size();i++){
 			ImageView imageView = new ImageView(getActivity());
 			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
@@ -329,7 +375,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			hlinearlayout.addView(imageView, 0);
 			listview.add(imageView);
-			
+
 			if (hscrollview.getWidth() >= width) {
 				new Handler().post(new Runnable() {
 
@@ -352,12 +398,29 @@ public class InformationCollectionFragment extends BaseFragment {
 		//        mVoicePop.setMinLeng(1000);
 		//        mVoicePop.setMaxLeng(1000 * 60);
 		mVoicePop.setRecordListener(new OnRecorListener() {
+			MediaPlayer md;
 			@Override
 			public void onStopSpeech(String path) {
+		
 				synchronized (mChatList) {
+					
+					try {
+						 md = new MediaPlayer();
+						md.reset();
+						md.setDataSource(path);
+						md.prepare();
+					} catch (Exception e) {
+						e.printStackTrace();
+					
+					}
+					long timeLong = md.getDuration();
+					
+					md.release();
+				    
 					ChatMessage chatmsg = new ChatMessage();
 					mChatList.add(chatmsg);
 					chatmsg.setPath(path);
+					chatmsg.setChattimelong(timeLong);
 					chatmsg.setParentId(mRowkey);
 					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
 					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
@@ -370,6 +433,19 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onParseResult(String path, String result) {
 				synchronized (mChatList) {
+					try {
+						 md = new MediaPlayer();
+						md.reset();
+						md.setDataSource(path);
+						md.prepare();
+					} catch (Exception e) {
+						e.printStackTrace();
+					
+					}
+					long timeLong = md.getDuration();
+					md.release();
+					if(timeLong>=1000&&timeLong<=6000){
+				   long longti=  (timeLong/1000);
 					boolean his = false;
 					for(ChatMessage message:mChatList){
 						if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
@@ -381,24 +457,44 @@ public class InformationCollectionFragment extends BaseFragment {
 					if(!his){
 						ChatMessage chatmsg = new ChatMessage();
 						mChatList.add(chatmsg);
-						
+
 						chatmsg.setPath(path);
 						chatmsg.setParentId(mRowkey);
 						chatmsg.setRemark(result);
 						chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
 						chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
 						chatmsg.setTime(System.currentTimeMillis());
+						chatmsg.setChattimelong(longti);
 						adapter.setData(mChatList);
 						adapter.notifadataset();
 						resetListView();
 					}
 					additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
+					}else if(timeLong<1000){
+						Log.i("chentao","录音时间过短");
+						Toast.makeText(getActivity(),"录音时间过短", Toast.LENGTH_SHORT).show();
+						if(new File(path).exists()){
+							new File(path).delete();
+						}
+					}else if(timeLong>6000){
+						Log.i("chentao","录音时间过长");
+						Toast.makeText(getActivity(),"录音时间过长", Toast.LENGTH_SHORT).show();
+						if(new File(path).exists()){
+							new File(path).delete();
+						}
+					}
 				}
 			}
 		});
-
+		//返回按钮
+		title_back.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mFragmentManager.back();
+			}
+		});
 		//选择位置点击
-		select_position.setOnClickListener(new OnClickListener() {
+		select_position_again.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -428,6 +524,14 @@ public class InformationCollectionFragment extends BaseFragment {
 
 		//立刻上报
 		report_at_once.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		delete_photo.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -638,4 +742,5 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 		return byt;
 	}
+	
 }

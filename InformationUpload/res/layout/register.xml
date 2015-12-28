@@ -2,35 +2,76 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white" >
+    android:background="@color/background_color" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/register_back"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/back_selecter"
-            android:gravity="center_vertical"
-            android:text="返回" />
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingTop="13dp" >
+
+            <TextView
+                android:id="@+id/register_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/all_back" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="注册"
+                android:textColor="@color/title_text_color" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="13dp"
+                android:background="@color/login_item_color" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp" >
+            android:layout_marginTop="10dp"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:background="@color/login_item_color" />
 
             <EditText
                 android:id="@+id/register_telephonenum_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:background="@null"
-                android:hint="手机号码" />
+                android:hint="手机号码"
+                android:textColor="@color/login_item_color" />
 
-            <include layout="@layout/division_line" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/horizontal_line_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,36 +80,46 @@
                 android:orientation="horizontal" >
 
                 <EditText
-                    android:id="@+id/register_identifying_code_et"
+                    android:id="@+id/register_password"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:background="@null"
-                    android:hint="验证码" />
+                    android:hint="输入密码"
+                     android:inputType="textPassword"
+                    android:textColor="@color/login_item_color" />
 
-                <View
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:layout_margin="2dp"
-                    android:background="@android:color/darker_gray" />
 
-                <TextView
-                    android:id="@+id/register_get_identifying_code_tv"
+                <CheckBox
+                    android:id="@+id/change_state_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="获取验证码" />
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:button="@drawable/password_change_state_selector" />
             </LinearLayout>
 
-            <include layout="@layout/division_line" />
-
-            <TextView
-                android:id="@+id/register_tv"
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/reset_password_btn_bg"
-                android:gravity="center"
-                android:text="注册" />
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/login_item_color" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/register_tv"
+           android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/login_register_bt_selector"
+            android:gravity="center"
+            android:text="注册"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </RelativeLayout>

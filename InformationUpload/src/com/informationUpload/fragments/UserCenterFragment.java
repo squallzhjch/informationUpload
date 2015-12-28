@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -58,6 +59,10 @@ public class UserCenterFragment extends BaseFragment{
 	 * 关于
 	 */
 	private RelativeLayout mAboutLayout;
+	/**
+	 * 个人资料
+	 */
+	private ImageView mPersonData;
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
@@ -74,6 +79,7 @@ public class UserCenterFragment extends BaseFragment{
 	 * 初始化
 	 */
 	private void init() {
+		mPersonData = (ImageView) view.findViewById(R.id.iv_head);
 		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
 		mMyRecordLayout = (RelativeLayout) view.findViewById(R.id.my_record);
 
@@ -96,6 +102,15 @@ public class UserCenterFragment extends BaseFragment{
 	 * 注册监听器
 	 */
 	private void addListeners() {
+		//个人资料
+		mPersonData.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+				
+			}
+		});
 		//上报记录
 		mRecordLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -142,7 +157,7 @@ public class UserCenterFragment extends BaseFragment{
 					e.printStackTrace();
 					Toast.makeText(getActivity(),"删除失败",Toast.LENGTH_SHORT).show();
 				}
-				
+
 				Toast.makeText(getActivity(),"清除缓存成功！",Toast.LENGTH_SHORT).show();
 			}
 		});
@@ -157,11 +172,11 @@ public class UserCenterFragment extends BaseFragment{
 		});
 		// 关于
 		mAboutLayout.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 

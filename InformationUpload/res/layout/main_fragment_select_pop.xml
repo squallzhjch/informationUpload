@@ -2,8 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/select_pop"
+    android:background="@android:color/white"
+    android:gravity="center"
     android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingTop="13dp" >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="上报"
+            android:textColor="@color/select_pop_title_color" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/title"
+            android:layout_marginTop="13dp"
+            android:background="@color/select_pop_horizontal_line_color" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,35 +38,33 @@
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
-            <Button
-                android:id="@+id/bus_button" 
+            android:layout_weight="2"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/bus_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:drawableTop="@drawable/bus_button_selector"
                 android:text="公交"
-                android:textColor="@android:color/white"/>
-            
+                android:textColor="@android:color/white" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
-            
-            <Button
+            android:layout_weight="2"
+            android:gravity="center" >
+
+            <TextView
                 android:id="@+id/establishment_button"
-                 android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:drawableTop="@drawable/establishment_button_selector"
                 android:text="设施"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -50,40 +72,39 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+       >
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
-            
-            <Button
-                android:id="@+id/road_button" 
+            android:layout_weight="2"
+            android:gravity="center" >
+
+            <TextView
+                android:id="@+id/road_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:drawableTop="@drawable/road_button_selector"
                 android:text="道路"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" >
-            
-            <Button
+            android:layout_weight="2"
+            android:gravity="center" >
+
+            <TextView
                 android:id="@+id/change_near_button"
-                 android:layout_width="wrap_content"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_selector"
                 android:layout_centerInParent="true"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:drawableTop="@drawable/change_near_button_selector"
                 android:text="周边变化"
-                android:textColor="@android:color/white"/>
+                android:textColor="@android:color/white" />
         </RelativeLayout>
     </LinearLayout>
 

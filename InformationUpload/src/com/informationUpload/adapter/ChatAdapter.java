@@ -18,8 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,9 +89,18 @@ public class ChatAdapter extends BaseAdapter {
 		}else{
 		     vh=(ViewHolder) Convertview.getTag();
 		}
+		int longti= (int) (getItem(position).getChattimelong());
+		LayoutParams lp;
+		if(longti<2){
+			 lp = new LayoutParams(longti*30,50);  
+		}else{
+			 lp = new LayoutParams(longti*16,50);  
+		}
+ 	
 		
 		vh.tv_chatcontent.setText("");
-		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
+		vh.tv_chatcontent.setLayoutParams(lp);
+//		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
 		vh.tv_time.setText(getItem(position).getChattimelong()+"");
 		
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {

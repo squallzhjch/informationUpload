@@ -39,5 +39,20 @@ public class SystemConfig {
     public static String BUNDLE_DATA_GEOPOINT="bundle_data_geopoint";
 
     public static String BUNDLE_DATA_TYPE="bundle_data_type";
-
+    
+    
+    /**
+     *解压过程中的消息
+     */
+    public static final int MSG_TASK_GET_DATA_UNZIP_START = 3120;
+    public static final int MSG_TASK_GET_DATA_UNZIP_FAILED = 3121;
+    public static final int MSG_TASK_GET_DATA_UNZIPPING = 3122;
+    public static final int MSG_TASK_GET_DATA_UNZIP_SUCCESS = 3137;// 解压成功
+    public static final int MSG_TASK_GET_DATA_FAILED = 3111;
+    
+    
+ // 最大的进度
+ 	public static final String MAX_SIZE = "maxSize";
+ // 进度变化的常量
+ 	public static final String CHANGE_SIZE = "changeSize";
 }

@@ -82,7 +82,7 @@ public class PoiRecordPopup {
         pop.setContentView(view);
         pop.update();
 
-        voice_rcd_hint_rcding = view.findViewById(R.id.voice_rcd_hint_rcding);
+//        voice_rcd_hint_rcding = view.findViewById(R.id.voice_rcd_hint_rcding);
         volume = (ImageView) view.findViewById(R.id.volume);
 
         voiceManager = VoiceSpeechManager.getInstance();
