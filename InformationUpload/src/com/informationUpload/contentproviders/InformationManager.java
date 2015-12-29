@@ -122,9 +122,7 @@ public class InformationManager {
                         boolean result = true;
                         ContentValues values = new ContentValues();
                         String rowkey = message.getRowkey();
-                        if (TextUtils.isEmpty(rowkey)) {
-                            rowkey = UUID.randomUUID().toString().replaceAll("-", "");
-                        }
+                        
                         values.put(Informations.Information.ROWKEY, rowkey);
                         values.put(Informations.Information.USER_ID, userId);
 

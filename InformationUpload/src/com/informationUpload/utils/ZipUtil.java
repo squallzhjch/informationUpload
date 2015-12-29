@@ -24,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.JsonToken;
@@ -106,6 +107,16 @@ public class ZipUtil {
 				int bytes_read;
 				in = new FileInputStream(fileOrDirectory);
 				// 实例代表一个条目内的ZIP归档
+				Log.i("chentao", "jpgb:"+fileOrDirectory.getName().contains(".jpg"));
+				Log.i("chentao", "jpg:"+fileOrDirectory.getName());
+				if(fileOrDirectory.getName().contains(".wav")){
+					
+					curPath="audio/";
+					Log.i("chentao","1:"+curPath);
+				}else if(fileOrDirectory.getName().contains(".jpg")){
+					curPath="photo/";
+					Log.i("chentao","2:"+curPath);
+				}
 				ZipEntry entry = new ZipEntry(curPath
 						+ fileOrDirectory.getName());
 				// 条目的信息写入底层流

@@ -3,21 +3,30 @@ package com.informationUpload.fragments;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-
-
-
+import java.util.UUID;
+import com.alibaba.fastjson.JSON;
 import com.informationUpload.R;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -28,49 +37,78 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
 import android.app.Activity;
-import android.view.Gravity;
+import android.app.ProgressDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AnimationUtils;
-
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.Switch;
-
-
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.informationUpload.adapter.ChatAdapter;
+import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
+import com.informationUpload.entity.attachmentsMessage;
+import com.informationUpload.entity.locationMessage;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
 import com.informationUpload.utils.SystemConfig;
-import com.informationUpload.widget.TitleView;
+/**
+ * @author chentao
+ * @version V1.0
+ * @ClassName: InformationCollectionFragment
+ * @Date 2015/12/3
+ * @Description: ${TODO}(用一句话描述该文件做什么)
+ */
 
 
 public class InformationCollectionFragment extends BaseFragment {
-
+	/**
+	 * 上传文件全名
+	 */
+	private String path_all_name;
+	/**
+	 * 附件list
+	 */
+	private ArrayList<attachmentsMessage> list_att;
+	/**
+	 * 上传超时
+	 */
+	private static final int TIME_OUT = 10 * 10000000; 
+	/**
+	 *  设置编码
+	 */
+	private static final String CHARSET = "utf-8"; 
+	/**
+	 * 成功码
+	 */
+	public static final String SUCCESS = "1";
+	/**
+	 * 失败码
+	 */
+	public static final String FAILURE = "0";
+	/**
+	 * 上传时候的进度条
+	 */
+	private ProgressDialog pb;
 	/**
 	 * 返回的字节数组
 	 */
@@ -157,13 +195,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 屏幕宽度
 	 */
 	private int width;
-
-
 	/**
 	 * 该条信息的唯一标识
 	 */
 	private String mRowkey;
-
 	/**
 	 * 位置坐标点
 	 */
@@ -216,7 +251,53 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 重新选点按钮
 	 */
 	private TextView select_position_again;
+	/**
+	 * 写入文件的json串
+	 */
+	private String servicePara;
+	/**
+	 * 文档保存的文件路径
+	 */
+	private String 	path = Environment
+			.getExternalStorageDirectory()+"/InformationUpload/Upload/";
+	/**
+	 * 图片保存路径
+	 */
+	private String path_pic=Environment
+			.getExternalStorageDirectory()+"/InformationUpload/Picture/";
+	/**
+	 * 语音保存路径
+	 */
+	private String path_chat=Environment
+			.getExternalStorageDirectory()+"/InformationUpload/Chat/";
+	/**
+	 * 时间格式刷
+	 */
+	private SimpleDateFormat df;
+	Handler handler=new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case 0:
 
+
+				new Thread(new Runnable() {
+
+					@Override
+					public void run() {
+						String b = uploadFile(new File(path_all_name));
+						Log.i("chentao","uploadFile:"+b);
+
+					}
+				}).start();
+				break;
+
+			case 1:
+			
+				Log.i("chentao","uploadFile:"+"压缩失败");
+				break;
+			}
+		}
+	};
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -277,6 +358,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
 
+		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;     // 屏幕宽度（像素）
@@ -334,7 +416,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		title_back = (TextView) view.findViewById(R.id.information_collect_back);
 		delete_photo=(TextView)view.findViewById(R.id.delete_photo);
 		select_position_again=(TextView)view.findViewById(R.id.select_position_again);
-		
+
 		mInformationCollectTitle= (TextView)view.findViewById(R.id.information_collect_title);
 		select_position = (TextView) view.findViewById(R.id.select_position);
 		hliv = (ImageView) view.findViewById(R.id.hliv);
@@ -401,22 +483,22 @@ public class InformationCollectionFragment extends BaseFragment {
 			MediaPlayer md;
 			@Override
 			public void onStopSpeech(String path) {
-		
+
 				synchronized (mChatList) {
-					
+
 					try {
-						 md = new MediaPlayer();
+						md = new MediaPlayer();
 						md.reset();
 						md.setDataSource(path);
 						md.prepare();
 					} catch (Exception e) {
 						e.printStackTrace();
-					
+
 					}
 					long timeLong = md.getDuration();
-					
+
 					md.release();
-				    
+
 					ChatMessage chatmsg = new ChatMessage();
 					mChatList.add(chatmsg);
 					chatmsg.setPath(path);
@@ -434,42 +516,42 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onParseResult(String path, String result) {
 				synchronized (mChatList) {
 					try {
-						 md = new MediaPlayer();
+						md = new MediaPlayer();
 						md.reset();
 						md.setDataSource(path);
 						md.prepare();
 					} catch (Exception e) {
 						e.printStackTrace();
-					
+
 					}
 					long timeLong = md.getDuration();
 					md.release();
 					if(timeLong>=1000&&timeLong<=6000){
-				   long longti=  (timeLong/1000);
-					boolean his = false;
-					for(ChatMessage message:mChatList){
-						if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
-							message.setRemark(result);
-							his = true;
-							break;
+						long longti=  (timeLong/1000);
+						boolean his = false;
+						for(ChatMessage message:mChatList){
+							if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
+								message.setRemark(result);
+								his = true;
+								break;
+							}
 						}
-					}
-					if(!his){
-						ChatMessage chatmsg = new ChatMessage();
-						mChatList.add(chatmsg);
+						if(!his){
+							ChatMessage chatmsg = new ChatMessage();
+							mChatList.add(chatmsg);
 
-						chatmsg.setPath(path);
-						chatmsg.setParentId(mRowkey);
-						chatmsg.setRemark(result);
-						chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-						chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-						chatmsg.setTime(System.currentTimeMillis());
-						chatmsg.setChattimelong(longti);
-						adapter.setData(mChatList);
-						adapter.notifadataset();
-						resetListView();
-					}
-					additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
+							chatmsg.setPath(path);
+							chatmsg.setParentId(mRowkey);
+							chatmsg.setRemark(result);
+							chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+							chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+							chatmsg.setTime(System.currentTimeMillis());
+							chatmsg.setChattimelong(longti);
+							adapter.setData(mChatList);
+							adapter.notifadataset();
+							resetListView();
+						}
+						additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
 					}else if(timeLong<1000){
 						Log.i("chentao","录音时间过短");
 						Toast.makeText(getActivity(),"录音时间过短", Toast.LENGTH_SHORT).show();
@@ -525,9 +607,91 @@ public class InformationCollectionFragment extends BaseFragment {
 		//立刻上报
 		report_at_once.setOnClickListener(new OnClickListener() {
 
+
+
+
+
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				//				saveLocal();
+				pb=new ProgressDialog(getActivity());
+				pb.setMessage("正在上传");
+				pb.show();
+				ArrayList<String> list_servicepara=new ArrayList<String>();
+				InformationMessage infomessage = InformationManager.getInstance().getInformation(mRowkey);
+
+				HashMap<String,Object> map=new HashMap<String,Object>();
+				map.put("info_intel_id",infomessage.getRowkey());
+
+				map.put("location", new locationMessage((float)infomessage.getLat(),(float)infomessage.getLon()));
+				map.put("info_type",infomessage.getType());
+				map.put("adiminCode","440111");//没存
+				map.put("address","白云区广州大道北1618号香柏广场");//没做
+				list_att=new ArrayList<attachmentsMessage>();
+				List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
+				List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
+				for(int j=0;j<chatmsglist.size();j++){
+					ChatMessage chatmsg = chatmsglist.get(j);
+					Log.i("chentao","chatmsg:"+chatmsg.getPath());
+					list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
+							df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)chatmsg.getLat(),(float)chatmsg.getLon())));
+				}
+				for(int f=0;f<picmsglist.size();f++){
+					PictureMessage picmsg = picmsglist.get(f);
+					list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
+							df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)picmsg.getLat(),(float)picmsg.getLon())));
+				}
+				map.put("attachments",list_att);
+
+				map.put("operateDate",df.format(infomessage.getTime()));
+				SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+				String userName = sp.getString("user_name",null);
+				map.put("user_id",userName);
+				servicePara = JSON.toJSONString(map);
+				Log.i("chentao",servicePara.toString());
+				list_servicepara.add(servicePara);
+				//将list在指定文件夹写成文本
+				doFilter(list_servicepara);
+
+
+				handler=new Handler();
+				new Thread(new Runnable() {
+
+					
+
+					@Override
+					public void run() {
+						try {
+							ArrayList<String> listall=new ArrayList<String>();
+							for(int h=0;h<list_att.size();h++){
+								Log.i("chentao","h:"+list_att.get(h).getUrl());
+								if(list_att.get(h).getType()==1){
+									Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
+									listall.add(path_chat+list_att.get(h).getUrl());
+								}else if(list_att.get(h).getType()==0){
+									listall.add(path_pic+list_att.get(h).getUrl());
+								}
+							}
+							listall.add(path+"poi.txt");
+                            path_all_name=path+df.format(new Date())+".zip";
+							ZipUtil.zip(
+									listall, path_all_name);
+
+
+							handler.sendEmptyMessage(0);
+							Log.i("chentao", "压缩成功");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+							handler.sendEmptyMessage(1);
+							Log.i("chentao", "压缩失败");
+						}
+
+					}
+				}).start();
+				
+
+
 
 			}
 		});
@@ -682,9 +846,42 @@ public class InformationCollectionFragment extends BaseFragment {
 			break;
 		}
 	}
+	/**
+	 * 将list写到文件中
+	 * @param list
+	 */
+	public  void doFilter(ArrayList<String> list){
 
 
+		if(!new File(path).exists()){
+			new File(path).mkdirs();
+		}
+
+		FileWriter fw = null;
+		PrintWriter pw = null;
+		try{
+			//创建字符流
+			fw = new FileWriter(path+"poi.txt");
+			Log.i("chentao","fw:"+path+"poi.txt");
+			//封装字符流的过滤流
+			pw = new PrintWriter(fw);
+			//文件写入
+			for(int i=0;i<list.size();i++){
+				pw.print(list.get(i)+"\r\n");
+			}
+		}catch(IOException e){
+			e.printStackTrace();
+		}finally{
+			//关闭外层流
+			if(pw != null){
+				pw.close();
+			}
+		}
+	}
 	private void  saveLocal(){
+		if (TextUtils.isEmpty(mRowkey)) {
+			mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
+		}
 		InformationMessage message = new InformationMessage();
 		message.setAddress(mAddress);
 		message.setType(mType);
@@ -742,5 +939,92 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 		return byt;
 	}
-	
+
+
+	private String uploadFile(File file) {
+		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识
+		// 随机生成
+		String PREFIX = "--", LINE_END = "\r\n";
+		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+		// String RequestURL =
+		// "http://10.8.52.157:8080/advertservice/fileUpload.do";
+		// String RequestURL =
+		// "http://10.8.52.157:8080/advertservice/Upload";
+		String RequestURL = "http://172.23.44.11:8081/fos/information/inforimp/";
+		try {
+			URL url = new URL(RequestURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(TIME_OUT);
+			conn.setConnectTimeout(TIME_OUT);
+			conn.setDoInput(true); // 允许输入流
+			conn.setDoOutput(true); // 允许输出流
+			conn.setUseCaches(false); // 不允许使用缓存
+			conn.setRequestMethod("POST"); // 请求方式
+			conn.setRequestProperty("Charset", CHARSET); // 设置编码
+			conn.setRequestProperty("connection", "keep-alive");
+			conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+			if (file != null) {
+				System.out.println("----------" + file);
+				/**
+				 * 当文件不为空，把文件包装并且上传
+				 */
+				OutputStream outputSteam = conn.getOutputStream();
+
+				DataOutputStream dos = new DataOutputStream(outputSteam);
+				StringBuffer sb = new StringBuffer();
+				sb.append(PREFIX);
+				sb.append(BOUNDARY);
+				sb.append(LINE_END);
+				/**
+				 * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+				 * filename是文件的名字，包含后缀名的 比如:abc.png
+				 */
+
+				sb.append("Content-Disposition: form-data; name=\"filenamepath\"; filename=\"" + file.getName() + "\"" + LINE_END);
+				System.out.println("----------" + file.getName());
+				sb.append("Content-Type: application/octet-stream;charset=" + CHARSET + LINE_END);
+				sb.append(LINE_END);
+				dos.write(sb.toString().getBytes());
+				dos.write("**你好啊ABCDFERGDFDFSFSDFD".getBytes(), 0, 22);
+				InputStream is = new FileInputStream(file);
+				byte[] bytes = new byte[1024];
+				int len = 0;
+				while ((len = is.read(bytes)) != -1) {
+					dos.write(bytes, 0, len);
+				}
+				is.close();
+				dos.write(LINE_END.getBytes());
+				byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+				dos.write(end_data);
+				dos.flush();
+				/**
+				 * 获取响应码 200=成功 当响应成功，获取响应的流
+				 */
+				int res = conn.getResponseCode();
+				// BufferedReader br = new BufferedReader(new
+				// InputStreamReader(conn.getInputStream()));
+				// JSONObject jsonObject =
+				// JSONObject.parseObject(br.toString());
+				// String resultMsg = (String)
+				// jsonObject.get("ResultMsg");
+				// System.out.println("resultMsg*******"+resultMsg);
+				System.out.println("res----------------" + res);
+				if (res == 200) {
+					return SUCCESS;
+				}
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return FAILURE;
+	}
+
+
+
+
+
+
+
 }
