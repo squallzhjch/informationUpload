@@ -106,7 +106,7 @@ public class VoiceSpeechManager {
         //关于解析Json的代码可参见MscDemo中JsonParser类；
         //isLast等于true时会话结束。
         public void onResult(RecognizerResult results, boolean isLast) {
-            Log.i("chentao", "result:" + results.getResultString());
+            
             StringBuffer resultBuffer = new StringBuffer();
             if(results != null) {
                 String text = JsonParser.parseIatResult(results.getResultString());

@@ -357,7 +357,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
-
+        
 		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -607,10 +607,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		//立刻上报
 		report_at_once.setOnClickListener(new OnClickListener() {
 
-
-
-
-
 			@Override
 			public void onClick(View arg0) {
 				//				saveLocal();
@@ -651,7 +647,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				Log.i("chentao",servicePara.toString());
 				list_servicepara.add(servicePara);
 				//将list在指定文件夹写成文本
-				doFilter(list_servicepara);
+				doWriteFile(list_servicepara);
 
 
 				handler=new Handler();
@@ -850,7 +846,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 将list写到文件中
 	 * @param list
 	 */
-	public  void doFilter(ArrayList<String> list){
+	public  void doWriteFile(ArrayList<String> list){
 
 
 		if(!new File(path).exists()){
@@ -878,6 +874,9 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		}
 	}
+	/**
+	 * 保存到本地数据库
+	 */
 	private void  saveLocal(){
 		if (TextUtils.isEmpty(mRowkey)) {
 			mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
@@ -940,16 +939,16 @@ public class InformationCollectionFragment extends BaseFragment {
 		return byt;
 	}
 
-
+    /**
+     * 上传文件
+     * @param file
+     * @return
+     */
 	private String uploadFile(File file) {
 		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识
 		// 随机生成
 		String PREFIX = "--", LINE_END = "\r\n";
 		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-		// String RequestURL =
-		// "http://10.8.52.157:8080/advertservice/fileUpload.do";
-		// String RequestURL =
-		// "http://10.8.52.157:8080/advertservice/Upload";
 		String RequestURL = "http://172.23.44.11:8081/fos/information/inforimp/";
 		try {
 			URL url = new URL(RequestURL);
@@ -1020,11 +1019,4 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 		return FAILURE;
 	}
-
-
-
-
-
-
-
 }

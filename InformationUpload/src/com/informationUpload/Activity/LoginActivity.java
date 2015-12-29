@@ -103,7 +103,7 @@ public class LoginActivity extends BaseActivity{
 			String time=df.format(new Date());
 			String uuid = UUID.randomUUID().toString().replace("-", "");
 			String userid = (time+uuid).replace("-","").replace(" ","").replace(":","");
-			Log.i("chentao",userid);
+		
 			sp.edit().putString("user_name",userid).commit();
 			LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
 		}else{

@@ -233,17 +233,17 @@ public class MainFragment extends BaseFragment {
     private View.OnKeyListener backlistener = new View.OnKeyListener() {
         @Override
         public boolean onKey(View view, int i, KeyEvent keyEvent) {
-            Log.i("chentao", "onKey1");
+            
             if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                 if (i == KeyEvent.KEYCODE_BACK) {  //表示按返回键 时的操作
-                    Log.i("chentao", "onKey2");
+                    
                     popupWindow.dismiss();
                     return true;
 
 
                 }
             }
-            Log.i("chentao", "onKey3");
+         
             return false;
         }
     };

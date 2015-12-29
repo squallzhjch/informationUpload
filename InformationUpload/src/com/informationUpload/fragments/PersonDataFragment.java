@@ -165,7 +165,7 @@ public class PersonDataFragment extends BaseFragment{
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
 
-		Log.i("chentao","uri:"+imageUri);
+		
 		switch (requestCode) {
 
 		case TAKE_PICTURE:
