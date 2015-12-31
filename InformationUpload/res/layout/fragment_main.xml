@@ -32,8 +32,8 @@
 
         <RelativeLayout
             android:id="@+id/main_refresh"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
@@ -46,8 +46,8 @@
 
         <RelativeLayout
             android:id="@+id/main_fix_position"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/discovery_situation"
@@ -71,8 +71,8 @@
 
         <RelativeLayout
             android:id="@+id/main_enlarge_map"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
@@ -85,8 +85,8 @@
 
         <RelativeLayout
             android:id="@+id/main_reduce_map"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/discovery_situation"
@@ -105,9 +105,10 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/discovery_situation"
         android:text="发现情况"
+        android:textSize="20sp"
         android:textColor="@color/discovery_situation_bt_color" />
 
 </RelativeLayout>

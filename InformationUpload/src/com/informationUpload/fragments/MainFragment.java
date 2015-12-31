@@ -1,5 +1,8 @@
 package com.informationUpload.fragments;
 
+import java.util.HashMap;
+
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -8,7 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
@@ -20,7 +26,11 @@ import com.informationUpload.R;
 import com.informationUpload.contentproviders.Informations;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.MapManager;
+import com.informationUpload.serviceengin.EnginCallback;
+import com.informationUpload.serviceengin.ServiceEngin;
 import com.informationUpload.utils.SystemConfig;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
 
 /**
  * @author zhjch
@@ -98,6 +108,7 @@ public class MainFragment extends BaseFragment {
 		popview.setFocusable(true);//这个和下面的这个命令必须要设置了，才能监听back事件。
 		popview.setFocusableInTouchMode(true);
 		popview.setOnKeyListener(backlistener);
+
 		mDiscoverySituationBtn = (Button) view.findViewById(R.id.discovery_situation);
 		//发现情况按钮
 		mDiscoverySituationBtn.setOnClickListener(new OnClickListener() {
@@ -124,7 +135,8 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				//刷新码点
+				refreshmap();
 
 			}
 		});
@@ -160,6 +172,30 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		return view;
+	}
+	//刷新码点
+	protected void refreshmap() {
+		HashMap<String,Object> map=new HashMap<String, Object>();
+
+		//		map.put("latitude",(mLocationManager.getCurrentPoint().getLat()+"").substring(0,(mLocationManager.getCurrentPoint().getLat()+"").lastIndexOf(".")+5));
+		//		map.put("longitude",(mLocationManager.getCurrentPoint().getLat()+"").substring(0,(mLocationManager.getCurrentPoint().getLon()+"").lastIndexOf(".")+5));
+		map.put("latitude","40.01392");
+		map.put("longitude","116.47836");
+		ServiceEngin.Request(getActivity(), map, "inforquery" ,new EnginCallback(getActivity()){
+			@Override
+			public void onSuccess(ResponseInfo arg0) {
+				// TODO Auto-generated method stub
+				super.onSuccess(arg0);
+				Log.e("请求成功",arg0.result.toString());
+			}
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				// TODO Auto-generated method stub
+				super.onFailure(arg0, arg1);
+				Log.e("请求失败",arg1);
+			}
+		});
+
 	}
 
 	//添加popwindow监听器
@@ -228,14 +264,39 @@ public class MainFragment extends BaseFragment {
 
 	//打开popwindow
 	protected void showPopview() {
+//		WindowManager.LayoutParams lp=getActivity().getWindow().getAttributes();
+//		lp.alpha=0.5f;
+//
+//		getActivity().getWindow().setAttributes(lp);
+
 		popupWindow = new PopupWindow(popview, 700,700);
 		//设置popwindow显示位置
-		popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+		popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 200);
 		//获取popwindow焦点
 		popupWindow.setFocusable(true);
+//		ColorDrawable cd = new ColorDrawable(0x000000);
+		//
+//		popupWindow.setBackgroundDrawable(cd);
 		//设置popwindow如果点击外面区域，便关闭。
 		popupWindow.setOutsideTouchable(true);
+		popupWindow.setOnDismissListener(new OnDismissListener() {
+
+			@Override
+			public void onDismiss() {
+				//在dismiss中恢复透明度
+//				WindowManager.LayoutParams lp=getActivity().getWindow().getAttributes();
+//				lp.alpha=1f;
+//
+//
+//				getActivity().getWindow().setAttributes(lp);
+
+
+
+			}
+		});
 		popupWindow.update();
+
+
 
 
 	}

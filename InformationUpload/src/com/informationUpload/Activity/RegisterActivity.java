@@ -1,13 +1,21 @@
 package com.informationUpload.activity;
 
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import com.informationUpload.R;
+import com.informationUpload.serviceengin.EnginCallback;
+import com.informationUpload.serviceengin.ServiceEngin;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.CheckBox;
@@ -74,7 +82,10 @@ public class RegisterActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-
+				String telNum = mTelephoneNum.getText().toString();
+				String rgpassword = mRegisterPassword.getText().toString();
+			  //注册	
+              register(telNum,rgpassword);
 
 			}
 		});
@@ -127,6 +138,29 @@ public class RegisterActivity extends BaseActivity {
 		});
 
 
+	}
+	//注册
+	protected void register(String telNum,String telpassword) {
+		HashMap<String,Object> map=new HashMap<String, Object>();
+		map.put("tel", telNum);
+		map.put("pwd", telpassword);
+		map.put("uuid",UUID.randomUUID().toString().replace("-",""));
+		ServiceEngin.Request(RegisterActivity.this, map, "inforegist" ,new EnginCallback(RegisterActivity.this){
+			@Override
+			public void onSuccess(ResponseInfo arg0) {
+				// TODO Auto-generated method stub
+				super.onSuccess(arg0);
+				Log.e("请求成功",arg0.result.toString());
+			}
+			
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				// TODO Auto-generated method stub
+				super.onFailure(arg0, arg1);
+				Log.e("请求失败",arg1);
+			}
+		});
+		
 	}
 
 }
