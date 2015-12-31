@@ -234,7 +234,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 返回按钮
 	 */
-	private TextView title_back;
+	private TextView title_back ;
 	/**
 	 * 头部标题
 	 */
@@ -274,6 +274,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 时间格式刷
 	 */
 	private SimpleDateFormat df;
+	/**
+	 *标题头文字 
+	 */
+	private String draw_txt;
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -284,6 +288,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					@Override
 					public void run() {
+						Log.i("chentao","path_all_name:"+path_all_name);
 						String b = uploadFile(new File(path_all_name));
 						Log.i("chentao","uploadFile:"+b);
 
@@ -298,6 +303,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		}
 	};
+	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -368,18 +374,23 @@ public class InformationCollectionFragment extends BaseFragment {
 		init();
 		switch(mType){
 		case Informations.Information.INFORMATION_TYPE_BUS:
+			draw_txt="公交";
 			draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
+			draw_txt="设施";
 			draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_ROAD:
+			draw_txt="道路";
 			draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_AROUND:
+			draw_txt="周边其他";
 			draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
 			break;
 		}
+		mInformationCollectTitle.setText(draw_txt);
 		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
 				null,null,null);
 
@@ -650,7 +661,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				doWriteFile(list_servicepara);
 
 
-				handler=new Handler();
+			
 				new Thread(new Runnable() {
 
 					
@@ -949,7 +960,8 @@ public class InformationCollectionFragment extends BaseFragment {
 		// 随机生成
 		String PREFIX = "--", LINE_END = "\r\n";
 		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-		String RequestURL = "http://172.23.44.11:8081/fos/information/inforimp/";
+
+		String RequestURL = "http://172.23.44.11:8081/infor/information/inforimp/";
 		try {
 			URL url = new URL(RequestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();

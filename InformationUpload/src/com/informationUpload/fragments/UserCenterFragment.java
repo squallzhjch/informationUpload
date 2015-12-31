@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
@@ -63,6 +64,10 @@ public class UserCenterFragment extends BaseFragment{
 	 * 个人资料
 	 */
 	private ImageView mPersonData;
+	/**
+	 * 返回按钮
+	 */
+	private TextView mBack;
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
@@ -92,6 +97,7 @@ public class UserCenterFragment extends BaseFragment{
 		mFeedBackLayout = (RelativeLayout) view.findViewById(R.id.feedback);
 
 		mAboutLayout = (RelativeLayout) view.findViewById(R.id.about);
+		mBack=(TextView)view.findViewById(R.id.back);
 
 
 
@@ -102,6 +108,15 @@ public class UserCenterFragment extends BaseFragment{
 	 * 注册监听器
 	 */
 	private void addListeners() {
+		//返回
+		mBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
+			}
+		});
 		//个人资料
 		mPersonData.setOnClickListener(new OnClickListener() {
 			
@@ -123,7 +138,8 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(MyRecordFragment
+						.class, null));
 
 			}
 		});

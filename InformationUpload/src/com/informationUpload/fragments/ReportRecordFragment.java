@@ -20,10 +20,13 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.informationUpload.R;
 import com.informationUpload.activity.ActivityInstanceStateListener;
@@ -71,6 +74,22 @@ public class ReportRecordFragment extends BaseFragment{
 	private TextView mSubmit;
 	private Boolean bsubmit=true;
 	private LocalInformationAdapter mServiceAdapter;
+	/**
+	 * 返回按钮
+	 */
+	private TextView mReportBack;
+	/**
+	 * 删除item
+	 */
+	private TextView mTvDeleteItem;
+	/**
+	 * 待提交下滑线
+	 */
+	private ImageView mWaitSubmitIv;
+	/**
+	 * 已提交下滑线
+	 */
+	private ImageView mAlreadySubmitIv;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -138,7 +157,10 @@ public class ReportRecordFragment extends BaseFragment{
 			
 			@Override
 			public void onClick(View arg0) {
-				
+				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
+				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
+				mAlreadySubmitIv.setLayoutParams(lp1);
+				mWaitSubmitIv.setLayoutParams(lp);
 				bsubmit=true;
 				
 				mListView.setAdapter(mLocalAdapter);
@@ -150,6 +172,10 @@ public class ReportRecordFragment extends BaseFragment{
 			
 			@Override
 			public void onClick(View arg0) {
+				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
+				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
+				mAlreadySubmitIv.setLayoutParams(lp);
+				mWaitSubmitIv.setLayoutParams(lp1);
 		      	
 		         bsubmit=false;
 		        
@@ -167,17 +193,14 @@ public class ReportRecordFragment extends BaseFragment{
 		mLocalLayout = (LinearLayout)view.findViewById(R.id.local_layout);
 		mServicLayout = (LinearLayout)view.findViewById(R.id.service_layout);
 		mListView = (ListView)view.findViewById(R.id.list_view);
-		mTitleView = (TitleView)view.findViewById(R.id.title_view);
+	
 		mLocalNum = (TextView)view.findViewById(R.id.local_num);
 		mUploadNum = (TextView)view.findViewById(R.id.upload_num); 
 		mSubmit   = (TextView)view.findViewById(R.id.submit);
-		mTitleView.setOnLeftAreaClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				mFragmentManager.back();
-			}
-		});
-		mTitleView.setRightImageResource(R.drawable.delete_item);
+		mTvDeleteItem = (TextView) view.findViewById(R.id.tv_delete_item);
+		mReportBack= (TextView) view.findViewById(R.id.report_back);
+		mWaitSubmitIv=(ImageView) view.findViewById(R.id.wait_submit_iv);
+		mAlreadySubmitIv=(ImageView) view.findViewById(R.id.already_submit_iv);
 		select_all.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override
@@ -218,6 +241,10 @@ public class ReportRecordFragment extends BaseFragment{
 			set(i,false);
 		}
 		mListView.setAdapter(mLocalAdapter);
+		LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
+		LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
+		mAlreadySubmitIv.setLayoutParams(lp1);
+		mWaitSubmitIv.setLayoutParams(lp);
 
 		getLoaderManager().initLoader(LOADER_TYPE_LOCAL, null, new LoaderManager.LoaderCallbacks<Cursor>() {
 			@Override
@@ -273,8 +300,17 @@ public class ReportRecordFragment extends BaseFragment{
 
 			}
 		});
-
-		mTitleView.setOnRightAreaClickListener(new OnClickListener() {
+		//返回
+		mReportBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
+			}
+		});
+        //删除
+		mTvDeleteItem.setOnClickListener(new OnClickListener() {
 
 			private View view;
 			private int num;

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 
+import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
 import com.informationUpload.fragments.MainFragment;
 //import com.informationUpload.fragments.ResetPasswordFragment;
@@ -25,8 +26,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         mOnSaveInstanceStateInvoked = false;
         if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
-
+           
             MapView mapView = (MapView) findViewById(R.id.mapView);
+            mapView.showZoomControls(false);
+         
             mMapManager = MapManager.getInstance();
             mMapManager.init(this, mapView);
             myFragmentManager = MyFragmentManager.getInstance();

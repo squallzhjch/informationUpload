@@ -53,18 +53,26 @@ public class LocationManager  implements BDLocationListener{
         if(mCurrentLocation == null){
             mCurrentLocation = new GeoPoint();
         }
+        
+        
+        
+        
+        
         synchronized (mCurrentLocation) {
+        	
+        	
+        	
             mCurrentLocation.setLat(bdLocation.getLatitude());
             mCurrentLocation.setLon(bdLocation.getLongitude());
 
             for (WeakReference<OnLocationListener> weakRef : mOnLocationListeners) {
                 if (weakRef.get() != null) {
-                    weakRef.get().onLocationChanged(mCurrentLocation, bdLocation.getAddrStr());
+                    weakRef.get().onLocationChanged(mCurrentLocation, bdLocation.getAddrStr(),bdLocation.getRadius());
                 }
             }
         }
     }
-
+    
     private void initLocation(){
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationMode.Hight_Accuracy);//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
@@ -83,7 +91,7 @@ public class LocationManager  implements BDLocationListener{
     }
 
     public interface OnLocationListener {
-        void onLocationChanged(GeoPoint location, String address);
+        void onLocationChanged(GeoPoint location, String address,float radius);
     }
 
     public void addOnLocationListener(OnLocationListener listener) {
@@ -97,7 +105,8 @@ public class LocationManager  implements BDLocationListener{
             mOnLocationListeners.add(new WeakReference<OnLocationListener>(listener));
         }
     }
-
+   
+     
     public void removeOnLocationListener(OnLocationListener listener) {
         synchronized (mOnLocationListeners) {
             WeakReference<OnLocationListener> weakRef;

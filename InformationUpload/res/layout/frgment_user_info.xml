@@ -14,7 +14,7 @@
         android:paddingTop="13dp" >
 
         <TextView
-            android:id="@+id/back"
+            android:id="@+id/persondata_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -23,7 +23,7 @@
             android:background="@drawable/all_back" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/persondata_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -33,7 +33,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/persondata_title"
             android:layout_marginTop="13dp"
             android:background="@color/login_item_color" />
     </RelativeLayout>

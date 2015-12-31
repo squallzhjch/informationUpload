@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_color" 
+   >
+
+    <RelativeLayout
+        android:id="@+id/rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingTop="13dp" >
+
+        <TextView
+            android:id="@+id/myrecord_num_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/all_back" />
+
+        <TextView
+            android:id="@+id/myrecord_num_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="我的战绩"
+            android:textColor="@color/title_text_color" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/myrecord_num_title"
+            android:layout_marginTop="13dp"
+            android:background="@color/login_item_color" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/myname_rl"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_below="@id/rl"
+        android:background="@android:color/white" >
+
+        <ImageView
+            android:id="@+id/myrecord_num_iv_head"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/headshot" />
+
+        <TextView
+            android:id="@+id/myrecord_num_tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/myrecord_num_iv_head"
+            android:layout_centerHorizontal="true"
+            android:text="我的名字"
+            android:textColor="@android:color/black" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iv_myname_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/myname_rl"
+        android:background="@color/login_item_color" />
+
+    <RelativeLayout
+        android:id="@+id/myrecord_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_myname_line"
+        android:background="@android:color/white"
+        android:padding="10dp" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="我的上报数量"
+            android:layout_centerVertical="true"
+            android:textColor="@color/select_pop_title_color" />
+          <TextView
+            android:id="@+id/myrecord_num_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/myrecord_num_unit"
+             android:layout_centerVertical="true"
+            android:text="44444"
+            android:textColor="@color/delete_photo_color" />
+        <TextView
+            android:id="@+id/myrecord_num_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+             android:layout_centerVertical="true"
+            android:text="个"
+            android:textColor="@color/select_pop_title_color" />
+    </RelativeLayout>
+
+    <ImageView
+      
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/myrecord_num"
+        android:background="@color/login_item_color" />
+
+</RelativeLayout>

@@ -48,7 +48,8 @@
                 android:layout_centerInParent="true"
                 android:drawableTop="@drawable/bus_button_selector"
                 android:text="公交"
-                android:textColor="@android:color/white" />
+                 android:gravity="center"
+                android:textColor="@color/select_pop_item_color" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -64,7 +65,8 @@
                 android:layout_centerInParent="true"
                 android:drawableTop="@drawable/establishment_button_selector"
                 android:text="设施"
-                android:textColor="@android:color/white" />
+                 android:gravity="center"
+                  android:textColor="@color/select_pop_item_color" />
         </RelativeLayout>
     </LinearLayout>
 
@@ -88,7 +90,8 @@
                 android:layout_centerInParent="true"
                 android:drawableTop="@drawable/road_button_selector"
                 android:text="道路"
-                android:textColor="@android:color/white" />
+                 android:gravity="center"
+               android:textColor="@color/select_pop_item_color" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -104,7 +107,8 @@
                 android:layout_centerInParent="true"
                 android:drawableTop="@drawable/change_near_button_selector"
                 android:text="周边变化"
-                android:textColor="@android:color/white" />
+                android:gravity="center"
+                  android:textColor="@color/select_pop_item_color"  />
         </RelativeLayout>
     </LinearLayout>
 

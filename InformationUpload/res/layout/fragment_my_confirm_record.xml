@@ -6,10 +6,49 @@
     android:background="@color/fragment_background_color"
     android:orientation="vertical" >
 
-    <com.informationUpload.widget.TitleView
-        android:id="@+id/title_view"
-        style="@style/TitleView"
-        app:title_text="上报记录" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingTop="13dp" >
+
+        <TextView
+            android:id="@+id/report_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/all_back" />
+
+        <TextView
+            android:id="@+id/report_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:drawablePadding="12dp"
+            android:gravity="center_vertical"
+            android:text="上报记录"
+            android:textColor="@color/title_text_color" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/report_title"
+            android:layout_marginTop="13dp"
+            android:background="@color/login_item_color" />
+
+        <TextView
+            android:id="@+id/tv_delete_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="删除"
+            android:textColor="@drawable/delete_font_color_xml" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,26 +61,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="待提交"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/select_pop_title_color" />
 
             <TextView
                 android:id="@+id/local_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/select_pop_title_color" />
         </LinearLayout>
-
-        <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@android:color/black" />
 
         <LinearLayout
             android:id="@+id/service_layout"
@@ -49,27 +85,49 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="已提交"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/select_pop_title_color" />
 
             <TextView
                 android:id="@+id/upload_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@android:color/black" />
+                android:textColor="@color/select_pop_title_color" />
         </LinearLayout>
     </LinearLayout>
 
-    <ImageView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@android:color/black" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom" >
+
+        <ImageView
+            android:id="@+id/wait_submit_iv"
+            android:layout_width="0dp"
+            android:layout_height="5px"
+            android:layout_weight="1"
+            
+            android:background="@color/delete_photo_color" />
+       
+        <ImageView
+            android:id="@+id/already_submit_iv"
+            android:layout_width="0dp"
+            android:layout_height="5px"
+            android:layout_weight="1"
+           
+            android:background="@color/delete_photo_color" />
+    </LinearLayout>
+
+   
 
     <ListView
         android:id="@+id/list_view"
@@ -77,9 +135,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#00000000"
+        android:divider="#00000000"
         android:fadingEdge="none"
-        android:scrollbars="@null"
-        >
+        android:scrollbars="@null" >
     </ListView>
 
     <RelativeLayout
@@ -92,23 +150,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
             android:text="全选"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/select_pop_title_color" />
 
         <TextView
             android:id="@+id/submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/login_btn_bg"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/select_all"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/login_register_bt_selector"
             android:gravity="center"
             android:paddingBottom="10dp"
             android:paddingLeft="35dp"
             android:paddingRight="35dp"
             android:paddingTop="10dp"
-            android:text="提交" />
+            android:text="提交"
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
 </LinearLayout>

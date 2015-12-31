@@ -14,6 +14,8 @@
     <color name="select_pop_title_color">#333333</color>
     <color name="select_pop_horizontal_line_color">#333333</color>
     <color name="information_location_icon_line">#d6d5d9</color>
-    <color name="delete_photo_color">#ffa312</color>
-
+   
+    <color name="select_pop_item_color">#868686</color>
+     <color name="delete_photo_color">#ffa312</color>
+      <color name="delete_photo_color_press">#e88e00</color>
 </resources>

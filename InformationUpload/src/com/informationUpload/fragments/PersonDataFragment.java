@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 public class PersonDataFragment extends BaseFragment{
 
@@ -41,11 +42,15 @@ public class PersonDataFragment extends BaseFragment{
 	/**
 	 * 头像
 	 */
-	private ImageView iv_head;
+	private ImageView IvHead;
 	/**
 	 * 图片存储路径
 	 */
 	private Uri imageUri;
+	/**
+	 * 返回按钮
+	 */
+	private TextView PersondataBack;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,17 +65,28 @@ public class PersonDataFragment extends BaseFragment{
 
 	//初始化
 	private void init() {
-		iv_head = (ImageView) view.findViewById(R.id.iv_head);
+		IvHead = (ImageView) view.findViewById(R.id.iv_head);
+		PersondataBack=(TextView)view.findViewById(R.id.persondata_back);
 
 	}
 	//添加监听器
 	private void addListeners() {
-		iv_head.setOnClickListener(new OnClickListener() {
+		//头像
+		IvHead.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				new PopupWindows(getActivity(),view);
 
+			}
+		});
+		//返回按钮
+		PersondataBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
 			}
 		});
 
@@ -170,11 +186,11 @@ public class PersonDataFragment extends BaseFragment{
 
 		case TAKE_PICTURE:
 
-			iv_head.setImageURI(imageUri);
+			IvHead.setImageURI(imageUri);
 			break;
 		case SELECT_PICTURE:
 			imageUri = intent.getData();
-			iv_head.setImageURI(imageUri);
+			IvHead.setImageURI(imageUri);
 
 
 			break;

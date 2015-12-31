@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/center_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -14,8 +15,7 @@
         android:background="@drawable/person_center_bg"
         android:gravity="center" >
 
-        <Button
-            android:id="@+id/center_btn"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/person_head" />
@@ -32,13 +32,13 @@
 
         <RelativeLayout
             android:id="@+id/main_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/main_refresh" />
@@ -46,14 +46,14 @@
 
         <RelativeLayout
             android:id="@+id/main_fix_position"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/main_fix_position" />
@@ -71,13 +71,13 @@
 
         <RelativeLayout
             android:id="@+id/main_enlarge_map"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/main_enlarge_map" />
@@ -85,14 +85,14 @@
 
         <RelativeLayout
             android:id="@+id/main_reduce_map"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:background="@drawable/main_reduce_map" />
