@@ -14,11 +14,15 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.model.LatLng;
@@ -187,6 +191,8 @@ public class MainFragment extends BaseFragment {
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0);
 				Log.e("请求成功",arg0.result.toString());
+				//进行json解析
+				parseJson(arg0.result.toString());
 			}
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
@@ -195,6 +201,27 @@ public class MainFragment extends BaseFragment {
 				Log.e("请求失败",arg1);
 			}
 		});
+
+	}
+	//进行json解析	
+	protected void parseJson(String json) {
+		JSONObject jsonObj = JSON.parseObject(json);
+		String errcode = jsonObj.getString("errcode");
+		String errmsg = jsonObj.getString("errmsg");
+		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
+		JSONArray data = jsonObj.getJSONArray("data");
+		for(int i=0;i<data.size();i++){
+			JSONObject obj = (JSONObject) data.get(i);
+			String info_type = obj.getString("info_type");
+			String info_intel_id = obj.getString("info_intel_id");
+			String address = obj.getString("address");
+		
+
+		}
+		}else{
+			Toast.makeText(getActivity(),errmsg,Toast.LENGTH_SHORT).show();
+		}
+
 
 	}
 
@@ -264,31 +291,24 @@ public class MainFragment extends BaseFragment {
 
 	//打开popwindow
 	protected void showPopview() {
-//		WindowManager.LayoutParams lp=getActivity().getWindow().getAttributes();
-//		lp.alpha=0.5f;
-//
-//		getActivity().getWindow().setAttributes(lp);
+		//	
 
 		popupWindow = new PopupWindow(popview, 700,700);
 		//设置popwindow显示位置
 		popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 200);
 		//获取popwindow焦点
 		popupWindow.setFocusable(true);
-//		ColorDrawable cd = new ColorDrawable(0x000000);
+		//		ColorDrawable cd = new ColorDrawable(0x000000);
 		//
-//		popupWindow.setBackgroundDrawable(cd);
+		//		popupWindow.setBackgroundDrawable(cd);
 		//设置popwindow如果点击外面区域，便关闭。
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setOnDismissListener(new OnDismissListener() {
 
 			@Override
 			public void onDismiss() {
-				//在dismiss中恢复透明度
-//				WindowManager.LayoutParams lp=getActivity().getWindow().getAttributes();
-//				lp.alpha=1f;
-//
-//
-//				getActivity().getWindow().setAttributes(lp);
+
+
 
 
 

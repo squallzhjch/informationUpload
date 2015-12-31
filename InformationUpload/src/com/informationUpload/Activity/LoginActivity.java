@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
@@ -85,7 +86,7 @@ public class LoginActivity extends BaseActivity{
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.acitivity_user_login);
-		final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
+		final SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
 
 
@@ -95,33 +96,28 @@ public class LoginActivity extends BaseActivity{
 		addListeners();
 
 
-//		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-//		String userName = sp.getString("user_name",null);
-//		String userTel = sp.getString("user_tel", null);
-//		String is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
-//		if(null==userName){
-//			String time=df.format(new Date());
-//			String uuid = UUID.randomUUID().toString().replace("-", "");
-//			String userid = (time+uuid).replace("-","").replace(" ","").replace(":","");
-//		
-//			sp.edit().putString("user_name",userid).commit();
-//			LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-//		}else{
-//			if(userTel==null){
-//				LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-//			}else{
-//				if("1".equals(is_login)){
-//					mUserName.setText(userTel);
-//				}else if("0".equals(is_login)){
-//					LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-//				}
-//			}
-//		}
-
-	
-
-
-
+		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		String userName = sp.getString("user_name",null);
+		String userTel = sp.getString("user_tel", null);
+		String is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
+		if(null==userName){
+			String time=df.format(new Date());
+			String uuid = UUID.randomUUID().toString().replace("-", "");
+			String userid = time+uuid;
+		
+			sp.edit().putString("user_name",userid).commit();
+			LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+		}else{
+			if(userTel==null){
+				LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+			}else{
+				if("1".equals(is_login)){
+					mUserName.setText(userTel);
+				}else if("0".equals(is_login)){
+					LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+				}
+			}
+		}
 
 
 	}
@@ -148,10 +144,9 @@ public class LoginActivity extends BaseActivity{
 			
 				name=mUserName.getText().toString();
 				password=mPassword.getText().toString();
-				LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-				LoginActivity.this.finish();
+
 //				//登录
-//                Login(name,password);
+                Login(name,password);
 				
 			}
 		});
@@ -234,6 +229,8 @@ public class LoginActivity extends BaseActivity{
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0);
 				Log.e("请求成功",arg0.result.toString());
+				//进行json解析
+				parseJson(arg0.result.toString());
 			}
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
@@ -242,6 +239,25 @@ public class LoginActivity extends BaseActivity{
 				Log.e("请求失败",arg1);
 			}
 		});
+		
+	}
+	//进行json解析
+	protected void parseJson(String json) {
+		JSONObject jsonObj = JSON.parseObject(json);
+	
+	String errcode =	jsonObj.getString("errcode");
+	String errmsg =	jsonObj.getString("errmsg");
+	if(!"".equals(errcode)&&null!=errcode&&"0".equals(0)){
+		String userid =	jsonObj.getString("data");
+		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		
+		sp.edit().putString("user_name",userid).commit();
+		LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+		LoginActivity.this.finish();
+	}else{
+		Toast.makeText(LoginActivity.this,errmsg,Toast.LENGTH_SHORT).show();
+	}
+	
 		
 	}
 

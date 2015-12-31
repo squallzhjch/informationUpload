@@ -4,12 +4,17 @@ package com.informationUpload.activity;
 import java.util.HashMap;
 import java.util.UUID;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.serviceengin.EnginCallback;
 import com.informationUpload.serviceengin.ServiceEngin;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -22,6 +27,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -76,7 +82,7 @@ public class RegisterActivity extends BaseActivity {
 
 			}
 		});
-	
+
 		//注册
 		mRegister.setOnClickListener(new OnClickListener() {
 
@@ -84,8 +90,8 @@ public class RegisterActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				String telNum = mTelephoneNum.getText().toString();
 				String rgpassword = mRegisterPassword.getText().toString();
-			  //注册	
-              register(telNum,rgpassword);
+				//注册	
+				register(telNum,rgpassword);
 
 			}
 		});
@@ -141,18 +147,22 @@ public class RegisterActivity extends BaseActivity {
 	}
 	//注册
 	protected void register(String telNum,String telpassword) {
+		SharedPreferences sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		String userName = sp.getString("user_name",null);
 		HashMap<String,Object> map=new HashMap<String, Object>();
 		map.put("tel", telNum);
 		map.put("pwd", telpassword);
-		map.put("uuid",UUID.randomUUID().toString().replace("-",""));
+		map.put("uuid",userName);
 		ServiceEngin.Request(RegisterActivity.this, map, "inforegist" ,new EnginCallback(RegisterActivity.this){
 			@Override
 			public void onSuccess(ResponseInfo arg0) {
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0);
 				Log.e("请求成功",arg0.result.toString());
+				//进行json解析
+				parseJson(arg0.result.toString());
 			}
-			
+
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				// TODO Auto-generated method stub
@@ -160,7 +170,20 @@ public class RegisterActivity extends BaseActivity {
 				Log.e("请求失败",arg1);
 			}
 		});
-		
+
+	}
+	//进行json解析
+	protected void parseJson(String json) {
+		JSONObject jsonObj = JSON.parseObject(json);
+		String errcode=jsonObj.getString("errcode");
+		String errmsg=jsonObj.getString("errmsg");
+		if(!"".equals(errcode)&&null!=errcode&&"0".equals(0)){
+			Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
+			RegisterActivity.this.finish();
+		}else{
+			Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
+		}
+
 	}
 
 }
