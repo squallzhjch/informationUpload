@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -77,7 +78,7 @@ public class ReportRecordFragment extends BaseFragment{
 	/**
 	 * 返回按钮
 	 */
-	private TextView mReportBack;
+	private RelativeLayout mReportBack;
 	/**
 	 * 删除item
 	 */
@@ -198,7 +199,7 @@ public class ReportRecordFragment extends BaseFragment{
 		mUploadNum = (TextView)view.findViewById(R.id.upload_num); 
 		mSubmit   = (TextView)view.findViewById(R.id.submit);
 		mTvDeleteItem = (TextView) view.findViewById(R.id.tv_delete_item);
-		mReportBack= (TextView) view.findViewById(R.id.report_back);
+		mReportBack= (RelativeLayout) view.findViewById(R.id.report_back);
 		mWaitSubmitIv=(ImageView) view.findViewById(R.id.wait_submit_iv);
 		mAlreadySubmitIv=(ImageView) view.findViewById(R.id.already_submit_iv);
 		select_all.setOnCheckedChangeListener(new OnCheckedChangeListener() {

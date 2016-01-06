@@ -7,7 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.informationUpload.R;
 import com.informationUpload.map.GeoPoint;
@@ -30,8 +34,13 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 
 	private SelectPointView mSelectView;
 	private String mAddress;
+	private String mAdminCode;
 	private GeoPoint point;
 	private MapManager mMapManager;
+	/**
+	 * 选点背景图片
+	 */
+	private BitmapDescriptor bd;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -58,7 +67,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 		mSelectView.setOnSubmitListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress,point);
+				mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress,mAdminCode,point);
 				mFragmentManager.back();
 			}
 		});
@@ -67,8 +76,12 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 		point.setLat(mLocationManager.getCurrentPoint().getLat());
 		point.setLon(mLocationManager.getCurrentPoint().getLon());
 		mMapManager.searchAddress(point,new OnSearchAddressListener() {
+		
+
 			@Override
-			public void OnSuccess(String address) {
+			public void OnSuccess(String address,String adminCode) {
+	
+				mAdminCode=adminCode;
 				mAddress = address;
 				mSelectView.setAddressText(address);
 			}
@@ -90,13 +103,22 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 
 	@Override
 	public void onMapClick(LatLng latLng) {
+		mMapManager.getMap().clear();
+		 bd = BitmapDescriptorFactory
+				.fromResource(R.drawable.type_bus);
+
+		LatLng ll_Point = new LatLng(latLng.latitude,latLng.longitude);
+		MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
+				.zIndex(9).draggable(true);
+		Marker mMarker = (Marker) (mMapManager.getMap().addOverlay(ooA));
 		point = new GeoPoint();
 
 		point.setLat(latLng.latitude);
 		point.setLon(latLng.longitude);
 		mMapManager.searchAddress(point,new OnSearchAddressListener() {
 			@Override
-			public void OnSuccess(String address) {
+			public void OnSuccess(String address,String adminCode) {
+				mAdminCode=adminCode;
 				mAddress = address;
 				mSelectView.setAddressText(address);
 			}
@@ -111,6 +133,15 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 	@Override
 	public boolean onMapPoiClick(MapPoi mapPoi) {
 		return false;
+	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		mMapManager.getMap().clear();
+		if(bd!=null){
+		bd.recycle();
+		}
 	}
 
 }

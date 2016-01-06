@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 /**
@@ -45,7 +46,7 @@ public class MyRecordFragment extends BaseFragment {
 	/**
 	 * 返回按钮
 	 */
-	private TextView mMyrecordNumBack;
+	private RelativeLayout mMyrecordNumBack;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,7 +107,7 @@ public class MyRecordFragment extends BaseFragment {
 	private void init() {
 		mTvName=(TextView)view.findViewById(R.id.myrecord_num_tv_name);
 		mMyrecordNumTv=(TextView)view.findViewById(R.id.myrecord_num_tv);
-		mMyrecordNumBack=(TextView)view.findViewById(R.id.myrecord_num_back);
+		mMyrecordNumBack=(RelativeLayout)view.findViewById(R.id.myrecord_num_back);
 
 
 

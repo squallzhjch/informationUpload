@@ -15,15 +15,23 @@
             android:background="@android:color/white"
             android:orientation="horizontal"
             android:paddingTop="13dp" >
+            
+               <RelativeLayout
+                    android:id="@+id/register_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp" >
 
-            <TextView
-                android:id="@+id/register_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="10dp"
-                android:background="@drawable/back_selecter" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/back_selecter" />
+                </RelativeLayout>
+
+            
 
             <TextView
                 android:id="@+id/title"

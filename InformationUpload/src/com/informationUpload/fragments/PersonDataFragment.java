@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PersonDataFragment extends BaseFragment{
@@ -50,7 +51,7 @@ public class PersonDataFragment extends BaseFragment{
 	/**
 	 * 返回按钮
 	 */
-	private TextView PersondataBack;
+	private RelativeLayout PersondataBack;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +67,7 @@ public class PersonDataFragment extends BaseFragment{
 	//初始化
 	private void init() {
 		IvHead = (ImageView) view.findViewById(R.id.iv_head);
-		PersondataBack=(TextView)view.findViewById(R.id.persondata_back);
+		PersondataBack=(RelativeLayout)view.findViewById(R.id.persondata_back);
 
 	}
 	//添加监听器

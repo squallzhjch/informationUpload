@@ -9,9 +9,10 @@
         android:id="@+id/isv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/ll" >
+        android:layout_above="@+id/rl" >
 
         <LinearLayout
+            android:id="@+id/svll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
@@ -24,14 +25,20 @@
                 android:orientation="horizontal"
                 android:paddingTop="13dp" >
 
-                <TextView
+                <RelativeLayout
                     android:id="@+id/information_collect_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:background="@drawable/back_selecter" />
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/back_selecter" />
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/information_collect_title"
@@ -41,7 +48,7 @@
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
                     android:text="上报"
-                    android:textColor="@color/title_text_color" />
+                    android:textColor="@color/forget_register_bt_color" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -79,10 +86,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/location_icon"
+                        android:drawablePadding="3dp"
                         android:gravity="center_vertical"
                         android:text="点击选择位置"
-                        android:drawablePadding="3dp"
-                        android:textColor="@android:color/black"
+                        android:textColor="@color/select_pop_title_color"
                         android:textSize="12sp" />
 
                     <ImageView
@@ -150,7 +157,8 @@
                 android:id="@+id/hscrollview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp" >
+                android:layout_marginTop="15dp"
+                android:scrollbars="none" >
 
                 <LinearLayout
                     android:id="@+id/hlinearlayout"
@@ -162,8 +170,8 @@
 
                     <ImageView
                         android:id="@+id/hliv"
-                        android:layout_width="150px"
-                        android:layout_height="150px"
+                        android:layout_width="180px"
+                        android:layout_height="180px"
                         android:background="@drawable/bt_add_pic" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -196,9 +204,11 @@
             <ListView
                 android:id="@+id/voice_collection_lv"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="180px"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="7dp"
+                android:layout_marginTop="5dp"
                 android:background="#00000000"
                 android:divider="#00000000"
                 android:fadingEdge="none"
@@ -210,20 +220,12 @@
                 android:layout_height="1dp"
                 android:background="@color/login_item_color" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:background="@color/background_color" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/login_item_color" />
+      
 
             <ScrollView
                 android:id="@+id/additional_remarks_sv"
                 android:layout_width="match_parent"
-                android:layout_height="100dp" >
+                android:layout_height="130dp" >
 
                 <EditText
                     android:id="@+id/additional_remarks_et"
@@ -240,75 +242,87 @@
                 android:layout_height="1dp"
                 android:background="@color/login_item_color" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:background="@color/background_color" />
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/login_item_color" />
+         
         </LinearLayout>
     </com.informationUpload.utils.InnerScrollView>
 
-    <LinearLayout
-        android:id="@+id/ll"
+    <RelativeLayout
+        android:id="@+id/rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:orientation="horizontal" >
+        android:layout_alignParentBottom="true" >
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
             android:orientation="vertical" >
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@android:color/white" />
-
-            <Button
-                android:id="@+id/savetolocal"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:background="@android:color/white"
-                android:text="保存到本地"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/recordvoice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/record_button_selector" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical" >
+                android:background="@color/background_color" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="3"
                 android:background="@android:color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical" >
+           
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+              <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/savetolocal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2.2"
+                    android:background="@android:color/transparent"
+                    android:text="保存到本地"
+                    android:textColor="@android:color/black"
+                    android:textSize="11sp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/report_at_once"
-                android:layout_width="match_parent"
+                android:id="@+id/recordvoice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/record_button_selector" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+               <View android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
-                android:background="@android:color/white"
-                android:text="立刻上报"
-                android:textSize="11sp" />
+                android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/report_at_once"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2.2"
+                    android:textColor="@android:color/black"
+                    android:background="@android:color/transparent"
+                    android:text="立刻上报"
+                    android:textSize="11sp" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

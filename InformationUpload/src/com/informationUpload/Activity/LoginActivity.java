@@ -37,6 +37,7 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -76,10 +77,6 @@ public class LoginActivity extends BaseActivity{
 	private CheckBox mChangeStatePassword;
 	
 
-
-
-	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -87,8 +84,6 @@ public class LoginActivity extends BaseActivity{
 
 		setContentView(R.layout.acitivity_user_login);
 		final SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-
-
 
 		//初始化
 		init();
@@ -122,7 +117,8 @@ public class LoginActivity extends BaseActivity{
 
 	}
 	//初始化
-	private void init() {
+	private void init() {   
+		
 		mUserName=(EditText)findViewById(R.id.username_et);
 		mPassword=(EditText)findViewById(R.id.password_et);
 		mLogin=(TextView)findViewById(R.id.login_tv);
@@ -252,6 +248,7 @@ public class LoginActivity extends BaseActivity{
 		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		
 		sp.edit().putString("user_name",userid).commit();
+		sp.edit().putString("is_login", "0").commit();
 		LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
 		LoginActivity.this.finish();
 	}else{

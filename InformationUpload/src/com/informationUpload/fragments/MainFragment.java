@@ -1,7 +1,9 @@
 package com.informationUpload.fragments;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,24 +16,43 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.GroundOverlayOptions;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerDragListener;
+import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
+import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.informationUpload.R;
 import com.informationUpload.contentproviders.Informations;
+import com.informationUpload.entity.AroundInformation;
 import com.informationUpload.fragments.utils.IntentHelper;
+
+import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.serviceengin.EnginCallback;
 import com.informationUpload.serviceengin.ServiceEngin;
+import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.SystemConfig;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
@@ -100,6 +121,14 @@ public class MainFragment extends BaseFragment {
 	 * 地图管理类
 	 */
 	private MapManager mapManager;
+	/**
+	 * 地图上的图标背景
+	 */
+	private BitmapDescriptor bd;
+	/**
+	 * 地图上的点显示信息
+	 */
+	private String text;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		view = inflater.inflate(R.layout.fragment_main, null, true);
@@ -180,11 +209,10 @@ public class MainFragment extends BaseFragment {
 	//刷新码点
 	protected void refreshmap() {
 		HashMap<String,Object> map=new HashMap<String, Object>();
+		double[] ret = ChangePointUtil.baidutoreal(mLocationManager.getCurrentPoint().getLat(),mLocationManager.getCurrentPoint().getLon());
+		map.put("latitude",(ret[0]+"").substring(0,(mLocationManager.getCurrentPoint().getLat()+"").lastIndexOf(".")+5));
+		map.put("longitude",(ret[1]+"").substring(0,(mLocationManager.getCurrentPoint().getLon()+"").lastIndexOf(".")+5));
 
-		//		map.put("latitude",(mLocationManager.getCurrentPoint().getLat()+"").substring(0,(mLocationManager.getCurrentPoint().getLat()+"").lastIndexOf(".")+5));
-		//		map.put("longitude",(mLocationManager.getCurrentPoint().getLat()+"").substring(0,(mLocationManager.getCurrentPoint().getLon()+"").lastIndexOf(".")+5));
-		map.put("latitude","40.01392");
-		map.put("longitude","116.47836");
 		ServiceEngin.Request(getActivity(), map, "inforquery" ,new EnginCallback(getActivity()){
 			@Override
 			public void onSuccess(ResponseInfo arg0) {
@@ -209,21 +237,116 @@ public class MainFragment extends BaseFragment {
 		String errcode = jsonObj.getString("errcode");
 		String errmsg = jsonObj.getString("errmsg");
 		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
-		JSONArray data = jsonObj.getJSONArray("data");
-		for(int i=0;i<data.size();i++){
-			JSONObject obj = (JSONObject) data.get(i);
-			String info_type = obj.getString("info_type");
-			String info_intel_id = obj.getString("info_intel_id");
-			String address = obj.getString("address");
-		
+			JSONArray data = jsonObj.getJSONArray("data");
+			ArrayList<AroundInformation> list=new ArrayList<AroundInformation>();
+			for(int i=0;i<data.size();i++){
+				JSONObject obj = (JSONObject) data.get(i);
+				String info_type = obj.getString("info_type");
 
-		}
+				String info_intel_id = obj.getString("info_intel_id");
+				String address = obj.getString("address");
+				JSONObject locationObj = obj.getJSONObject("location");
+				String latitude = locationObj.getString("latitude");
+				String longitude = locationObj.getString("longitude");
+				Log.i("chentao","info_type："+i+":"+info_type);
+				Log.i("chentao","address："+i+":"+address);
+				GeoPoint gp=new GeoPoint((Double.parseDouble(latitude)),Double.parseDouble(longitude));
+
+				AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp);
+				list.add(aioformation);
+
+			}
+			//在地图上添加覆盖物
+			initOverlay(list);
 		}else{
 			Toast.makeText(getActivity(),errmsg,Toast.LENGTH_SHORT).show();
 		}
 
 
 	}
+	/**
+	 * 子地图上添加覆盖物
+	 * @param list 
+	 */
+	private void initOverlay(ArrayList<AroundInformation> list) {
+
+		// add marker overlay
+		for(int i=0;i<list.size();i++){
+
+			if(list.get(i).getInfoType().equals("1")){
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.type_bus);
+				text="公交";
+			}else if(list.get(i).getInfoType().equals("2")){
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.type_establishment);
+				text="设施";
+			}else if(list.get(i).getInfoType().equals("3")){
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.type_road);
+				text="道路";
+			}else if(list.get(i).getInfoType().equals("4")){
+				bd = BitmapDescriptorFactory
+						.fromResource(R.drawable.type_other);
+				text="周边变化";
+			}
+			double[] ret = ChangePointUtil.realtobaidu(list.get(i).getGp().getLat(),list.get(i).getGp().getLon());
+			LatLng ll_Point = new LatLng(ret[0],ret[1]);
+			MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
+					.zIndex(9).draggable(true);
+			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
+			mMarker.setTitle(text+":"+list.get(i).getAddress());
+
+
+
+
+		}
+		mapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
+			//弹窗
+			private InfoWindow mInfoWindow;
+
+			@Override
+			public boolean onMarkerClick(Marker marker) {
+
+				LatLng ll = marker.getPosition();
+				String[] title = marker.getTitle().split(":");
+				TextView tv=new TextView(getActivity());
+				tv.setText("");
+				for(int i=0;i<title.length;i++){
+
+					if(i==title.length-1){
+						tv.append(title[i]);
+					}else{
+						tv.append(title[i]+"\n");
+					}
+				}
+
+
+				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+						LinearLayout.LayoutParams.WRAP_CONTENT,
+						LinearLayout.LayoutParams.WRAP_CONTENT);
+				tv.setLayoutParams(lp);
+				tv.setTextColor(Color.WHITE);
+				tv.setBackgroundResource(R.drawable.select_point_pop_bg);
+
+				OnInfoWindowClickListener listener = new OnInfoWindowClickListener() {
+					public void onInfoWindowClick() {
+						mapManager.getMap().hideInfoWindow();
+
+					}
+				};
+
+
+				mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(tv), ll, -100, listener);
+				mapManager.getMap().showInfoWindow(mInfoWindow);
+
+				return true;
+			}
+
+		});
+
+	}
+
 
 	//添加popwindow监听器
 	private void addPopListeners() {
@@ -307,9 +430,6 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onDismiss() {
-
-
-
 
 
 			}

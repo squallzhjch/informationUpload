@@ -12,8 +12,20 @@ import java.io.Serializable;
 public class GeoPoint implements Serializable{
     private double lat;
     private double lon;
+    
+    
 
-    public double getLat() {
+    public GeoPoint() {
+		super();
+	}
+
+	public GeoPoint(double lat,double lon) {
+		this.lat=lat;
+		this.lon=lon;
+				
+	}
+
+	public double getLat() {
         return lat;
     }
 

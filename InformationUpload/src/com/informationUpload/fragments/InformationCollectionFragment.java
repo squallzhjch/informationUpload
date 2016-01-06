@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.Proxy.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,6 +52,7 @@ import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.informationUpload.adapter.ChatAdapter;
@@ -63,6 +65,7 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.utils.Bimp;
+import com.informationUpload.utils.InnerScrollView;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -234,7 +237,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 返回按钮
 	 */
-	private TextView title_back ;
+	private RelativeLayout title_back ;
 	/**
 	 * 头部标题
 	 */
@@ -278,32 +281,54 @@ public class InformationCollectionFragment extends BaseFragment {
 	 *标题头文字 
 	 */
 	private String draw_txt;
+	/**
+	 * 城市code
+	 */
+	private String mAdminCode;
+	/**
+	 * 垂直的自定义scrollview
+	 */
+	private InnerScrollView isv;
+	/**
+	 * 垂直主布局的Linearlayout
+	 */
+	private LinearLayout svll;
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
 
-
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
-						Log.i("chentao","path_all_name:"+path_all_name);
-						String b = uploadFile(new File(path_all_name));
-						Log.i("chentao","uploadFile:"+b);
+
+						uploadFile(new File(path_all_name));
+
 
 					}
 				}).start();
 				break;
 
 			case 1:
-			
+				pb.dismiss();
+				Toast.makeText(getActivity(),"压缩失败", Toast.LENGTH_SHORT).show();
 				Log.i("chentao","uploadFile:"+"压缩失败");
+				break;
+			case 2:
+				pb.dismiss();
+				Toast.makeText(getActivity(),"上传成功", Toast.LENGTH_SHORT).show();
+				break;
+			case 3:	
+				pb.dismiss();
+				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
 			}
 		}
 	};
-	
+
+
+
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -316,8 +341,10 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onContentUpdated(List<Object[]> values) {
 				if (values != null) {
 					mAddress = (String) values.get(0)[0];
+					mAdminCode=(String) values.get(0)[1];
 					select_position.setText(mAddress);
-					mPoint = (GeoPoint) values.get(0)[1];
+					mPoint = (GeoPoint) values.get(0)[2];
+					Log.i("chentao","mAddress:"+mAddress+",mAdminCode:"+mAdminCode+",mPoint"+mPoint.getLat());
 				}
 			}
 
@@ -363,7 +390,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
-        
+
 		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -401,14 +428,17 @@ public class InformationCollectionFragment extends BaseFragment {
 		Log.i("chentao",""+mPoint.getLat());
 		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 
+			
+
 			@Override
 			public void onFailure() {
 				Log.i("chentao",":onFailure");
 			}
 
 			@Override
-			public void OnSuccess(String address) {
+			public void OnSuccess(String address,String adminCode) {
 				mAddress = address;
+				mAdminCode=adminCode;
 				Log.i("chentao",":"+mAddress);
 				select_position.setText(address);
 
@@ -424,10 +454,12 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private void init() {
 		listview = new ArrayList<View>();
-		title_back = (TextView) view.findViewById(R.id.information_collect_back);
+		title_back = (RelativeLayout) view.findViewById(R.id.information_collect_back);
 		delete_photo=(TextView)view.findViewById(R.id.delete_photo);
 		select_position_again=(TextView)view.findViewById(R.id.select_position_again);
-
+		isv=    (InnerScrollView)     view.findViewById(R.id.isv);
+		svll=    (LinearLayout)     view.findViewById(R.id.svll);
+		
 		mInformationCollectTitle= (TextView)view.findViewById(R.id.information_collect_title);
 		select_position = (TextView) view.findViewById(R.id.select_position);
 		hliv = (ImageView) view.findViewById(R.id.hliv);
@@ -447,7 +479,11 @@ public class InformationCollectionFragment extends BaseFragment {
 
 		for(int i=0;i<mPicList.size();i++){
 			ImageView imageView = new ImageView(getActivity());
-			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
+			lp.setMargins(5,0,5,0);
+			imageView.setLayoutParams(lp);
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
 			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath()))
 					);
 			imageView.setTag(i);
@@ -497,30 +533,30 @@ public class InformationCollectionFragment extends BaseFragment {
 
 				synchronized (mChatList) {
 
-					try {
-						md = new MediaPlayer();
-						md.reset();
-						md.setDataSource(path);
-						md.prepare();
-					} catch (Exception e) {
-						e.printStackTrace();
-
-					}
-					long timeLong = md.getDuration();
-
-					md.release();
-
-					ChatMessage chatmsg = new ChatMessage();
-					mChatList.add(chatmsg);
-					chatmsg.setPath(path);
-					chatmsg.setChattimelong(timeLong);
-					chatmsg.setParentId(mRowkey);
-					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-					chatmsg.setTime(System.currentTimeMillis());
-					adapter.setData(mChatList);
-					adapter.notifadataset();
-					resetListView();
+					//					try {
+					//						md = new MediaPlayer();
+					//						md.reset();
+					//						md.setDataSource(path);
+					//						md.prepare();
+					//					} catch (Exception e) {
+					//						e.printStackTrace();
+					//
+					//					}
+					//					long timeLong = md.getDuration();
+					//
+					//					md.release();
+					//
+					//					ChatMessage chatmsg = new ChatMessage();
+					//					mChatList.add(chatmsg);
+					//					chatmsg.setPath(path);
+					//					chatmsg.setChattimelong(timeLong);
+					//					chatmsg.setParentId(mRowkey);
+					//					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
+					//					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
+					//					chatmsg.setTime(System.currentTimeMillis());
+					//					adapter.setData(mChatList);
+					//					adapter.notifadataset();
+					//					resetListView();
 				}
 			}
 			@Override
@@ -536,9 +572,13 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					}
 					long timeLong = md.getDuration();
+
 					md.release();
+					md=null;
 					if(timeLong>=1000&&timeLong<=6000){
 						long longti=  (timeLong/1000);
+
+
 						boolean his = false;
 						for(ChatMessage message:mChatList){
 							if(!TextUtils.isEmpty(result) && !TextUtils.isEmpty(message.getPath()) && !TextUtils.isEmpty(path) && result.equals(message.getPath())){
@@ -557,6 +597,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
 							chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
 							chatmsg.setTime(System.currentTimeMillis());
+
 							chatmsg.setChattimelong(longti);
 							adapter.setData(mChatList);
 							adapter.notifadataset();
@@ -620,93 +661,107 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				//				saveLocal();
-				pb=new ProgressDialog(getActivity());
-				pb.setMessage("正在上传");
-				pb.show();
-				ArrayList<String> list_servicepara=new ArrayList<String>();
-				InformationMessage infomessage = InformationManager.getInstance().getInformation(mRowkey);
+				if(mAddress.equals("")){
+					Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行上报，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
+				}else{
+					saveLocal();
+					pb=new ProgressDialog(getActivity());
+					pb.setMessage("正在上传");
+					pb.show();
 
-				HashMap<String,Object> map=new HashMap<String,Object>();
-				map.put("info_intel_id",infomessage.getRowkey());
+					ArrayList<String> list_servicepara=new ArrayList<String>();
+					InformationMessage infomessage = InformationManager.getInstance().getInformation(mRowkey);
 
-				map.put("location", new locationMessage((float)infomessage.getLat(),(float)infomessage.getLon()));
-				map.put("info_type",infomessage.getType());
-				map.put("adiminCode","440111");//没存
-				map.put("address","白云区广州大道北1618号香柏广场");//没做
-				list_att=new ArrayList<attachmentsMessage>();
-				List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
-				List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
-				for(int j=0;j<chatmsglist.size();j++){
-					ChatMessage chatmsg = chatmsglist.get(j);
-					Log.i("chentao","chatmsg:"+chatmsg.getPath());
-					list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
-							df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)chatmsg.getLat(),(float)chatmsg.getLon())));
-				}
-				for(int f=0;f<picmsglist.size();f++){
-					PictureMessage picmsg = picmsglist.get(f);
-					list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
-							df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)picmsg.getLat(),(float)picmsg.getLon())));
-				}
-				map.put("attachments",list_att);
+					HashMap<String,Object> map=new HashMap<String,Object>();
+					map.put("info_fid",infomessage.getRowkey());
 
-				map.put("operateDate",df.format(infomessage.getTime()));
-				SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-				String userName = sp.getString("user_name",null);
-				map.put("user_id",userName);
-				servicePara = JSON.toJSONString(map);
-				Log.i("chentao",servicePara.toString());
-				list_servicepara.add(servicePara);
-				//将list在指定文件夹写成文本
-				doWriteFile(list_servicepara);
-
-
-			
-				new Thread(new Runnable() {
-
-					
-
-					@Override
-					public void run() {
-						try {
-							ArrayList<String> listall=new ArrayList<String>();
-							for(int h=0;h<list_att.size();h++){
-								Log.i("chentao","h:"+list_att.get(h).getUrl());
-								if(list_att.get(h).getType()==1){
-									Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
-									listall.add(path_chat+list_att.get(h).getUrl());
-								}else if(list_att.get(h).getType()==0){
-									listall.add(path_pic+list_att.get(h).getUrl());
-								}
-							}
-							listall.add(path+"poi.txt");
-                            path_all_name=path+df.format(new Date())+".zip";
-							ZipUtil.zip(
-									listall, path_all_name);
-
-
-							handler.sendEmptyMessage(0);
-							Log.i("chentao", "压缩成功");
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-							handler.sendEmptyMessage(1);
-							Log.i("chentao", "压缩失败");
-						}
-
+					map.put("location", new locationMessage((float)infomessage.getLat(),(float)infomessage.getLon()));
+					map.put("info_type",infomessage.getType());
+					map.put("adiminCode",mAdminCode);
+					map.put("address",mAddress);
+					list_att=new ArrayList<attachmentsMessage>();
+					List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
+					List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
+					for(int j=0;j<chatmsglist.size();j++){
+						ChatMessage chatmsg = chatmsglist.get(j);
+						Log.i("chentao","chatmsg:"+chatmsg.getPath());
+						list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
+								df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)chatmsg.getLat(),(float)chatmsg.getLon())));
 					}
-				}).start();
-				
+					for(int f=0;f<picmsglist.size();f++){
+						PictureMessage picmsg = picmsglist.get(f);
+						list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
+								df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)picmsg.getLat(),(float)picmsg.getLon())));
+					}
+					map.put("attachments",list_att);
+
+					map.put("operateDate",df.format(infomessage.getTime()));
+					SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+					String userName = sp.getString("user_name",null);
+					map.put("user_id",userName);
+					map.put("remark", infomessage.getRemark());
+					servicePara = JSON.toJSONString(map);
+					Log.i("chentao",servicePara.toString());
+					list_servicepara.add(servicePara);
+					//将list在指定文件夹写成文本
+					doWriteFile(list_servicepara);
+
+
+
+					new Thread(new Runnable() {
+
+
+
+						@Override
+						public void run() {
+							try {
+								ArrayList<String> listall=new ArrayList<String>();
+								for(int h=0;h<list_att.size();h++){
+									Log.i("chentao","h:"+list_att.get(h).getUrl());
+									if(list_att.get(h).getType()==1){
+										Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
+										listall.add(path_chat+list_att.get(h).getUrl());
+									}else if(list_att.get(h).getType()==0){
+										listall.add(path_pic+list_att.get(h).getUrl());
+									}
+								}
+								listall.add(path+"poi.txt");
+								path_all_name=path+df.format(new Date())+".zip";
+								ZipUtil.zip(
+										listall, path_all_name);
+
+
+								handler.sendEmptyMessage(0);
+								Log.i("chentao", "压缩成功");
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								handler.sendEmptyMessage(1);
+								Log.i("chentao", "压缩失败");
+							}
+
+						}
+					}).start();
+				}
+
+
 
 
 
 			}
 		});
+		//删除照片
 		delete_photo.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				int len = listview.size();
+				if(len!=0){
+					hlinearlayout.removeView(listview.get(len-1));
+					listview.remove(len-1);
+				}else{
+					Toast.makeText(getActivity(),"您好，您还没有拍照，不能进行删除操作！",Toast.LENGTH_LONG).show();
+				}
 
 			}
 		});
@@ -726,9 +781,12 @@ public class InformationCollectionFragment extends BaseFragment {
 				int defHeight = count
 						* (itemView.getMeasuredHeight() + voice_collection_lv
 								.getDividerHeight());
+				if(defHeight>180){
 				LayoutParams lp =  voice_collection_lv.getLayoutParams();
+			
 				lp.height = defHeight;
 				voice_collection_lv.setLayoutParams(lp);
+				}
 			}
 		}
 	}
@@ -789,9 +847,10 @@ public class InformationCollectionFragment extends BaseFragment {
 		switch (requestCode) {
 		case TAKE_PICTURE:
 			ImageView imageView = new ImageView(getActivity());
-			imageView.setLayoutParams(new LinearLayout.LayoutParams(150,150));
-
-
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
+			lp.setMargins(5,0,5,0);
+			imageView.setLayoutParams(lp);
+			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			try {
 
 				bitmap = Bimp.revitionImageSize(file.getPath());
@@ -813,14 +872,8 @@ public class InformationCollectionFragment extends BaseFragment {
 				e.printStackTrace();
 			}
 			if(bitmap!=null){
-
-
 				imageView.setImageBitmap(bitmap);
-
-
-
 				imageView.setTag(i);
-
 				imageView.setOnClickListener(new OnClickListener() {
 
 					@Override
@@ -837,6 +890,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 				hlinearlayout.addView(imageView, 0);
 				listview.add(imageView);
+
 				i++;
 				if (hscrollview.getWidth() >= width) {
 					new Handler().post(new Runnable() {
@@ -889,19 +943,24 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 保存到本地数据库
 	 */
 	private void  saveLocal(){
-		if (TextUtils.isEmpty(mRowkey)) {
-			mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
+		if(mAddress.equals("")){
+			Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
+		}else{
+			if (TextUtils.isEmpty(mRowkey)) {
+				mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
+			}
+			InformationMessage message = new InformationMessage();
+			message.setAddress(mAddress);
+			message.setType(mType);
+			message.setRowkey(mRowkey);
+			message.setLat(mPoint.getLat());
+			message.setLon(mPoint.getLon());
+			message.setRemark(additional_remarks_et.getText().toString());
+			message.setChatMessageList(mChatList);
+			message.setPictureMessageList(mPicList);
+			mInformationManager.saveInformation(mApplication.getUserId(), message);
 		}
-		InformationMessage message = new InformationMessage();
-		message.setAddress(mAddress);
-		message.setType(mType);
-		message.setRowkey(mRowkey);
-		message.setLat(mPoint.getLat());
-		message.setLon(mPoint.getLon());
-		message.setRemark(additional_remarks_et.getText().toString());
-		message.setChatMessageList(mChatList);
-		message.setPictureMessageList(mPicList);
-		mInformationManager.saveInformation(mApplication.getUserId(), message);
+
 	}
 	@Override
 	public void onDetach() {
@@ -950,18 +1009,18 @@ public class InformationCollectionFragment extends BaseFragment {
 		return byt;
 	}
 
-    /**
-     * 上传文件
-     * @param file
-     * @return
-     */
+	/**
+	 * 上传文件
+	 * @param file
+	 * @return
+	 */
 	private String uploadFile(File file) {
 		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识
 		// 随机生成
 		String PREFIX = "--", LINE_END = "\r\n";
 		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
 
-		String RequestURL = "http://172.23.44.11:8081/infor/information/inforimp/";
+		String RequestURL = "http://192.168.3.155:8083/infor/information/inforimp/";
 		try {
 			URL url = new URL(RequestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -1021,6 +1080,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				// System.out.println("resultMsg*******"+resultMsg);
 				System.out.println("res----------------" + res);
 				if (res == 200) {
+					handler.sendEmptyMessage(2);
 					return SUCCESS;
 				}
 			}
@@ -1029,6 +1089,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		handler.sendEmptyMessage(3);
 		return FAILURE;
 	}
 }

@@ -26,6 +26,7 @@ import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,7 @@ public class RegisterActivity extends BaseActivity {
 	/**
 	 * 返回
 	 */
-	private TextView register_back;
+	private RelativeLayout register_back;
 	/**
 	 * 改变密码状态
 	 */
@@ -68,7 +69,7 @@ public class RegisterActivity extends BaseActivity {
 		mRegisterPassword=(EditText)findViewById(R.id.register_password);
 		mChangeStatePassword=(CheckBox)findViewById(R.id.change_state_password);
 		mRegister=(TextView)findViewById(R.id.register_tv);
-		register_back=(TextView)findViewById(R.id.register_back);
+		register_back=(RelativeLayout)findViewById(R.id.register_back);
 
 	}
 	//添加监听器

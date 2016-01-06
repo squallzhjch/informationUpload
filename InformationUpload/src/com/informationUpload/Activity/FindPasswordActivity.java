@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ public class FindPasswordActivity  extends BaseActivity{
 		/**
 		 * 返回
 		 */
-		private TextView mBack;
+		private RelativeLayout mBack;
 		/**
 		 * 改变密码状态
 		 */
@@ -62,7 +63,7 @@ public class FindPasswordActivity  extends BaseActivity{
         }                
         //初始化
 		private void init() {
-			 mBack = (TextView)findViewById(R.id.back);
+			 mBack = (RelativeLayout)findViewById(R.id.back);
 			 mPassword=(EditText)findViewById(R.id.password_et);
 			 mChangeStatePassword=(CheckBox)findViewById(R.id.change_state_password);
 			mTelephoneNum=(EditText)findViewById(R.id.telephonenum_et);

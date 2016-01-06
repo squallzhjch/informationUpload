@@ -8,7 +8,7 @@
     <color name="background_color">#f1f1f1</color>
     <color name="horizontal_line_color">#e1e1e1</color>
     <color name="forget_register_bt_color">#343434</color>
-    <color name="login_item_color">#a7a7a7</color>
+    <color name="login_item_color">#c8c7cc</color>
     <color name="title_color">#343434</color>
     <color name="discovery_situation_bt_color">#3fafee</color>
     <color name="select_pop_title_color">#333333</color>
