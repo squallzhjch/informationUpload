@@ -157,6 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="全选"
+   
             android:textColor="@color/select_pop_title_color" />
 
         <TextView

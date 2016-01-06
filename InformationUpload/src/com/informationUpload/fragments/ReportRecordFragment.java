@@ -59,7 +59,8 @@ import org.w3c.dom.Text;
  */
 public class ReportRecordFragment extends BaseFragment{
 
-	private static HashMap<Integer,Boolean> map=new HashMap<Integer,Boolean>();;
+	private static HashMap<Integer,Boolean> map=new HashMap<Integer,Boolean>();
+	
 	private LinearLayout mLocalLayout;
 	private LinearLayout mServicLayout;
 	private ListView mListView;
@@ -71,7 +72,7 @@ public class ReportRecordFragment extends BaseFragment{
 	private static final int LOADER_TYPE_SERVICE = 1;
 	private InformationObserver mInformationObserver;
 	private ThreadManager mThreadManager;
-	private CheckBox select_all;
+	private  CheckBox select_all;
 	private TextView mSubmit;
 	private Boolean bsubmit=true;
 	private LocalInformationAdapter mServiceAdapter;
@@ -116,46 +117,47 @@ public class ReportRecordFragment extends BaseFragment{
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		View view = inflater.inflate(R.layout.fragment_my_confirm_record, null, true);
-        //初始化
+		//初始化
 		initView(view);
 		initLoader();
 		//注册监听器
 		addListeners();
 		return view;
 	}
-    //注册监听器
+	//注册监听器
 	private void addListeners() {
 		//提交
 		mSubmit.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				if(bsubmit){
 					for(int i=0;i<mLocalAdapter.getCount();i++){
 						Boolean bool = map.get(i);
 						if(bool){
+
 							View view = mLocalAdapter.getView(i, null,null);
 
 							final String rowkey=(String) view.getTag(R.id.cb);
 
-						
-                            ContentValues values=new ContentValues();
-                            values.put(Informations.Information.STATUS,Informations.Information.STATUS_SERVER);
+							set(i, false);
+							ContentValues values=new ContentValues();
+							values.put(Informations.Information.STATUS,Informations.Information.STATUS_SERVER);
 							InformationManager.getInstance().updateInformation(rowkey, values);
-							
+
 
 						}
 					}
-					
+
 				}else{
 					Toast.makeText(getActivity(),"此项是已提交数据，请勿重复提交，谢谢！",Toast.LENGTH_LONG).show();
 				}
-				
+
 			}
 		});
 		//待提交
 		mLocalLayout.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
@@ -163,29 +165,29 @@ public class ReportRecordFragment extends BaseFragment{
 				mAlreadySubmitIv.setLayoutParams(lp1);
 				mWaitSubmitIv.setLayoutParams(lp);
 				bsubmit=true;
-				
+				select_all.setVisibility(View.VISIBLE);
 				mListView.setAdapter(mLocalAdapter);
-				
+
 			}
 		});
 		//已提交
 		mServicLayout.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
 				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
 				mAlreadySubmitIv.setLayoutParams(lp);
 				mWaitSubmitIv.setLayoutParams(lp1);
-		      	
-		         bsubmit=false;
-		        
-		         mListView.setAdapter(mServiceAdapter);
-				
+				select_all.setVisibility(View.INVISIBLE);
+				bsubmit=false;
+
+				mListView.setAdapter(mServiceAdapter);
+
 			}
 		});
-		
-	
+
+
 	}
 
 
@@ -194,7 +196,7 @@ public class ReportRecordFragment extends BaseFragment{
 		mLocalLayout = (LinearLayout)view.findViewById(R.id.local_layout);
 		mServicLayout = (LinearLayout)view.findViewById(R.id.service_layout);
 		mListView = (ListView)view.findViewById(R.id.list_view);
-	
+
 		mLocalNum = (TextView)view.findViewById(R.id.local_num);
 		mUploadNum = (TextView)view.findViewById(R.id.upload_num); 
 		mSubmit   = (TextView)view.findViewById(R.id.submit);
@@ -229,18 +231,21 @@ public class ReportRecordFragment extends BaseFragment{
 				LocalInformationAdapter.WHERE,
 				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)},
 				LocalInformationAdapter.ORDER_BY
-				), false);
-		
+				), false,"local");
+
 		mServiceAdapter = new LocalInformationAdapter(mApplication, getActivity().managedQuery(
 				Informations.Information.CONTENT_URI,
 				LocalInformationAdapter.KEY_MAPPING,
 				LocalInformationAdapter.WHERE,
 				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)},
 				LocalInformationAdapter.ORDER_BY
-				), false);
+				), false,"server");
 		for( int i=0;i<mLocalAdapter.getCount();i++){
+			Log.i("chentao",":"+i);
 			set(i,false);
+			
 		}
+
 		mListView.setAdapter(mLocalAdapter);
 		LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
 		LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
@@ -289,11 +294,13 @@ public class ReportRecordFragment extends BaseFragment{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				try {
 					String rowkey = (String) view.getTag(R.id.cb);
-				
+
 					if (!TextUtils.isEmpty(rowkey)) {
+						if(bsubmit){
 						Bundle bundle = new Bundle();
 						bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
 						mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -303,14 +310,14 @@ public class ReportRecordFragment extends BaseFragment{
 		});
 		//返回
 		mReportBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.back();
-				
+
 			}
 		});
-        //删除
+		//删除
 		mTvDeleteItem.setOnClickListener(new OnClickListener() {
 
 			private View view;
@@ -360,5 +367,7 @@ public class ReportRecordFragment extends BaseFragment{
 	public static Boolean get(Integer po){
 		return map.get(po);
 	}
+	
+
 
 }
