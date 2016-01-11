@@ -111,7 +111,7 @@ public class InformationManager {
                 }
         );
     }
-
+   
     public void saveInformation(final String userId, final InformationMessage message) {
         if (TextUtils.isEmpty(userId) || message == null)
             return;

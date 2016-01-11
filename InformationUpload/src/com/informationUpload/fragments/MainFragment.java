@@ -249,9 +249,10 @@ public class MainFragment extends BaseFragment {
 				JSONObject locationObj = obj.getJSONObject("location");
 				String latitude = locationObj.getString("latitude");
 				String longitude = locationObj.getString("longitude");
+				double[] ret_pos = ChangePointUtil.realtobaidu(Double.parseDouble(latitude),Double.parseDouble(longitude));
 				Log.i("chentao","info_type："+i+":"+info_type);
 				Log.i("chentao","address："+i+":"+address);
-				GeoPoint gp=new GeoPoint((Double.parseDouble(latitude)),Double.parseDouble(longitude));
+				GeoPoint gp=new GeoPoint(ret_pos[0],ret_pos[1]);
 
 				AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp);
 				list.add(aioformation);

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,9 +72,9 @@ public class UserCenterFragment extends BaseFragment{
 	 * 返回按钮
 	 */
 	private RelativeLayout mBack;
-    /**
-     * 用户id
-     */
+	/**
+	 * 用户id
+	 */
 	private String userName;
 	/**
 	 * 用户电话
@@ -87,14 +88,18 @@ public class UserCenterFragment extends BaseFragment{
 	 * 退出登录或者绑定手机号
 	 */
 	private Button mExitLogin;
+	/**
+	 * 存储个人信息的sp
+	 */
+	private SharedPreferences sp;
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		view = inflater.inflate(R.layout.fragment_user_center, null, true);
-		SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-		 userName = sp.getString("user_name",null);
-		 userTel = sp.getString("user_tel", null);
-		 is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
+		sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		userName = sp.getString("user_name",null);
+		userTel = sp.getString("user_tel", null);
+		is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
 		//初始化
 		init();
 		//添加监听器
@@ -133,44 +138,46 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private void addListeners() {
 		//绑定手机号或者退出登录
+		Log.i("chentao", "is_login:"+is_login);
 		if(is_login.equals("1")){
 			mExitLogin.setText("绑定手机号");
 			mExitLogin.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View arg0) {
 					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
-					
+
 				}
 			});
 		}else if(is_login.equals("0")){
 			mExitLogin.setText("退出登录");
 			mExitLogin.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View arg0) {
-				startActivity(new Intent(getActivity(),LoginActivity.class));
+					sp.edit().putString("is_login","1").commit();
+					startActivity(new Intent(getActivity(),LoginActivity.class));
 					getActivity().finish();
 				}
 			});
 		}
-		
+
 		//返回
 		mBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.back();
-				
+
 			}
 		});
 		//个人资料
 		mPersonData.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
-				
+
 			}
 		});
 		//上报记录

@@ -164,6 +164,7 @@ public class RegisterActivity extends BaseActivity {
 	protected void register(final String telNum,final String telpassword) {
 		 sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		String userName = sp.getString("user_name",null);
+		Log.i("chentao","user_name:"+userName);
 		HashMap<String,Object> map=new HashMap<String, Object>();
 		map.put("tel", telNum);
 		map.put("pwd", telpassword);
@@ -196,7 +197,7 @@ public class RegisterActivity extends BaseActivity {
 		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
 			Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
 			sp.edit().putString("user_tel",telNum).commit();
-			sp.edit().putString("user_tel",telNum).commit();
+			sp.edit().putString("is_login","0").commit();
 			startActivity(new Intent(RegisterActivity.this,MainActivity.class));
 			RegisterActivity.this.finish();
 			

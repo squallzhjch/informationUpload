@@ -101,15 +101,21 @@ public class LoginActivity extends BaseActivity{
 			String userid = time+uuid;
 		
 			sp.edit().putString("user_name",userid).commit();
+			
 			LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+			LoginActivity.this.finish();
 		}else{
 			if(userTel==null){
+				
 				LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+				LoginActivity.this.finish();
 			}else{
 				if("1".equals(is_login)){
 					mUserName.setText(userTel);
 				}else if("0".equals(is_login)){
+					
 					LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+					LoginActivity.this.finish();
 				}
 			}
 		}
@@ -151,8 +157,9 @@ public class LoginActivity extends BaseActivity{
 
 			@Override
 			public void onClick(View arg0) {
+				
 				LoginActivity.this.startActivity(new Intent(LoginActivity.this,FindPasswordActivity.class));
-
+				LoginActivity.this.finish();
 			}
 		});
 		//快速注册
@@ -160,8 +167,9 @@ public class LoginActivity extends BaseActivity{
 
 			@Override
 			public void onClick(View arg0) {
+				
 				LoginActivity.this.startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-
+				LoginActivity.this.finish();
 			}
 		});
 

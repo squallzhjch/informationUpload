@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.UUID;
 import com.alibaba.fastjson.JSON;
 import com.informationUpload.R;
+
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,6 +67,7 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.utils.Bimp;
+import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.InnerScrollView;
 import com.informationUpload.utils.PoiRecordPopup;
 import com.informationUpload.utils.ZipUtil;
@@ -317,7 +320,12 @@ public class InformationCollectionFragment extends BaseFragment {
 				break;
 			case 2:
 				pb.dismiss();
+				ContentValues values = new ContentValues();
+				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
+				mInformationManager.updateInformation(mRowkey,values);
+				mFragmentManager.back();
 				Toast.makeText(getActivity(),"上传成功", Toast.LENGTH_SHORT).show();
+			    
 				break;
 			case 3:	
 				pb.dismiss();
@@ -428,7 +436,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		Log.i("chentao",""+mPoint.getLat());
 		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 
-			
+
 
 			@Override
 			public void onFailure() {
@@ -459,7 +467,7 @@ public class InformationCollectionFragment extends BaseFragment {
 		select_position_again=(TextView)view.findViewById(R.id.select_position_again);
 		isv=    (InnerScrollView)     view.findViewById(R.id.isv);
 		svll=    (LinearLayout)     view.findViewById(R.id.svll);
-		
+
 		mInformationCollectTitle= (TextView)view.findViewById(R.id.information_collect_title);
 		select_position = (TextView) view.findViewById(R.id.select_position);
 		hliv = (ImageView) view.findViewById(R.id.hliv);
@@ -594,6 +602,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							chatmsg.setPath(path);
 							chatmsg.setParentId(mRowkey);
 							chatmsg.setRemark(result);
+
 							chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
 							chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
 							chatmsg.setTime(System.currentTimeMillis());
@@ -674,8 +683,8 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					HashMap<String,Object> map=new HashMap<String,Object>();
 					map.put("info_fid",infomessage.getRowkey());
-
-					map.put("location", new locationMessage((float)infomessage.getLat(),(float)infomessage.getLon()));
+					double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
+					map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
 					map.put("info_type",infomessage.getType());
 					map.put("adminCode",mAdminCode);
 					map.put("address",mAddress);
@@ -685,13 +694,15 @@ public class InformationCollectionFragment extends BaseFragment {
 					for(int j=0;j<chatmsglist.size();j++){
 						ChatMessage chatmsg = chatmsglist.get(j);
 						Log.i("chentao","chatmsg:"+chatmsg.getPath());
+						double[] ret_chat = ChangePointUtil.baidutoreal(chatmsg.getLat(),chatmsg.getLon());
 						list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
-								df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)chatmsg.getLat(),(float)chatmsg.getLon())));
+								df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)ret_chat[0],(float)ret_chat[1])));
 					}
 					for(int f=0;f<picmsglist.size();f++){
 						PictureMessage picmsg = picmsglist.get(f);
+						double[] ret_pic = ChangePointUtil.baidutoreal(picmsg.getLat(),picmsg.getLon());
 						list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
-								df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)picmsg.getLat(),(float)picmsg.getLon())));
+								df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)ret_pic[0],(float)ret_pic[1])));
 					}
 					map.put("attachments",list_att);
 
@@ -782,10 +793,10 @@ public class InformationCollectionFragment extends BaseFragment {
 						* (itemView.getMeasuredHeight() + voice_collection_lv
 								.getDividerHeight());
 				if(defHeight>180){
-				LayoutParams lp =  voice_collection_lv.getLayoutParams();
-			
-				lp.height = defHeight;
-				voice_collection_lv.setLayoutParams(lp);
+					LayoutParams lp =  voice_collection_lv.getLayoutParams();
+
+					lp.height = defHeight;
+					voice_collection_lv.setLayoutParams(lp);
 				}
 			}
 		}
@@ -826,7 +837,6 @@ public class InformationCollectionFragment extends BaseFragment {
 
 		picMsg.setParentId(mRowkey);
 		picMsg.setPath(file.getPath());
-
 		picMsg.setLat(mLocationManager.getCurrentPoint().getLat());
 		picMsg.setLon(mLocationManager.getCurrentPoint().getLon());
 		picMsg.setTime(System.currentTimeMillis());
@@ -953,6 +963,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setAddress(mAddress);
 			message.setType(mType);
 			message.setRowkey(mRowkey);
+
 			message.setLat(mPoint.getLat());
 			message.setLon(mPoint.getLon());
 			message.setRemark(additional_remarks_et.getText().toString());
