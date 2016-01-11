@@ -87,9 +87,11 @@
     <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="Msc" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_radar_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="xUtils-2.6.14" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_map_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_search_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_base_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="fastjson-1.1.31" level="project" />
     <orderEntry type="library" exported="" name="Sunflower" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_util_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="locSDK_6.13" level="project" />
