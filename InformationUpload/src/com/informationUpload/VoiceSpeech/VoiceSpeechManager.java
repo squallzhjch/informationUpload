@@ -1,9 +1,7 @@
-package com.informationUpload.VoiceSpeech;
+package com.informationUpload.voiceSpeech;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 
 import com.iflytek.cloud.RecognizerListener;
 import com.iflytek.cloud.RecognizerResult;

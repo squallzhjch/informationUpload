@@ -3,7 +3,7 @@ package com.informationUpload.activity;
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
+import com.informationUpload.voiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentproviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.LocationManager;
