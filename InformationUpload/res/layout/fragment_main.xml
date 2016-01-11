@@ -6,6 +6,7 @@
     android:orientation="vertical" >
 
     <RelativeLayout
+        android:id="@+id/center_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -14,8 +15,7 @@
         android:background="@drawable/person_center_bg"
         android:gravity="center" >
 
-        <Button
-            android:id="@+id/center_btn"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/person_head" />
@@ -32,13 +32,13 @@
 
         <RelativeLayout
             android:id="@+id/main_refresh"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/main_refresh" />
@@ -46,14 +46,14 @@
 
         <RelativeLayout
             android:id="@+id/main_fix_position"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
             android:background="@drawable/discovery_situation"
             android:gravity="center" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/main_fix_position" />
@@ -61,40 +61,49 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="80dp"
         android:layout_above="@+id/discovery_situation"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="10dp"
+        android:background="@drawable/discovery_situation"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/main_enlarge_map"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/discovery_situation"
-            android:gravity="center" >
+            android:layout_width="35dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1.5" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:background="@drawable/main_enlarge_map" />
         </RelativeLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="2px"
+            android:layout_marginRight="2px"
+            android:layout_weight="0.1"
+         
+            android:background="#dddddd" />
+
         <RelativeLayout
             android:id="@+id/main_reduce_map"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/discovery_situation"
-            android:gravity="center" >
+            android:layout_width="35dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1.5" >
 
-            <Button
+            <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="1dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:background="@drawable/main_reduce_map" />
         </RelativeLayout>
     </LinearLayout>
@@ -105,9 +114,10 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="30dp"
-        android:background="@drawable/discovery_situation"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/main_big_discovery_bt"
         android:text="发现情况"
-        android:textColor="@color/discovery_situation_bt_color" />
+        android:textColor="@android:color/white"
+        android:textSize="20sp" />
 
 </RelativeLayout>

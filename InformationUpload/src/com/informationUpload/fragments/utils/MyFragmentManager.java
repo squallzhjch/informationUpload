@@ -57,7 +57,7 @@ public class MyFragmentManager {
         if (intent != null) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
-                hideAllOtherFragment = bundle.getBoolean(SystemConfig.HIDE_OTHER_FRAGMENT, false);
+                hideAllOtherFragment = bundle.getBoolean(SystemConfig.HIDE_OTHER_FRAGMENT, true);
             }
         }
 

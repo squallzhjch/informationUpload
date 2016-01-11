@@ -197,7 +197,7 @@ public class PoiRecordPopup {
                     AnimationDrawable animation = (AnimationDrawable) volume.getBackground();
                     isLoading = true;
                     animation.start();
-                    mVoicePath = mDirPath + System.currentTimeMillis();
+                    mVoicePath = mDirPath + System.currentTimeMillis() + ".wav";
                     voiceManager.setPath(mVoicePath);
                     voiceManager.start();
                     break;

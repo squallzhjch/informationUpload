@@ -365,7 +365,7 @@ public class OffLineMapActivity extends Activity implements
 	public void clickCityListButton(View view) {
 
 		clButton.setBackgroundResource(R.drawable.main_leftbtn_off_xml);
-		localButton.setBackgroundResource(R.drawable.main_rightbtn_xml);
+		localButton.setBackgroundResource(R.drawable.main_leftbtn_xml);
 		LinearLayout cl = (LinearLayout) findViewById(R.id.citylist_layout);
 		RelativeLayout lm = (RelativeLayout) findViewById(R.id.localmap_layout);
 		lm.setVisibility(View.GONE);

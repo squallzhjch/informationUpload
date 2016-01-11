@@ -2,7 +2,9 @@ package com.informationUpload.fragments;
 
 import java.io.File;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -12,9 +14,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
+import com.informationUpload.activity.LoginActivity;
 import com.informationUpload.activity.OffLineMapActivity;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.utils.FileUtils;
@@ -63,10 +67,34 @@ public class UserCenterFragment extends BaseFragment{
 	 * 个人资料
 	 */
 	private ImageView mPersonData;
+	/**
+	 * 返回按钮
+	 */
+	private RelativeLayout mBack;
+    /**
+     * 用户id
+     */
+	private String userName;
+	/**
+	 * 用户电话
+	 */
+	private String userTel;
+	/**
+	 * 用户是否登录
+	 */
+	private String is_login;//0代表登录 1代表未登录
+	/**
+	 * 退出登录或者绑定手机号
+	 */
+	private Button mExitLogin;
 
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 		view = inflater.inflate(R.layout.fragment_user_center, null, true);
+		SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		 userName = sp.getString("user_name",null);
+		 userTel = sp.getString("user_tel", null);
+		 is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
 		//初始化
 		init();
 		//添加监听器
@@ -79,6 +107,7 @@ public class UserCenterFragment extends BaseFragment{
 	 * 初始化
 	 */
 	private void init() {
+		mExitLogin     =(Button) view.findViewById(R.id.exit_login);
 		mPersonData = (ImageView) view.findViewById(R.id.iv_head);
 		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
 		mMyRecordLayout = (RelativeLayout) view.findViewById(R.id.my_record);
@@ -92,6 +121,7 @@ public class UserCenterFragment extends BaseFragment{
 		mFeedBackLayout = (RelativeLayout) view.findViewById(R.id.feedback);
 
 		mAboutLayout = (RelativeLayout) view.findViewById(R.id.about);
+		mBack=(RelativeLayout)view.findViewById(R.id.back);
 
 
 
@@ -102,6 +132,38 @@ public class UserCenterFragment extends BaseFragment{
 	 * 注册监听器
 	 */
 	private void addListeners() {
+		//绑定手机号或者退出登录
+		if(is_login.equals("1")){
+			mExitLogin.setText("绑定手机号");
+			mExitLogin.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+					
+				}
+			});
+		}else if(is_login.equals("0")){
+			mExitLogin.setText("退出登录");
+			mExitLogin.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View arg0) {
+				startActivity(new Intent(getActivity(),LoginActivity.class));
+					getActivity().finish();
+				}
+			});
+		}
+		
+		//返回
+		mBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
+			}
+		});
 		//个人资料
 		mPersonData.setOnClickListener(new OnClickListener() {
 			
@@ -123,7 +185,8 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(MyRecordFragment
+						.class, null));
 
 			}
 		});

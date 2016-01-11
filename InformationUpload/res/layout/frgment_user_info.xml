@@ -12,18 +12,26 @@
         android:background="@android:color/white"
         android:orientation="horizontal"
         android:paddingTop="13dp" >
+        
+            <RelativeLayout
+                    android:id="@+id/persondata_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/back_selecter" />
+                </RelativeLayout>
+
+       
 
         <TextView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/all_back" />
-
-        <TextView
-            android:id="@+id/title"
+            android:id="@+id/persondata_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -33,7 +41,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/title"
+            android:layout_below="@+id/persondata_title"
             android:layout_marginTop="13dp"
             android:background="@color/login_item_color" />
     </RelativeLayout>
@@ -86,6 +94,7 @@
         android:background="@drawable/herizontal_line" />
 
     <RelativeLayout
+        android:id="@+id/name_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white" >
@@ -129,6 +138,7 @@
         android:background="@drawable/herizontal_line" />
 
     <RelativeLayout
+        android:id="@+id/tel_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white" >

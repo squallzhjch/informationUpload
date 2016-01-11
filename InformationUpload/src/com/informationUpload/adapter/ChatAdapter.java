@@ -14,6 +14,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,8 +29,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChatAdapter extends BaseAdapter {
-   
-	
+
+
 
 	private ArrayList<ChatMessage> list;
 	private LayoutInflater inflater;
@@ -37,7 +38,7 @@ public class ChatAdapter extends BaseAdapter {
 	private Context context;
 	private InformationCollectionFragment fragm;
 
-	
+
 
 	public ChatAdapter(Context context,InformationCollectionFragment fragm,ArrayList<ChatMessage> list){
 		this.fragm=fragm;
@@ -45,19 +46,19 @@ public class ChatAdapter extends BaseAdapter {
 		if(list==null){
 			list=new ArrayList<ChatMessage>();
 		}else{
-		this.list=list;
+			this.list=list;
 		}
 		inflater=LayoutInflater.from(context);
 	}
-	
+
 	public void setData(ArrayList<ChatMessage> list){
 		this.list=list;
 	}
 	public void notifadataset(){
 		this.notifyDataSetChanged();
 	}
-	    
-	
+
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -72,7 +73,7 @@ public class ChatAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		
+
 		return position ;
 	}
 
@@ -87,22 +88,23 @@ public class ChatAdapter extends BaseAdapter {
 			vh.tv_time= (TextView)Convertview.findViewById(R.id.tv_time);
 			Convertview.setTag(vh);
 		}else{
-		     vh=(ViewHolder) Convertview.getTag();
+			vh=(ViewHolder) Convertview.getTag();
 		}
 		int longti= (int) (getItem(position).getChattimelong());
+
 		LayoutParams lp;
-		if(longti<2){
-			 lp = new LayoutParams(longti*30,50);  
-		}else{
-			 lp = new LayoutParams(longti*16,50);  
-		}
- 	
-		
+
+
+
+		lp = new LayoutParams(200+longti*10,70);  
+
+
+
 		vh.tv_chatcontent.setText("");
 		vh.tv_chatcontent.setLayoutParams(lp);
-//		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
+		//		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
 		vh.tv_time.setText(getItem(position).getChattimelong()+"");
-		
+
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -112,13 +114,13 @@ public class ChatAdapter extends BaseAdapter {
 					file.delete();
 				}
 				list.remove(position);
-				
-				
+
+
 				ChatAdapter.this.notifadataset();
-				
+
 				fragm.resetListView();
-				
-				
+
+
 				Toast.makeText(context,"已经删除",Toast.LENGTH_LONG).show();
 			}
 		});
@@ -126,43 +128,43 @@ public class ChatAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-			
+
 				if (getItem(position)!=null) {
-				    if(new File(getItem(position).getPath()).exists()){
-					playMusic(getItem(position).getPath()) ;
-				    }else{
-				    	Toast.makeText (context, "该文件已经被手动在文件夹中删除",Toast.LENGTH_SHORT).show();
-				    }
+					if(new File(getItem(position).getPath()).exists()){
+						playMusic(getItem(position).getPath()) ;
+					}else{
+						Toast.makeText (context, "该文件已经被手动在文件夹中删除",Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 		});
-	
+
 		return Convertview;
 	}
-	
+
 	/**
 	 * @Description
 	 * @param name
 	 */
 	private void playMusic(String name) {
 		try {
-			
+
 			if (mMediaPlayer.isPlaying()) {
-				
+
 				mMediaPlayer.stop();
-				
+
 			}
 			mMediaPlayer.reset();
 			mMediaPlayer.setDataSource(name);
-			
+
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
-		 
+
 			mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer mp) {
-					
-					
+
+
 				}
 			});
 
@@ -171,10 +173,10 @@ public class ChatAdapter extends BaseAdapter {
 		}
 
 	}
-	
+
 	public class ViewHolder{
 		public ImageView iv_userhead;
-	    public 	TextView tv_chatcontent;
+		public 	TextView tv_chatcontent;
 		public TextView tv_time;
 	}
 

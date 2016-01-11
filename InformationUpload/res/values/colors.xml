@@ -8,12 +8,15 @@
     <color name="background_color">#f1f1f1</color>
     <color name="horizontal_line_color">#e1e1e1</color>
     <color name="forget_register_bt_color">#343434</color>
-    <color name="login_item_color">#a7a7a7</color>
+    <color name="login_item_color">#c8c7cc</color>
     <color name="title_color">#343434</color>
     <color name="discovery_situation_bt_color">#3fafee</color>
     <color name="select_pop_title_color">#333333</color>
     <color name="select_pop_horizontal_line_color">#333333</color>
     <color name="information_location_icon_line">#d6d5d9</color>
-    <color name="delete_photo_color">#ffa312</color>
-
+   
+    <color name="select_pop_item_color">#868686</color>
+     <color name="delete_photo_color">#ffa312</color>
+      <color name="delete_photo_color_press">#e88e00</color>
+      <color name="offline_map_color">#666666</color>
 </resources>

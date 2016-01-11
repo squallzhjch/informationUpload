@@ -6,6 +6,8 @@ import java.io.File;
 
 
 import com.informationUpload.R;
+import com.informationUpload.activity.RegisterActivity;
+import com.informationUpload.fragments.utils.IntentHelper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +28,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 public class PersonDataFragment extends BaseFragment{
 
@@ -41,11 +45,23 @@ public class PersonDataFragment extends BaseFragment{
 	/**
 	 * 头像
 	 */
-	private ImageView iv_head;
+	private ImageView IvHead;
 	/**
 	 * 图片存储路径
 	 */
 	private Uri imageUri;
+	/**
+	 * 返回按钮
+	 */
+	private RelativeLayout PersondataBack;
+	/**
+	 * 昵称的relativelayout
+	 */
+	private RelativeLayout NameRl;
+	/**
+	 * 手机号的relativelayout
+	 */
+	private RelativeLayout TelRl;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,17 +76,51 @@ public class PersonDataFragment extends BaseFragment{
 
 	//初始化
 	private void init() {
-		iv_head = (ImageView) view.findViewById(R.id.iv_head);
+		IvHead = (ImageView) view.findViewById(R.id.iv_head);
+		PersondataBack=(RelativeLayout)view.findViewById(R.id.persondata_back);
+		NameRl =(RelativeLayout) view.findViewById(R.id.name_rl);
+		TelRl=(RelativeLayout)view.findViewById(R.id.tel_rl);
 
 	}
 	//添加监听器
 	private void addListeners() {
-		iv_head.setOnClickListener(new OnClickListener() {
+		//昵称rl
+		NameRl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+				getActivity().startActivity(intent);
+				
+			}
+		});
+		//手机rl
+		TelRl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+				getActivity().startActivity(intent);
+				
+			}
+		});
+		//头像
+		IvHead.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
 				new PopupWindows(getActivity(),view);
 
+			}
+		});
+		//返回按钮
+		PersondataBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
 			}
 		});
 
@@ -165,16 +215,16 @@ public class PersonDataFragment extends BaseFragment{
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
 
-		Log.i("chentao","uri:"+imageUri);
+		
 		switch (requestCode) {
 
 		case TAKE_PICTURE:
 
-			iv_head.setImageURI(imageUri);
+			IvHead.setImageURI(imageUri);
 			break;
 		case SELECT_PICTURE:
 			imageUri = intent.getData();
-			iv_head.setImageURI(imageUri);
+			IvHead.setImageURI(imageUri);
 
 
 			break;
