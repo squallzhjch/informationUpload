@@ -6,6 +6,8 @@ import java.io.File;
 
 
 import com.informationUpload.R;
+import com.informationUpload.activity.RegisterActivity;
+import com.informationUpload.fragments.utils.IntentHelper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +54,14 @@ public class PersonDataFragment extends BaseFragment{
 	 * 返回按钮
 	 */
 	private RelativeLayout PersondataBack;
+	/**
+	 * 昵称的relativelayout
+	 */
+	private RelativeLayout NameRl;
+	/**
+	 * 手机号的relativelayout
+	 */
+	private RelativeLayout TelRl;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,10 +78,33 @@ public class PersonDataFragment extends BaseFragment{
 	private void init() {
 		IvHead = (ImageView) view.findViewById(R.id.iv_head);
 		PersondataBack=(RelativeLayout)view.findViewById(R.id.persondata_back);
+		NameRl =(RelativeLayout) view.findViewById(R.id.name_rl);
+		TelRl=(RelativeLayout)view.findViewById(R.id.tel_rl);
 
 	}
 	//添加监听器
 	private void addListeners() {
+		//昵称rl
+		NameRl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+				getActivity().startActivity(intent);
+				
+			}
+		});
+		//手机rl
+		TelRl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				
+				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+				getActivity().startActivity(intent);
+				
+			}
+		});
 		//头像
 		IvHead.setOnClickListener(new OnClickListener() {
 

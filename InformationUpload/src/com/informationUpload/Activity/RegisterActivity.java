@@ -53,6 +53,18 @@ public class RegisterActivity extends BaseActivity {
 	 * 改变密码状态
 	 */
 	private CheckBox mChangeStatePassword;
+	/**
+	 * 存取用户信息的
+	 */
+	private SharedPreferences sp;
+	/**
+	 * 注册电话号码
+	 */
+	private String telNum;
+	/**
+	 * 注册密码
+	 */
+	private String rgpassword;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -87,10 +99,12 @@ public class RegisterActivity extends BaseActivity {
 		//注册
 		mRegister.setOnClickListener(new OnClickListener() {
 
+			
+
 			@Override
 			public void onClick(View arg0) {
-				String telNum = mTelephoneNum.getText().toString();
-				String rgpassword = mRegisterPassword.getText().toString();
+				 telNum = mTelephoneNum.getText().toString();
+			 rgpassword = mRegisterPassword.getText().toString();
 				//注册	
 				register(telNum,rgpassword);
 
@@ -147,8 +161,8 @@ public class RegisterActivity extends BaseActivity {
 
 	}
 	//注册
-	protected void register(String telNum,String telpassword) {
-		SharedPreferences sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+	protected void register(final String telNum,final String telpassword) {
+		 sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		String userName = sp.getString("user_name",null);
 		HashMap<String,Object> map=new HashMap<String, Object>();
 		map.put("tel", telNum);
@@ -176,11 +190,16 @@ public class RegisterActivity extends BaseActivity {
 	//进行json解析
 	protected void parseJson(String json) {
 		JSONObject jsonObj = JSON.parseObject(json);
-		String errcode=jsonObj.getString("errcode");
+		String errcode=""+jsonObj.getInteger("errcode");
+		Log.i("chentao", "errcode:"+errcode);
 		String errmsg=jsonObj.getString("errmsg");
-		if(!"".equals(errcode)&&null!=errcode&&"0".equals(0)){
+		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
 			Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
+			sp.edit().putString("user_tel",telNum).commit();
+			sp.edit().putString("user_tel",telNum).commit();
+			startActivity(new Intent(RegisterActivity.this,MainActivity.class));
 			RegisterActivity.this.finish();
+			
 		}else{
 			Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
 		}

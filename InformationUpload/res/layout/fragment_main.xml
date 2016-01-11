@@ -115,9 +115,9 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/discovery_situation"
+        android:background="@drawable/main_big_discovery_bt"
         android:text="发现情况"
-        android:textColor="#548bf7"
+        android:textColor="@android:color/white"
         android:textSize="20sp" />
 
 </RelativeLayout>

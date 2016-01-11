@@ -133,7 +133,7 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private void addListeners() {
 		//绑定手机号或者退出登录
-		if(userTel==null){
+		if(is_login.equals("1")){
 			mExitLogin.setText("绑定手机号");
 			mExitLogin.setOnClickListener(new OnClickListener() {
 				
@@ -143,14 +143,14 @@ public class UserCenterFragment extends BaseFragment{
 					
 				}
 			});
-		}else{
+		}else if(is_login.equals("0")){
 			mExitLogin.setText("退出登录");
 			mExitLogin.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View arg0) {
 				startActivity(new Intent(getActivity(),LoginActivity.class));
-					
+					getActivity().finish();
 				}
 			});
 		}

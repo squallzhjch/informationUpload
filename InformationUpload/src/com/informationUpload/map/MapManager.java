@@ -167,6 +167,7 @@ public class MapManager {
 
 	public void onStop() {
 		if(mMapView != null){
+			
 		}
 	}
 	public void setOnMapClickListener(OnMapClickListener listener){
@@ -238,7 +239,13 @@ public class MapManager {
 				 Log.i("chentao","onGetReverseGeoCodeResult:"+arg0.getAddress());
 
 				 if(listener!=null){
-				     String admincode = arg0.getAddressDetail().city;
+					 String province=arg0.getAddressDetail().province;
+					 String city = arg0.getAddressDetail().city;
+					 String district=arg0.getAddressDetail().district;
+					 String street=arg0.getAddressDetail().street;
+					 String streetNumber=arg0.getAddressDetail().streetNumber;
+                     Log.i("chentao","province:"+province+",city:"+city+",district:"+district+",street:"+street+",streetNumber:"+streetNumber);
+				     String admincode = province+city+district;
 					 listener.OnSuccess(arg0.getAddress(),admincode);
 				 }
 			 }

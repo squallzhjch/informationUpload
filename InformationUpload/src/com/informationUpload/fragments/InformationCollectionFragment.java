@@ -677,7 +677,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					map.put("location", new locationMessage((float)infomessage.getLat(),(float)infomessage.getLon()));
 					map.put("info_type",infomessage.getType());
-					map.put("adiminCode",mAdminCode);
+					map.put("adminCode",mAdminCode);
 					map.put("address",mAddress);
 					list_att=new ArrayList<attachmentsMessage>();
 					List<ChatMessage> chatmsglist = infomessage.getChatMessageList();

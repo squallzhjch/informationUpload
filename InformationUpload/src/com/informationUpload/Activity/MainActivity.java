@@ -1,6 +1,7 @@
 package com.informationUpload.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -89,7 +90,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
 
     @Override
     public void onBackPressed() {
+    	Log.i("chentao", "onBackPressed1");
         if (!myFragmentManager.back()) {
+        	Log.i("chentao", "onBackPressed2");
             finish();
             System.exit(0);
         }

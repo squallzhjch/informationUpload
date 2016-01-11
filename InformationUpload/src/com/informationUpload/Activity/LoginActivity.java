@@ -241,9 +241,9 @@ public class LoginActivity extends BaseActivity{
 	protected void parseJson(String json) {
 		JSONObject jsonObj = JSON.parseObject(json);
 	
-	String errcode =	jsonObj.getString("errcode");
+	String errcode =""+	jsonObj.getInteger("errcode");
 	String errmsg =	jsonObj.getString("errmsg");
-	if(!"".equals(errcode)&&null!=errcode&&"0".equals(0)){
+	if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
 		String userid =	jsonObj.getString("data");
 		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		

@@ -94,6 +94,7 @@
         android:background="@drawable/herizontal_line" />
 
     <RelativeLayout
+        android:id="@+id/name_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white" >
@@ -137,6 +138,7 @@
         android:background="@drawable/herizontal_line" />
 
     <RelativeLayout
+        android:id="@+id/tel_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white" >

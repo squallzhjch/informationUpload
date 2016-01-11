@@ -235,6 +235,7 @@ public class MainFragment extends BaseFragment {
 	protected void parseJson(String json) {
 		JSONObject jsonObj = JSON.parseObject(json);
 		String errcode = jsonObj.getString("errcode");
+		
 		String errmsg = jsonObj.getString("errmsg");
 		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
 			JSONArray data = jsonObj.getJSONArray("data");
