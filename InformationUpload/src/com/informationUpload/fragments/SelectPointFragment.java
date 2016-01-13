@@ -118,6 +118,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapC
 		mMapManager.searchAddress(point,new OnSearchAddressListener() {
 			@Override
 			public void OnSuccess(String address,String adminCode) {
+				mMapManager.centerpoint(point);
 				mAdminCode=adminCode;
 				mAddress = address;
 				mSelectView.setAddressText(address);

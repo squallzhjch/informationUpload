@@ -131,8 +131,13 @@ public class MapManager {
 			//            mMapView.getMap().setMapStatus(MapStatusUpdateFactory.newLatLng(new LatLng(location.getLat(), location.getLon())));
 		}
 	};
-
-
+    //使某点居中显示
+    public void centerpoint(GeoPoint point){
+    	LatLng ll = new LatLng(point.getLat(),
+    			point.getLon());
+		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+		mMapView.getMap().animateMapStatus(u);
+    }
 	public void onDestroy(){
 		if(mMapView != null){
 			mMapView.onDestroy();
