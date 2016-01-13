@@ -7,13 +7,12 @@ buildscript {
     }
 }
 apply plugin: 'android'
-
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
 android {
-    compileSdkVersion 19
+    compileSdkVersion 18
     buildToolsVersion '22.0.1'
 
     sourceSets {

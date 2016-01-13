@@ -1,22 +1,17 @@
 package com.informationUpload.utils;
 
 import java.io.File;
-import java.io.IOException;
 
 import com.informationUpload.R;
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager;
-import com.informationUpload.VoiceSpeech.VoiceSpeechManager.OnParseListener;
+import com.informationUpload.voiceSpeech.VoiceSpeechManager;
+import com.informationUpload.voiceSpeech.VoiceSpeechManager.OnParseListener;
 import com.informationUpload.entity.ChatMessage;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.MediaPlayer;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.SystemClock;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
