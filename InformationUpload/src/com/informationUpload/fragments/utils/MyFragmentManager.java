@@ -132,4 +132,9 @@ public class MyFragmentManager {
     public void hideFragment(){
 
     }
+
+    public void onDestroy(){
+        mFragmentList.clear();
+        mInstance = null;
+    }
 }

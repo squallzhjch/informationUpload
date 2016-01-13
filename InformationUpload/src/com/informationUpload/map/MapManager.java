@@ -145,6 +145,7 @@ public class MapManager {
 		if(mOnMapClickListeners != null){
 			mOnMapClickListeners.clear();
 		}
+		mInstance = null;
 	}
 
 	public void onPause(){
