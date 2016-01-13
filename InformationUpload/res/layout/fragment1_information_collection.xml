@@ -149,6 +149,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="10dp"
                     android:text="删除"
+                    android:visibility="invisible"
                     android:textColor="@color/delete_photo_color"
                     android:textSize="13sp" />
             </RelativeLayout>

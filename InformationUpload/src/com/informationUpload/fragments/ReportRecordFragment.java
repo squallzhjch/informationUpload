@@ -54,6 +54,7 @@ import org.w3c.dom.Text;
  * @author zhjch
  * @version V1.0
  * @ClassName: ReportRecordFragment
+ * 
  * @Date 2015/12/9
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */

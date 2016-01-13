@@ -42,6 +42,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -216,7 +217,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 地址
 	 */
-	private String mAddress;
+	private String mAddress="";
 	/**
 	 * 图片名称
 	 */
@@ -325,7 +326,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				mInformationManager.updateInformation(mRowkey,values);
 				mFragmentManager.back();
 				Toast.makeText(getActivity(),"上传成功", Toast.LENGTH_SHORT).show();
-			    
+
 				break;
 			case 3:	
 				pb.dismiss();
@@ -856,11 +857,33 @@ public class InformationCollectionFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case TAKE_PICTURE:
+			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(180,180);
+			lp_rl.setMargins(5,0,5,0);
+
+			RelativeLayout rl=new RelativeLayout(getActivity());
+
+			rl.setLayoutParams(lp_rl);
+
 			ImageView imageView = new ImageView(getActivity());
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
-			lp.setMargins(5,0,5,0);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(180,180);
+			//			lp.setMargins(5,0,5,0);
 			imageView.setLayoutParams(lp);
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			ImageView iv_delete = new ImageView(getActivity());
+
+			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(60,60);
+
+			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
+			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
+
+
+			iv_delete.setLayoutParams(lp_del);
+			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
+			iv_delete.setImageResource(R.drawable.delete_item);
+
+			rl.addView(imageView);
+			rl.addView(iv_delete);
+
 			try {
 
 				bitmap = Bimp.revitionImageSize(file.getPath());
@@ -882,13 +905,15 @@ public class InformationCollectionFragment extends BaseFragment {
 				e.printStackTrace();
 			}
 			if(bitmap!=null){
+
 				imageView.setImageBitmap(bitmap);
-				imageView.setTag(i);
+				imageView.setTag(listview.size());
 				imageView.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
 						int num = (Integer) arg0.getTag();
+						 Log.i("chentao","num:"+num);
 						Bundle bundle=new Bundle();
 						bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
 						bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
@@ -896,12 +921,31 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					}
 				});
+				//删除
+			    iv_delete.setTag(listview.size());
+				iv_delete.setOnClickListener(new OnClickListener() {
 
+					@Override
+					public void onClick(View arg0) {
+						int j = (Integer) arg0.getTag();
+					   Log.i("chentao","j:"+j);
+					   Log.i("chentao","listview:"+ listview.size()+"");
+					   for(int m=0;m<listview.size();m++){
+						  int index = (Integer) listview.get(m).getTag();
+						   if(index==j){
+							   hlinearlayout.removeView(listview.get(m));
+							   listview.remove(m);
+						   }
+					   }
+					
 
-				hlinearlayout.addView(imageView, 0);
-				listview.add(imageView);
+					}
+				});
+                rl.setTag(listview.size());
+				hlinearlayout.addView(rl, 0);
+				listview.add(rl);
 
-				i++;
+//				i++;
 				if (hscrollview.getWidth() >= width) {
 					new Handler().post(new Runnable() {
 

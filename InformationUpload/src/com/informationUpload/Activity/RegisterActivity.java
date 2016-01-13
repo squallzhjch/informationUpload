@@ -99,12 +99,12 @@ public class RegisterActivity extends BaseActivity {
 		//注册
 		mRegister.setOnClickListener(new OnClickListener() {
 
-			
+
 
 			@Override
 			public void onClick(View arg0) {
-				 telNum = mTelephoneNum.getText().toString();
-			 rgpassword = mRegisterPassword.getText().toString();
+				telNum = mTelephoneNum.getText().toString();
+				rgpassword = mRegisterPassword.getText().toString();
 				//注册	
 				register(telNum,rgpassword);
 
@@ -162,7 +162,7 @@ public class RegisterActivity extends BaseActivity {
 	}
 	//注册
 	protected void register(final String telNum,final String telpassword) {
-		 sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+		sp = RegisterActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		String userName = sp.getString("user_name",null);
 		Log.i("chentao","user_name:"+userName);
 		HashMap<String,Object> map=new HashMap<String, Object>();
@@ -200,9 +200,18 @@ public class RegisterActivity extends BaseActivity {
 			sp.edit().putString("is_login","0").commit();
 			startActivity(new Intent(RegisterActivity.this,MainActivity.class));
 			RegisterActivity.this.finish();
-			
+
 		}else{
-			Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
+			if(errmsg.equals("用户已经存在")){
+				Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
+				sp.edit().putString("user_tel",telNum).commit();
+				sp.edit().putString("is_login","1").commit();
+				startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+			}else{
+				Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
+				
+			}
+			
 		}
 
 	}

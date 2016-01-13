@@ -153,11 +153,14 @@
 
         <CheckBox
             android:id="@+id/select_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:maxHeight="40dp"
             android:layout_alignParentLeft="true"
             android:text="全选"
-   
+            android:button="@drawable/infocheckbox_selecter"
+            android:paddingLeft="5dp"
+            android:textSize="12sp"
             android:textColor="@color/select_pop_title_color" />
 
         <TextView
