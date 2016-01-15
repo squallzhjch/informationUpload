@@ -70,7 +70,7 @@ public class MapManager {
 		mContext = context;
 		mMapView = mapView;
 		map = mMapView.getMap();
-		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(15f));
+		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(17f));
 		mapView.getMap().setMyLocationEnabled(true);
 		mapView.getMap().getUiSettings().setCompassEnabled(false);
 		mLocationManager = LocationManager.getInstance();
