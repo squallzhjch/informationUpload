@@ -12,9 +12,18 @@ dependencies {
 }
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'informationUpload'
+            keyPassword 'navinfo'
+            storeFile file('G:/git/informationUpload/informationUpload.jks')
+            storePassword 'navinfo'
+        }
+        debug {
+        }
+    }
     compileSdkVersion 18
     buildToolsVersion '22.0.1'
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -38,5 +47,16 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    buildTypes {
+        release {
+            zipAlignEnabled true
+            signingConfig signingConfigs.release
+        }
+        debug {
+            debuggable true
+            jniDebuggable true
+            signingConfig signingConfigs.release
+        }
     }
 }
