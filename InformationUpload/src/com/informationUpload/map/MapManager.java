@@ -64,9 +64,6 @@ public class MapManager {
 	public void init(Context context, MapView mapView){
 		if(mapView == null || context == null)
 			return;
-
-
-
 		mContext = context;
 		mMapView = mapView;
 		map = mMapView.getMap();
@@ -77,7 +74,7 @@ public class MapManager {
 		mLocationManager.startLocation();
 
 		mLocationManager.addOnLocationListener(listener);
-
+       
 		mMapView.getMap().setOnMapClickListener(new OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
