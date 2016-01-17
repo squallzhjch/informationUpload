@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.PopupWindow;
@@ -128,7 +129,8 @@ public class MainFragment extends BaseFragment {
 	 * 是否需要刷新
 	 */
 	private boolean isneedrefresh=true;
-
+	 TextView tv1;
+     TextView tv2;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
@@ -316,39 +318,79 @@ public class MainFragment extends BaseFragment {
 					.zIndex(9).draggable(true);
 			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
 			mMarker.setTitle(text+":"+list.get(i).getAddress());
+           
 
 
-
-
+ 
 		}
 		mapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
 			//弹窗
 			private InfoWindow mInfoWindow;
+			private LayoutParams lp;
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
-
+                tv1=null;
+                tv2=null;
 				LatLng ll = marker.getPosition();
+				double lat = ll.latitude;
+				double lon = ll.longitude;
+				mapManager.setCenter(new GeoPoint(lat,lon));
+			
 				String[] title = marker.getTitle().split(":");
-				TextView tv=new TextView(getActivity());
-				tv.setText("");
+			
+		        
 				for(int i=0;i<title.length;i++){
 
 					if(i==title.length-1){
-						tv.append(title[i]);
+						 tv1=new TextView(getActivity());
+						tv1.setText(title[i]);
+						if(title.length==1){
+							tv1.setTextSize(20);
+						}else{
+							tv1.setTextSize(15);
+						}
+						
 					}else{
-						tv.append(title[i]+"\n");
+						 tv2=new TextView(getActivity());
+						tv2.setText(title[i]);
+						tv2.setTextSize(20);
+
 					}
 				}
+                LinearLayout linear=new LinearLayout(getActivity()
+                		);
+                LinearLayout.LayoutParams linear_lp =new LinearLayout.LayoutParams(300,100);
+                linear_lp.gravity=Gravity.CENTER;
+                linear.setLayoutParams(linear_lp);
+              
+                linear.setOrientation(LinearLayout.VERTICAL);
+                linear.setBackgroundResource(R.drawable.select_point_pop_bg);
+                if(title.length==1){
+                	 lp = new LinearLayout.LayoutParams(
+    						800,
+    						240);
+                	 lp.gravity=Gravity.CENTER;
+                }else{
+                	 lp = new LinearLayout.LayoutParams(
+    						800,
+    						120);
+                	 lp.gravity=Gravity.CENTER;
+                }
+			
+				
+			   
 
-
-				LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-						LinearLayout.LayoutParams.WRAP_CONTENT,
-						LinearLayout.LayoutParams.WRAP_CONTENT);
-				tv.setLayoutParams(lp);
-				tv.setTextColor(Color.WHITE);
-				tv.setBackgroundResource(R.drawable.select_point_pop_bg);
-
+				if(tv2!=null){
+					tv2.setLayoutParams(lp);
+					tv2.setTextColor(Color.WHITE);
+					linear.addView(tv2);
+				}
+				if(tv1!=null){
+					tv1.setLayoutParams(lp);
+					tv1.setTextColor(Color.WHITE);
+				linear.addView(tv1);
+				}
 				OnInfoWindowClickListener listener = new OnInfoWindowClickListener() {
 					public void onInfoWindowClick() {
 						mapManager.getMap().hideInfoWindow();
@@ -357,7 +399,8 @@ public class MainFragment extends BaseFragment {
 				};
 
 
-				mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(tv), ll, -100, listener);
+				mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(linear), ll, -100, listener);
+				
 				mapManager.getMap().showInfoWindow(mInfoWindow);
 
 				return true;

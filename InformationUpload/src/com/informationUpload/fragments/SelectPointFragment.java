@@ -58,7 +58,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_select_point, null);
-
+        
         TitleView title = (TitleView) view.findViewById(R.id.title_view);
         title.setOnLeftAreaClickListener(new View.OnClickListener() {
             @Override
