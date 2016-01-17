@@ -1008,7 +1008,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setRemark(additional_remarks_et.getText().toString());
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
-			mInformationManager.saveInformation(mApplication.getUserId(), message);
+			mInformationManager.saveInformation(mApplication.getUserId(), message, null);
 		}
 
 	}

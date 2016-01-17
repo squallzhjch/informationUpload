@@ -69,7 +69,10 @@ public class InformationManager {
     public void init(Context context) {
         mContext = context;
     }
-
+    public interface OnDBListener{
+        void onSuccess();
+        void onFailed();
+    }
     private InformationManager() {
         mThreadManager = ThreadManager.getInstance();
     }
@@ -110,7 +113,7 @@ public class InformationManager {
         );
     }
    
-    public void saveInformation(final String userId, final InformationMessage message) {
+    public void saveInformation(final String userId, final InformationMessage message,final OnDBListener listener) {
         if (TextUtils.isEmpty(userId) || message == null)
             return;
         mThreadManager.getHandler().post(
@@ -172,8 +175,14 @@ public class InformationManager {
                     @Override
                     public void onSuccess(Boolean value) {
                         if (value) {
+                            if (listener != null){
+                                listener.onSuccess();
+                            }
                             Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
                         } else {
+                            if(listener != null){
+                                listener.onFailed();
+                            }
                             Toast.makeText(mContext, "保存失败", Toast.LENGTH_SHORT).show();
                         }
                     }
