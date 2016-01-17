@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="注册"
+                android:textSize="@dimen/text_size_large"
                 android:textColor="@color/title_text_color" />
 
             <ImageView

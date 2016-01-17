@@ -1,6 +1,7 @@
 package com.informationUpload.map;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -54,7 +55,7 @@ public class LocationManager  implements BDLocationListener{
             mCurrentLocation = new GeoPoint();
         }
         
-        
+       
         
         
         

@@ -120,8 +120,14 @@ public class MainFragment extends BaseFragment {
 	 * 地图上的点显示信息
 	 */
 	private String text;
+	/**
+	 * 
+	 * 是否需要刷新
+	 */
+	private boolean isneedrefresh=true;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
 		mapManager=MapManager.getInstance();
 		popview = inflater.inflate(R.layout.main_fragment_select_pop, null);
@@ -195,15 +201,32 @@ public class MainFragment extends BaseFragment {
 
 			}
 		});
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				while(isneedrefresh){
+					
+					if(mLocationManager.getCurrentPoint().getLat()!=0.0&&mLocationManager.getCurrentPoint().getLon()!=0.0){
+						refreshmap();
+						isneedrefresh=false;
+					}
+					
+				}
+				
+			}
+		}).start();
+		
 		return view;
 	}
 	//刷新码点
 	protected void refreshmap() {
 		HashMap<String,Object> map=new HashMap<String, Object>();
 		double[] ret = ChangePointUtil.baidutoreal(mLocationManager.getCurrentPoint().getLat(),mLocationManager.getCurrentPoint().getLon());
-		map.put("latitude",(ret[0]+"").substring(0,(mLocationManager.getCurrentPoint().getLat()+"").lastIndexOf(".")+5));
-		map.put("longitude",(ret[1]+"").substring(0,(mLocationManager.getCurrentPoint().getLon()+"").lastIndexOf(".")+5));
-
+		Log.i("chentao", "ret[o]:"+ret[0]+",ret[1]:"+ret[1]);
+		map.put("latitude",(ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+5));
+		map.put("longitude",(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+5));
+     
 		ServiceEngin.Request(getActivity(), map, "inforquery" ,new EnginCallback(getActivity()){
 			@Override
 			public void onSuccess(ResponseInfo arg0) {
@@ -432,6 +455,12 @@ public class MainFragment extends BaseFragment {
 
 
 
+	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		isneedrefresh=false;
 	}
 
 	private View.OnKeyListener backlistener = new View.OnKeyListener() {

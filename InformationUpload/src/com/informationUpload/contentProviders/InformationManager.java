@@ -104,9 +104,9 @@ public class InformationManager {
                     @Override
                     public void onSuccess(Boolean value) {
                         if (value) {
-                            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(mContext, "更新失败", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "更新失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -178,12 +178,12 @@ public class InformationManager {
                             if (listener != null){
                                 listener.onSuccess();
                             }
-                            Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
+                            
                         } else {
                             if(listener != null){
                                 listener.onFailed();
                             }
-                            Toast.makeText(mContext, "保存失败", Toast.LENGTH_SHORT).show();
+                           
                         }
                     }
                 }
