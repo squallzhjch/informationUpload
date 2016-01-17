@@ -21,7 +21,7 @@ import java.util.HashMap;
  * @Date 2015/12/3
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
-public class InformationProvider extends ContentProvider{
+public class InformationProvider extends ContentProviderWithDecorator{
 
     private static final String LOG_TAG = "InformationProvider";
     private static final String DATABASE_NAME = "informationsDB.db";
@@ -254,7 +254,8 @@ public class InformationProvider extends ContentProvider{
                 long _id = db.insert(INFORMATION_TABLE_NAME, null, values);
                 if (_id > 0) {
                     Uri uri1 = ContentUris.withAppendedId(Informations.Information.CONTENT_URI, _id);
-                    getContext().getContentResolver().notifyChange(uri1, null);
+                    notifyUriIfNeeded(uri);
+//                    getContext().getContentResolver().notifyChange(uri1, null);
                     return uri1;
                 }
                 break;
@@ -262,7 +263,8 @@ public class InformationProvider extends ContentProvider{
                  _id = db.insert(VIDEO_DATA_TABLE_NAME, null, values);
                 if (_id > 0) {
                     Uri uri1 = ContentUris.withAppendedId(Informations.VideoData.CONTENT_URI, _id);
-                    getContext().getContentResolver().notifyChange(uri1, null);
+                    notifyUriIfNeeded(uri);
+//                    getContext().getContentResolver().notifyChange(uri1, null);
                     return uri1;
                 }
                 break;
@@ -292,7 +294,8 @@ public class InformationProvider extends ContentProvider{
             default:
                 throw new IllegalArgumentException();
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        notifyUriIfNeeded(uri);
+//        getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 
@@ -319,7 +322,8 @@ public class InformationProvider extends ContentProvider{
             default:
                 throw new IllegalArgumentException();
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        notifyUriIfNeeded(uri);
+//        getContext().getContentResolver().notifyChange(uri, null);
         return count;
     }
 }

@@ -5,6 +5,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.informationUpload.activity.MyApplication;
 
@@ -89,9 +90,11 @@ public class InformationObserver extends ContentObserver{
             cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_LOCAL), mContext.getUserId()}, null);
             if (cursor != null) {
                 localMessage = cursor.getCount();
-            }
 
+            }
+            Log.e("jingo", "checkData 1");
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -103,8 +106,9 @@ public class InformationObserver extends ContentObserver{
             if (cursor != null) {
                 serviceMessage = cursor.getCount();
             }
-
+            Log.e("jingo", "checkData 2");
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -115,6 +119,7 @@ public class InformationObserver extends ContentObserver{
     }
 
     private void notifyListeners(final InformationCheckData data) {
+        Log.e("jingo", "checkData 3");
         mUIHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -122,6 +127,7 @@ public class InformationObserver extends ContentObserver{
                     for (WeakReference<OnCheckMessageCountListener> weakRef : mOnCheckMessageCountListeners) {
                         if (weakRef != null
                                 && weakRef.get() != null) {
+                            Log.e("jingo", "checkData 4");
                             weakRef.get().onCheckNewMessageSucceed(data, false);
                         }
                     }

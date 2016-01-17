@@ -19,4 +19,7 @@
      <color name="delete_photo_color">#ffa312</color>
       <color name="delete_photo_color_press">#e88e00</color>
       <color name="offline_map_color">#666666</color>
+
+    <color name="zoom_btn_press_false">#00ffffff</color>
+    <color name="zoom_btn_press_true">#c8f1f1f1</color>
 </resources>

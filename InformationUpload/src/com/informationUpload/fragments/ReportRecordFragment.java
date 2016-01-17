@@ -96,6 +96,7 @@ public class ReportRecordFragment extends BaseFragment{
 		mInformationObserver.addOnCheckMessageListener(new OnCheckMessageCountListener() {
 			@Override
 			public void onCheckNewMessageSucceed(InformationCheckData data, boolean isFirs) {
+				Log.e("jingo", "local = " + data.getLocalNum() + "upload = " + data.getUploadNum());
 				mLocalNum.setText(String.valueOf(data.getLocalNum()));
 				mUploadNum.setText(String.valueOf(data.getUploadNum()));
 			}

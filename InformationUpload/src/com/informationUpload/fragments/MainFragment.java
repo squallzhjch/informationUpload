@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -102,11 +103,11 @@ public class MainFragment extends BaseFragment {
 	/**
 	 * 对地图放大按钮
 	 */
-	private RelativeLayout main_enlarge_map;
+	private FrameLayout main_enlarge_map;
 	/**
 	 * 对地图缩小按钮
 	 */
-	private RelativeLayout main_reduce_map;
+	private FrameLayout main_reduce_map;
 	/**
 	 * 地图管理类
 	 */
@@ -175,7 +176,7 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		//对地图放大按钮
-		main_enlarge_map=(RelativeLayout)view.findViewById(R.id.main_enlarge_map);
+		main_enlarge_map=(FrameLayout)view.findViewById(R.id.main_enlarge_map);
 		main_enlarge_map.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -185,7 +186,7 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		//对地图缩小按钮
-		main_reduce_map=(RelativeLayout)view.findViewById(R.id.main_reduce_map);
+		main_reduce_map=(FrameLayout)view.findViewById(R.id.main_reduce_map);
 		main_reduce_map.setOnClickListener(new OnClickListener() {
 
 			@Override
