@@ -69,7 +69,10 @@ public class InformationManager {
     public void init(Context context) {
         mContext = context;
     }
-
+    public interface OnDBListener{
+        void onSuccess();
+        void onFailed();
+    }
     private InformationManager() {
         mThreadManager = ThreadManager.getInstance();
     }
@@ -101,16 +104,16 @@ public class InformationManager {
                     @Override
                     public void onSuccess(Boolean value) {
                         if (value) {
-                            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "更新成功", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(mContext, "更新失败", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(mContext, "更新失败", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
         );
     }
    
-    public void saveInformation(final String userId, final InformationMessage message) {
+    public void saveInformation(final String userId, final InformationMessage message,final OnDBListener listener) {
         if (TextUtils.isEmpty(userId) || message == null)
             return;
         mThreadManager.getHandler().post(
@@ -172,9 +175,15 @@ public class InformationManager {
                     @Override
                     public void onSuccess(Boolean value) {
                         if (value) {
-                            Toast.makeText(mContext, "保存成功", Toast.LENGTH_SHORT).show();
+                            if (listener != null){
+                                listener.onSuccess();
+                            }
+                            
                         } else {
-                            Toast.makeText(mContext, "保存失败", Toast.LENGTH_SHORT).show();
+                            if(listener != null){
+                                listener.onFailed();
+                            }
+                           
                         }
                     }
                 }

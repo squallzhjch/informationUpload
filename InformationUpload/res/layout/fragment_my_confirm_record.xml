@@ -36,6 +36,7 @@
             android:drawablePadding="12dp"
             android:gravity="center_vertical"
             android:text="上报记录"
+            android:textSize="@dimen/text_size_large"
             android:textColor="@color/title_text_color" />
 
         <ImageView

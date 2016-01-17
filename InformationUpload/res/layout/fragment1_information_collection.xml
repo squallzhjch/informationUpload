@@ -47,6 +47,7 @@
                     android:layout_centerInParent="true"
                     android:drawablePadding="12dp"
                     android:gravity="center_vertical"
+                    android:textSize="@dimen/text_size_large"
                     android:text="上报"
                     android:textColor="@color/forget_register_bt_color" />
 
@@ -73,7 +74,7 @@
                     android:layout_marginLeft="10dp"
                     android:text="位置:"
                     android:textColor="@android:color/black"
-                    android:textSize="11sp" />
+                    android:textSize="17sp" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -90,7 +91,7 @@
                         android:gravity="center_vertical"
                         android:text="点击选择位置"
                         android:textColor="@color/select_pop_title_color"
-                        android:textSize="12sp" />
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:layout_width="200dp"
@@ -109,7 +110,7 @@
                         android:gravity="center"
                         android:text="重新选点"
                         android:textColor="@android:color/white"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -140,7 +141,7 @@
                     android:layout_alignParentLeft="true"
                     android:text="拍照上传："
                     android:textColor="@android:color/black"
-                    android:textSize="13sp" />
+                    android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/delete_photo"
@@ -171,8 +172,8 @@
 
                     <ImageView
                         android:id="@+id/hliv"
-                        android:layout_width="180px"
-                        android:layout_height="180px"
+                        android:layout_width="210px"
+                        android:layout_height="210px"
                         android:background="@drawable/bt_add_pic" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -200,7 +201,7 @@
                 android:layout_marginTop="10dp"
                 android:text="录音上传："
                 android:textColor="@android:color/black"
-                android:textSize="13sp" />
+                android:textSize="17sp" />
 
             <ListView
                 android:id="@+id/voice_collection_lv"
@@ -296,7 +297,7 @@
                     android:background="@android:color/transparent"
                     android:text="保存到本地"
                     android:textColor="@android:color/black"
-                    android:textSize="11sp" />
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <Button
@@ -321,7 +322,7 @@
                     android:textColor="@android:color/black"
                     android:background="@android:color/transparent"
                     android:text="立刻上报"
-                    android:textSize="11sp" />
+                    android:textSize="17sp" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

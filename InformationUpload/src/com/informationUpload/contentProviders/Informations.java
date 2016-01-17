@@ -13,7 +13,7 @@ import com.informationUpload.contentProviders.columns.VideoDataColumns;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public final class Informations {
-    public static final String AUTHORITY = "com.informationUpload.contentproviders.Informations";
+    public static final String AUTHORITY = "com.informationUpload.contentProviders.Informations";
 
     static class InformationsBase {
         public static final int STATUS_LOCAL = 0; //数据还在本地没有上传

@@ -58,6 +58,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contentProviders.InformationManager;
+import com.informationUpload.contentProviders.InformationManager.OnDBListener;
 import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
@@ -295,6 +296,12 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 垂直主布局的Linearlayout
 	 */
 	private LinearLayout svll;
+	/**
+	 * 保存还是上报
+	 */
+	private String saveorreport;//保存0,上报1
+
+
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -319,14 +326,24 @@ public class InformationCollectionFragment extends BaseFragment {
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
 				mInformationManager.updateInformation(mRowkey,values);
-			
-				Toast.makeText(getActivity(),"上传成功", Toast.LENGTH_SHORT).show();
-				mFragmentManager.back();
+                final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
+				toast.show();
+                
+				  handler.postDelayed(new Runnable() {
+						
+						@Override
+						public void run() {
+							toast.cancel();
+							mFragmentManager.back();
+							
+						}
+					}, 600);
 				break;
 			case 3:	
 				pb.dismiss();
 				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
+			
 			}
 		}
 	};
@@ -337,7 +354,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
+		
 		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
 
 
@@ -657,10 +674,13 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				boolean bol = saveLocal();
-				if(bol==true){
-					mFragmentManager.back();
-				}
+				saveorreport="0";
+				saveLocal();
+
+
+
+
+
 			}
 		});
 
@@ -669,6 +689,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
+				saveorreport="1";
 				if(mAddress.equals("")){
 					Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行上报，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
 				}else{
@@ -855,21 +876,21 @@ public class InformationCollectionFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case TAKE_PICTURE:
-			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(180,180);
-			lp_rl.setMargins(5,0,5,0);
-
+			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
+//			lp_rl.setMargins(10,0,10,0);
+            
 			RelativeLayout rl=new RelativeLayout(getActivity());
 
 			rl.setLayoutParams(lp_rl);
-
+         
 			ImageView imageView = new ImageView(getActivity());
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(180,180);
-			//			lp.setMargins(5,0,5,0);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
+				lp.setMargins(5,0,5,0);
 			imageView.setLayoutParams(lp);
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			ImageView iv_delete = new ImageView(getActivity());
 
-			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(60,60);
+			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(70,70);
 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
@@ -911,7 +932,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					@Override
 					public void onClick(View arg0) {
 						int num = (Integer) arg0.getTag();
-						 Log.i("chentao","num:"+num);
+						Log.i("chentao","num:"+num);
 						Bundle bundle=new Bundle();
 						bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
 						bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
@@ -920,30 +941,30 @@ public class InformationCollectionFragment extends BaseFragment {
 					}
 				});
 				//删除
-			    iv_delete.setTag(listview.size());
+				iv_delete.setTag(listview.size());
 				iv_delete.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View arg0) {
 						int j = (Integer) arg0.getTag();
-					   Log.i("chentao","j:"+j);
-					   Log.i("chentao","listview:"+ listview.size()+"");
-					   for(int m=0;m<listview.size();m++){
-						  int index = (Integer) listview.get(m).getTag();
-						   if(index==j){
-							   hlinearlayout.removeView(listview.get(m));
-							   listview.remove(m);
-						   }
-					   }
-					
+						Log.i("chentao","j:"+j);
+						Log.i("chentao","listview:"+ listview.size()+"");
+						for(int m=0;m<listview.size();m++){
+							int index = (Integer) listview.get(m).getTag();
+							if(index==j){
+								hlinearlayout.removeView(listview.get(m));
+								listview.remove(m);
+							}
+						}
+
 
 					}
 				});
-                rl.setTag(listview.size());
+				rl.setTag(listview.size());
 				hlinearlayout.addView(rl, 0);
 				listview.add(rl);
 
-//				i++;
+				//				i++;
 				if (hscrollview.getWidth() >= width) {
 					new Handler().post(new Runnable() {
 
@@ -994,10 +1015,12 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 保存到本地数据库
 	 */
-	private boolean  saveLocal(){
+	private void  saveLocal(){
+
 		if(mAddress.equals("")){
+
 			Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
-			return false;
+
 		}else{
 			if (TextUtils.isEmpty(mRowkey)) {
 				mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
@@ -1012,9 +1035,39 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setRemark(additional_remarks_et.getText().toString());
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
-			mInformationManager.saveInformation(mApplication.getUserId(), message);
-			return true;
+			mInformationManager.saveInformation(mApplication.getUserId(), message,new OnDBListener() {
+
+				@Override
+				public void onSuccess() {
+
+					if(saveorreport.equals("0")){
+						final Toast toast = Toast.makeText(getActivity(), "保存成功",300);
+						toast.show();
+					    handler.postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								toast.cancel();
+								mFragmentManager.back();
+								
+								
+								
+							}
+						}, 600);
+                  
+					}
+
+				}
+
+				@Override
+				public void onFailed() {
+					Toast.makeText(getActivity(), "保存失败",Toast.LENGTH_SHORT).show();
+
+				}
+			});
+
 		}
+
 
 	}
 	@Override
