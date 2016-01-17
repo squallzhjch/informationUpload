@@ -2,13 +2,12 @@ package com.informationUpload.activity;
 
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
-import com.informationUpload.serviceengin.EnginCallback;
-import com.informationUpload.serviceengin.ServiceEngin;
+import com.informationUpload.serviceEngin.EnginCallback;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 

@@ -1,12 +1,7 @@
 package com.informationUpload.activity;
 
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -14,12 +9,8 @@ import java.util.UUID;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
-import com.informationUpload.entity.attachmentsMessage;
-import com.informationUpload.entity.locationMessage;
-import com.informationUpload.serviceengin.EnginCallback;
-import com.informationUpload.serviceengin.ServiceEngin;
-import com.informationUpload.utils.ZipUtil;
-import com.lidroid.xutils.db.annotation.Check;
+import com.informationUpload.serviceEngin.EnginCallback;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
@@ -27,17 +18,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.text.InputType;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;

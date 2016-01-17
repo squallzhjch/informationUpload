@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.informationUpload.voiceSpeech.VoiceSpeechManager;
-import com.informationUpload.contentproviders.InformationManager;
+import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.LocationManager;
 import com.informationUpload.thread.ThreadManager;

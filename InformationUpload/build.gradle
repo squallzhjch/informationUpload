@@ -16,7 +16,7 @@ android {
         release {
             keyAlias 'informationUpload'
             keyPassword 'navinfo'
-            storeFile file('G:/git/informationUpload/informationUpload.jks')
+            storeFile file('../informationUpload.jks')
             storePassword 'navinfo'
         }
         debug {

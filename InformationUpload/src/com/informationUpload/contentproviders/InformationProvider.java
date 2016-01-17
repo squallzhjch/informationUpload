@@ -1,4 +1,4 @@
-package com.informationUpload.contentproviders;
+package com.informationUpload.contentProviders;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -12,10 +12,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
-
-import com.informationUpload.contentproviders.Informations.Information;
 
 /**
  * @author zhjch

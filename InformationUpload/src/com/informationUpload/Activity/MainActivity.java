@@ -44,8 +44,10 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         if (mMapManager != null) {
             mMapManager.onDestroy();
         }
-        myFragmentManager.onDestroy();
-        myFragmentManager = null;
+        if(myFragmentManager != null) {
+            myFragmentManager.onDestroy();
+            myFragmentManager = null;
+        }
         super.onDestroy();
     }
 

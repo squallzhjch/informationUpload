@@ -1,4 +1,4 @@
-package com.informationUpload.contentproviders;
+package com.informationUpload.contentProviders;
 
 import java.io.Serializable;
 

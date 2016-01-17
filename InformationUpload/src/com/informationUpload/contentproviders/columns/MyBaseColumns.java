@@ -1,4 +1,4 @@
-package com.informationUpload.contentproviders.columns;
+package com.informationUpload.contentProviders.columns;
 
 /**
  * @author zhjch

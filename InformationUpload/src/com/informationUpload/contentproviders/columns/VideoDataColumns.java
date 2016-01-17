@@ -1,6 +1,4 @@
-package com.informationUpload.contentproviders.columns;
-
-import android.provider.BaseColumns;
+package com.informationUpload.contentProviders.columns;
 
 /**
  * @author zhjch

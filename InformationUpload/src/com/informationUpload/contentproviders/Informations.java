@@ -1,9 +1,9 @@
-package com.informationUpload.contentproviders;
+package com.informationUpload.contentProviders;
 
 import android.net.Uri;
 
-import com.informationUpload.contentproviders.columns.InformationColumns;
-import com.informationUpload.contentproviders.columns.VideoDataColumns;
+import com.informationUpload.contentProviders.columns.InformationColumns;
+import com.informationUpload.contentProviders.columns.VideoDataColumns;
 
 /**
  * @author zhjch

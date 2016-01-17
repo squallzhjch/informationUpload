@@ -1,4 +1,4 @@
-package com.informationUpload.contentproviders;
+package com.informationUpload.contentProviders;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.widget.Toast;
 
-import com.informationUpload.entity.BaseMessage;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.DataBaseMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -18,7 +17,6 @@ import com.informationUpload.utils.FileUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Vector;
 
 /**
  * @author zhjch

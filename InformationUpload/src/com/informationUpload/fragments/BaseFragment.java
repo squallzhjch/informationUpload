@@ -8,7 +8,7 @@ import android.support.v4.app.Fragment;
 import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.activity.MainActivity;
 import com.informationUpload.activity.MyApplication;
-import com.informationUpload.contentproviders.InformationManager;
+import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.contents.OnContentUpdateListener;

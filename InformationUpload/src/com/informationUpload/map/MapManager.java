@@ -1,20 +1,25 @@
 package com.informationUpload.map;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.ZoomControls;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
-import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
 import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
+import com.baidu.mapapi.map.Polygon;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -44,6 +49,7 @@ public class MapManager {
 	private Context mContext;
 	private Boolean bFirst = true;
 	private LocationManager mLocationManager;
+	private final List<WeakReference<OnMapStatusChangeListener>> mOnMapStatusChangeListeners = new ArrayList<WeakReference<OnMapStatusChangeListener>>();
 	private final List<WeakReference<OnMapClickListener>> mOnMapClickListeners = new ArrayList<WeakReference<OnMapClickListener>>();
 	private static volatile MapManager mInstance;
 	public static MapManager getInstance() {
@@ -61,7 +67,7 @@ public class MapManager {
 		return map;
 	}
 
-	public void init(Context context, MapView mapView){
+	public void init(final Context context, final MapView mapView){
 		if(mapView == null || context == null)
 			return;
 		mContext = context;
@@ -69,12 +75,16 @@ public class MapManager {
 		map = mMapView.getMap();
 		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(17f));
 		mapView.getMap().setMyLocationEnabled(true);
-		mapView.getMap().getUiSettings().setCompassEnabled(false);
+
+
 		mLocationManager = LocationManager.getInstance();
 		mLocationManager.startLocation();
-
 		mLocationManager.addOnLocationListener(listener);
-       
+		View child = mMapView.getChildAt(1);
+		if (child != null && (child instanceof ImageView || child instanceof ZoomControls)){
+			child.setVisibility(View.INVISIBLE);
+		}
+
 		mMapView.getMap().setOnMapClickListener(new OnMapClickListener() {
 			@Override
 			public void onMapClick(LatLng latLng) {
@@ -90,12 +100,49 @@ public class MapManager {
 				return false;
 			}
 		});
+
+
+		mMapView.getMap().setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+			@Override
+			public void onMapStatusChangeStart(MapStatus mapStatus) {
+				for (WeakReference<OnMapStatusChangeListener> weakRef : mOnMapStatusChangeListeners) {
+					if (weakRef.get() != null) {
+						weakRef.get().onMapStatusChangeStart(mapStatus);
+					}
+				}
+			}
+
+			@Override
+			public void onMapStatusChange(MapStatus mapStatus) {
+				for (WeakReference<OnMapStatusChangeListener> weakRef : mOnMapStatusChangeListeners) {
+					if (weakRef.get() != null) {
+						weakRef.get().onMapStatusChange(mapStatus);
+					}
+				}
+			}
+
+			@Override
+			public void onMapStatusChangeFinish(MapStatus mapStatus) {
+				for (WeakReference<OnMapStatusChangeListener> weakRef : mOnMapStatusChangeListeners) {
+					if (weakRef.get() != null) {
+						weakRef.get().onMapStatusChangeFinish(mapStatus);
+					}
+				}
+			}
+		});
+
+		mMapView.getMap().setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
+			@Override
+			public void onMapLoaded() {
+				WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+				int width = wm.getDefaultDisplay().getWidth();
+				mapView.getMap().getUiSettings().setCompassPosition(new Point(width - 80, 80));
+			}
+		});
+
 	}
 
 	private  OnLocationListener listener = new OnLocationListener() {
-
-
-
 
 		@Override
 		public void onLocationChanged(GeoPoint location,String address,float radius) {
@@ -129,12 +176,19 @@ public class MapManager {
 		}
 	};
     //使某点居中显示
-    public void centerpoint(GeoPoint point){
+    public void setCenter(GeoPoint point){
     	LatLng ll = new LatLng(point.getLat(),
     			point.getLon());
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mMapView.getMap().animateMapStatus(u);
     }
+
+	public GeoPoint getCenter(){
+		final LatLng point = mMapView.getMap().getMapStatus().target;
+		GeoPoint point1 = new GeoPoint(point.latitude, point.longitude);
+		return point1;
+	}
+
 	public void onDestroy(){
 		if(mMapView != null){
 			mMapView.onDestroy();
@@ -142,6 +196,10 @@ public class MapManager {
 		}
 		if(mLocationManager != null){
 			mLocationManager.onDestroy();
+		}
+
+		if(mOnMapStatusChangeListeners != null){
+			mOnMapStatusChangeListeners.clear();
 		}
 
 		if(mOnMapClickListeners != null){
@@ -201,6 +259,35 @@ public class MapManager {
 			}
 		}
 	}
+
+	public void setOnMapStatusChangeListener(OnMapStatusChangeListener listener){
+		synchronized (mOnMapStatusChangeListeners) {
+			for (WeakReference<OnMapStatusChangeListener> weakRef : mOnMapStatusChangeListeners) {
+				if (weakRef != null
+						&& weakRef.get() == listener) {
+					return;
+				}
+			}
+			mOnMapStatusChangeListeners.add(new WeakReference<OnMapStatusChangeListener>(listener));
+		}
+	}
+
+	public void removeOnMapTouchListener(OnMapStatusChangeListener listener) {
+		synchronized (mOnMapStatusChangeListeners) {
+			WeakReference<OnMapStatusChangeListener> weakRef;
+			for (int idx = 0; idx < mOnMapStatusChangeListeners.size(); idx++) {
+				if ((weakRef = mOnMapStatusChangeListeners.get(idx)) != null) {
+					if (weakRef.get() == listener) {
+						mOnMapStatusChangeListeners.remove(idx);
+						return;
+					}
+				} else {
+					mOnMapStatusChangeListeners.remove(idx);
+					idx--;
+				}
+			}
+		}
+	}
 	/**
 	 * 重新定位
 	 */
@@ -233,7 +320,6 @@ public class MapManager {
 		 if(latLng == null)
 			 return;
 
-
 		 GeoCoder gc = GeoCoder.newInstance();
 		 gc.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
 
@@ -261,8 +347,6 @@ public class MapManager {
 		 });
 
 		 gc.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(latLng.getLat(),latLng.getLon())));
-
-
 
 	 }
 }

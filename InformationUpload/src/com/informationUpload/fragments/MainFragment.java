@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -13,15 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 
 
@@ -30,28 +27,21 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.GroundOverlayOptions;
 import com.baidu.mapapi.map.InfoWindow;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMarkerDragListener;
 import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
-import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.model.LatLngBounds;
 import com.informationUpload.R;
-import com.informationUpload.contentproviders.Informations;
+import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.entity.AroundInformation;
 import com.informationUpload.fragments.utils.IntentHelper;
 
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
-import com.informationUpload.serviceengin.EnginCallback;
-import com.informationUpload.serviceengin.ServiceEngin;
+import com.informationUpload.serviceEngin.EnginCallback;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.SystemConfig;
 import com.lidroid.xutils.exception.HttpException;
@@ -72,7 +62,7 @@ public class MainFragment extends BaseFragment {
 	/**
 	 * 个人中心按钮
 	 */
-	private RelativeLayout mCenterBtn;
+	private ImageView mCenterBtn;
 	/**
 	 * popwindow弹出的view
 	 */
@@ -104,11 +94,11 @@ public class MainFragment extends BaseFragment {
 	/**
 	 * 刷新地图码点按钮
 	 */
-	private RelativeLayout main_refresh;
+	private ImageView main_refresh;
 	/**
 	 * 重新定位按钮
 	 */
-	private RelativeLayout main_fix_position;
+	private ImageView main_fix_position;
 	/**
 	 * 对地图放大按钮
 	 */
@@ -155,7 +145,7 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		//个人中心按钮
-		mCenterBtn = (RelativeLayout) view.findViewById(R.id.center_btn);
+		mCenterBtn = (ImageView) view.findViewById(R.id.center_btn);
 		mCenterBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -163,7 +153,7 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		//刷新地图麻点按钮
-		main_refresh=(RelativeLayout)view.findViewById(R.id.main_refresh);
+		main_refresh=(ImageView)view.findViewById(R.id.main_refresh);
 		main_refresh.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -174,7 +164,7 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		//重新定位按钮
-		main_fix_position=(RelativeLayout)view.findViewById(R.id.main_fix_position);
+		main_fix_position=(ImageView)view.findViewById(R.id.main_fix_position);
 		main_fix_position.setOnClickListener(new OnClickListener() {
 
 			@Override

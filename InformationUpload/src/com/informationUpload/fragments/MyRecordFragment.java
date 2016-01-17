@@ -3,13 +3,10 @@ package com.informationUpload.fragments;
 import java.util.HashMap;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
-import com.informationUpload.activity.LoginActivity;
-import com.informationUpload.activity.MyApplication;
-import com.informationUpload.serviceengin.EnginCallback;
-import com.informationUpload.serviceengin.ServiceEngin;
+import com.informationUpload.serviceEngin.EnginCallback;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 

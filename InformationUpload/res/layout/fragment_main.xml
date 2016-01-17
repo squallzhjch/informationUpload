@@ -5,21 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <ImageView
         android:id="@+id/center_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/person_center_bg"
-        android:gravity="center" >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/person_head" />
-    </RelativeLayout>
+        android:background="@drawable/icon_map_btn_press"
+        android:src="@drawable/person_head"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -30,34 +24,24 @@
         android:layout_marginLeft="10dp"
         android:orientation="vertical" >
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/main_refresh"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/discovery_situation"
-            android:gravity="center" >
+            android:background="@drawable/icon_map_btn_press"
+            android:src="@drawable/main_refresh"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/main_refresh" />
-        </RelativeLayout>
 
-        <RelativeLayout
+        <ImageView
             android:id="@+id/main_fix_position"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="10dp"
-            android:background="@drawable/discovery_situation"
-            android:gravity="center" >
+            android:background="@drawable/icon_map_btn_press"
+            android:src="@drawable/main_fix_position"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/main_fix_position" />
-        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout

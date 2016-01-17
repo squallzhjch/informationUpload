@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -31,24 +30,17 @@ import android.widget.Toast;
 
 import com.informationUpload.R;
 import com.informationUpload.activity.ActivityInstanceStateListener;
-import com.informationUpload.activity.MainActivity;
 import com.informationUpload.activity.MyApplication;
 import com.informationUpload.adapter.LocalInformationAdapter;
-import com.informationUpload.contentproviders.InformationCheckData;
-import com.informationUpload.contentproviders.InformationManager;
-import com.informationUpload.contentproviders.InformationObserver;
-import com.informationUpload.contentproviders.InformationObserver.OnCheckMessageCountListener;
-import com.informationUpload.contentproviders.Informations;
-import com.informationUpload.contents.ContentsManager;
-import com.informationUpload.contents.OnContentUpdateListener;
+import com.informationUpload.contentProviders.InformationCheckData;
+import com.informationUpload.contentProviders.InformationManager;
+import com.informationUpload.contentProviders.InformationObserver;
+import com.informationUpload.contentProviders.InformationObserver.OnCheckMessageCountListener;
+import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.fragments.utils.IntentHelper;
-import com.informationUpload.fragments.utils.MyFragmentManager;
-import com.informationUpload.map.LocationManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.SystemConfig;
 import com.informationUpload.widget.TitleView;
-
-import org.w3c.dom.Text;
 
 /**
  * @author zhjch

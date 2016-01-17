@@ -1,31 +1,16 @@
-package com.informationUpload.serviceengin;
+package com.informationUpload.serviceEngin;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.UUID;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.os.StrictMode;
-import android.support.v4.app.FragmentActivity;
-import android.telephony.TelephonyManager;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.utils.NetUtil;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
-import com.lidroid.xutils.http.ResponseStream;
 import com.lidroid.xutils.http.client.HttpRequest;
 
 
@@ -41,7 +26,6 @@ public class ServiceEngin {
 
 	private static String RESULT;
 	
-
 
 //	private static String URL="http://172.23.44.11:8081/infor/information/";
 	private static String URL="http://192.168.3.155:8083/infor/information/";

@@ -1,4 +1,4 @@
-package com.informationUpload.serviceengin;
+package com.informationUpload.serviceEngin;
 
 public class EnginBean {
 

@@ -2,25 +2,20 @@ package com.informationUpload.adapter;
 
 import java.util.HashMap;
 
-import android.R.color;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CursorAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.informationUpload.R;
-import com.informationUpload.contentproviders.InformationManager;
-import com.informationUpload.contentproviders.Informations;
+import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.fragments.ReportRecordFragment;
 
 /**

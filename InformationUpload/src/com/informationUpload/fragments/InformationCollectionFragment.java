@@ -15,7 +15,6 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.Proxy.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -42,7 +41,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
@@ -59,8 +57,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.informationUpload.adapter.ChatAdapter;
-import com.informationUpload.contentproviders.InformationManager;
-import com.informationUpload.contentproviders.Informations;
+import com.informationUpload.contentProviders.InformationManager;
+import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
@@ -301,14 +299,11 @@ public class InformationCollectionFragment extends BaseFragment {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case 0:
-
 				new Thread(new Runnable() {
 
 					@Override
 					public void run() {
-
 						uploadFile(new File(path_all_name));
-
 
 					}
 				}).start();
