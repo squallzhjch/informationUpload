@@ -1,5 +1,8 @@
 package com.informationUpload.activity;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.informationUpload.R;
 
 public class MainActivity extends BaseActivity implements OnClickListener, ActivityInstanceStateListener {
 
+    public static MainActivity mMainActivity;
     private MapManager mMapManager;
     private MyFragmentManager myFragmentManager;
     private volatile boolean mOnSaveInstanceStateInvoked;
@@ -25,9 +29,9 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnSaveInstanceStateInvoked = false;
+        mMainActivity = this;
         if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
-           
             MapView mapView = (MapView) findViewById(R.id.mapView);
             mapView.showZoomControls(false);
          
@@ -48,6 +52,7 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
             myFragmentManager.onDestroy();
             myFragmentManager = null;
         }
+        mMainActivity = null;
         super.onDestroy();
     }
 
@@ -97,8 +102,18 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
     	Log.i("chentao", "onBackPressed1");
         if (!myFragmentManager.back()) {
         	Log.i("chentao", "onBackPressed2");
-            finish();
-            System.exit(0);
+            final Dialog deleteDialog = new AlertDialog.Builder(this)
+                    .setTitle("退出！")
+                    .setMessage("您确定要退出吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                            System.exit(0);
+                        }
+                    })
+                    .setNegativeButton("取消", null).show();
+
         }
     }
     @Override

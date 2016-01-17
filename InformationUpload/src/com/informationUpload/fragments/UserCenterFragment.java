@@ -127,11 +127,6 @@ public class UserCenterFragment extends BaseFragment{
 
 		mAboutLayout = (RelativeLayout) view.findViewById(R.id.about);
 		mBack=(RelativeLayout)view.findViewById(R.id.back);
-
-
-
-
-
 	}
 	/**
 	 * 注册监听器
@@ -140,13 +135,15 @@ public class UserCenterFragment extends BaseFragment{
 		//绑定手机号或者退出登录
 		Log.i("chentao", "is_login:"+is_login);
 		if(is_login.equals("1")){
-			mExitLogin.setText("绑定手机号");
+			mExitLogin.setText("登录/注册");
 			mExitLogin.setOnClickListener(new OnClickListener() {
 
 				@Override
 				public void onClick(View arg0) {
-					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
-
+//					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+					Intent intent = new Intent(getActivity(), LoginActivity.class);
+					intent.putExtra("bFirst", false);
+					startActivityForResult(intent, 1001);
 				}
 			});
 		}else if(is_login.equals("0")){

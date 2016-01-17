@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.tool.StringTool;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
@@ -20,6 +21,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -63,51 +65,63 @@ public class LoginActivity extends BaseActivity{
 	 */
 	private CheckBox mChangeStatePassword;
 	
-
+	public static LoginActivity mLoginActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		mLoginActivity = this;
+		if(savedInstanceState == null) {
+			setContentView(R.layout.acitivity_user_login);
+			final SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
-		setContentView(R.layout.acitivity_user_login);
-		final SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+			//初始化
+			init();
+			//注册监听器
+			addListeners();
 
-		//初始化
-		init();
-		//注册监听器
-		addListeners();
+			Bundle extras = getIntent().getExtras();
+			boolean bFirst = true;
+			if (extras != null) {
+				bFirst = extras.getBoolean("bFirst");
+			}
 
+			SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
+			String userName = sp.getString("user_name", null);
+			String userTel = sp.getString("user_tel", null);
+			String is_login = sp.getString("is_login", "1");//0代表登录 1代表未登录
+			if (null == userName && bFirst) {
+				String time = df.format(new Date());
+				String uuid = UUID.randomUUID().toString().replace("-", "");
+				String userid = time + uuid;
 
-		SharedPreferences sp = LoginActivity.this.getSharedPreferences("user_info", Context.MODE_PRIVATE);
-		String userName = sp.getString("user_name",null);
-		String userTel = sp.getString("user_tel", null);
-		String is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
-		if(null==userName){
-			String time=df.format(new Date());
-			String uuid = UUID.randomUUID().toString().replace("-", "");
-			String userid = time+uuid;
-		
-			sp.edit().putString("user_name",userid).commit();
-			
-			LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-			LoginActivity.this.finish();
-		}else{
-			if(userTel==null){
-				
-				LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+				sp.edit().putString("user_name", userid).commit();
+
+				LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
 				LoginActivity.this.finish();
-			}else{
-				if("1".equals(is_login)){
-					mUserName.setText(userTel);
-				}else if("0".equals(is_login)){
-					
-					LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
+			} else {
+				if (userTel == null && bFirst) {
+
+					LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
 					LoginActivity.this.finish();
+				} else {
+					if ("1".equals(is_login)) {
+						mUserName.setText(userTel);
+					} else if ("0".equals(is_login)) {
+
+						LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
+						LoginActivity.this.finish();
+					}
 				}
 			}
 		}
 
+	}
 
+	@Override
+	protected void onDestroy() {
+		mLoginActivity = null;
+		super.onDestroy();
 	}
 	//初始化
 	private void init() {   
@@ -133,7 +147,18 @@ public class LoginActivity extends BaseActivity{
 			
 				name=mUserName.getText().toString();
 				password=mPassword.getText().toString();
+				if(TextUtils.isEmpty(name)){
 
+					Toast.makeText(LoginActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+					return;
+				}else if(!StringTool.isTelNum(name)){
+					Toast.makeText(LoginActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(TextUtils.isEmpty(password)){
+					Toast.makeText(LoginActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
+					return;
+				}
 //				//登录
                 Login(name,password);
 				
@@ -155,8 +180,7 @@ public class LoginActivity extends BaseActivity{
 			@Override
 			public void onClick(View arg0) {
 				
-				LoginActivity.this.startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-				LoginActivity.this.finish();
+				LoginActivity.this.startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
 			}
 		});
 
@@ -244,6 +268,10 @@ public class LoginActivity extends BaseActivity{
 		
 		sp.edit().putString("user_name",userid).commit();
 		sp.edit().putString("is_login", "0").commit();
+		MainActivity mainActivity = new MainActivity();
+		if(mainActivity.mMainActivity != null) {
+			mainActivity.mMainActivity.finish();
+		}
 		LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
 		LoginActivity.this.finish();
 	}else{
