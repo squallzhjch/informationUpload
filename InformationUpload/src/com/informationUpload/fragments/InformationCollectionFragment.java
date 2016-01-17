@@ -886,19 +886,21 @@ public class InformationCollectionFragment extends BaseFragment {
 			ImageView imageView = new ImageView(getActivity());
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
 				lp.setMargins(5,0,5,0);
+				
 			imageView.setLayoutParams(lp);
+			
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			ImageView iv_delete = new ImageView(getActivity());
 
-			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(70,70);
+			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-
+            lp_del.setMargins(2,2,5,2);
 
 			iv_delete.setLayoutParams(lp_del);
 			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
-			iv_delete.setImageResource(R.drawable.delete_item);
+			iv_delete.setBackgroundResource(R.drawable.delete_item);
 
 			rl.addView(imageView);
 			rl.addView(iv_delete);
