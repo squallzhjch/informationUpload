@@ -44,6 +44,7 @@ import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.tool.PointTool;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.SystemConfig;
 import com.lidroid.xutils.exception.HttpException;
@@ -121,6 +122,8 @@ public class MainFragment extends BaseFragment {
 	 * 地图上的点显示信息
 	 */
 	private String text;
+
+	private View mengView;
 	/**
 	 * 
 	 * 是否需要刷新
@@ -132,6 +135,7 @@ public class MainFragment extends BaseFragment {
 	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
 		mapManager=MapManager.getInstance();
+		mengView = view.findViewById(R.id.meng_view);
 		popview = inflater.inflate(R.layout.main_fragment_select_pop, null);
 		//初始化popview
 		initPopview();
@@ -474,8 +478,8 @@ public class MainFragment extends BaseFragment {
 	//打开popwindow
 	protected void showPopview() {
 		//	
-
-		popupWindow = new PopupWindow(popview, 700,700);
+		mengView.setVisibility(View.VISIBLE);
+		popupWindow = new PopupWindow(popview, PointTool.Dp2Px(getActivity(), 250),PointTool.Dp2Px(getActivity(), 250));
 		//设置popwindow显示位置
 		popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 200);
 		//获取popwindow焦点
@@ -489,7 +493,7 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onDismiss() {
-
+				mengView.setVisibility(View.GONE);
 
 			}
 		});
@@ -514,6 +518,7 @@ public class MainFragment extends BaseFragment {
 				if (i == KeyEvent.KEYCODE_BACK) {  //表示按返回键 时的操作
 
 					popupWindow.dismiss();
+
 					return true;
 
 

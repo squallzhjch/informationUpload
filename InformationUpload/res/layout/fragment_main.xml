@@ -88,5 +88,12 @@
         android:text="发现情况"
         android:textColor="@android:color/white"
         android:textSize="20sp" />
+    <View
+        android:id="@+id/meng_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:background="#af0d0d0d">
 
+    </View>
 </RelativeLayout>
