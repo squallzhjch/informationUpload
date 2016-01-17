@@ -319,9 +319,9 @@ public class InformationCollectionFragment extends BaseFragment {
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
 				mInformationManager.updateInformation(mRowkey,values);
-				mFragmentManager.back();
+			
 				Toast.makeText(getActivity(),"上传成功", Toast.LENGTH_SHORT).show();
-
+				mFragmentManager.back();
 				break;
 			case 3:	
 				pb.dismiss();
@@ -657,7 +657,10 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				saveLocal();
+				boolean bol = saveLocal();
+				if(bol==true){
+					mFragmentManager.back();
+				}
 			}
 		});
 
@@ -991,9 +994,10 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 保存到本地数据库
 	 */
-	private void  saveLocal(){
+	private boolean  saveLocal(){
 		if(mAddress.equals("")){
 			Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
+			return false;
 		}else{
 			if (TextUtils.isEmpty(mRowkey)) {
 				mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
@@ -1009,6 +1013,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
 			mInformationManager.saveInformation(mApplication.getUserId(), message);
+			return true;
 		}
 
 	}
