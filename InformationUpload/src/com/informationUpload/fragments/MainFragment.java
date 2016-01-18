@@ -122,7 +122,7 @@ public class MainFragment extends BaseFragment {
 	 * 地图上的点显示信息
 	 */
 	private String text;
-
+    
 	private View mengView;
 	/**
 	 * 
@@ -176,6 +176,8 @@ public class MainFragment extends BaseFragment {
 
 			}
 		});
+		
+		
 		//重新定位按钮
 		main_fix_position=(ImageView)view.findViewById(R.id.main_fix_position);
 		main_fix_position.setOnClickListener(new OnClickListener() {
@@ -317,12 +319,14 @@ public class MainFragment extends BaseFragment {
 			MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
 					.zIndex(9).draggable(true);
 			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
+			
 			mMarker.setTitle(text+":"+list.get(i).getAddress());
            
 
 
  
 		}
+		
 		mapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
 			//弹窗
 			private InfoWindow mInfoWindow;
@@ -330,6 +334,7 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public boolean onMarkerClick(Marker marker) {
+				
                 tv1=null;
                 tv2=null;
 				LatLng ll = marker.getPosition();

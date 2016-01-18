@@ -9,6 +9,7 @@ import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.fragments.InformationCollectionFragment;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Handler;
@@ -37,7 +38,8 @@ public class ChatAdapter extends BaseAdapter {
 	private MediaPlayer mMediaPlayer = new MediaPlayer();
 	private Context context;
 	private InformationCollectionFragment fragm;
-
+	private AnimationDrawable animation;
+	private ViewHolder vh;
 
 
 	public ChatAdapter(Context context,InformationCollectionFragment fragm,ArrayList<ChatMessage> list){
@@ -79,7 +81,7 @@ public class ChatAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(final int position, View Convertview, ViewGroup viewgroup) {
-		ViewHolder vh=null;
+		vh=null;
 		if(Convertview==null){ 
 			vh=new ViewHolder();
 			Convertview=inflater.inflate(R.layout.fm_card_chatting_item_msg_text_left, null);
@@ -102,8 +104,8 @@ public class ChatAdapter extends BaseAdapter {
 
 		vh.tv_chatcontent.setText("");
 		vh.tv_chatcontent.setLayoutParams(lp);
-	    vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
-		vh.tv_time.setText(getItem(position).getChattimelong()+"");
+		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
+		vh.tv_time.setText(getItem(position).getChattimelong()+"''");
 
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {
 
@@ -131,7 +133,7 @@ public class ChatAdapter extends BaseAdapter {
 
 				if (getItem(position)!=null) {
 					if(new File(getItem(position).getPath()).exists()){
-						playMusic(getItem(position).getPath()) ;
+						playMusic(getItem(position).getPath(), vh.tv_chatcontent) ;
 					}else{
 						Toast.makeText (context, "该文件已经被手动在文件夹中删除",Toast.LENGTH_SHORT).show();
 					}
@@ -146,7 +148,7 @@ public class ChatAdapter extends BaseAdapter {
 	 * @Description
 	 * @param name
 	 */
-	private void playMusic(String name) {
+	private void playMusic(String name,final TextView tv_chatcontent) {
 		try {
 
 			if (mMediaPlayer.isPlaying()) {
@@ -159,12 +161,16 @@ public class ChatAdapter extends BaseAdapter {
 
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
+			
+			tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.anim.voice_img, 0, 0, 0);
+			animation = (AnimationDrawable) tv_chatcontent.getCompoundDrawables()[0];
 
+			animation.start();
 			mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer mp) {
-
-
+					animation.stop();
+					tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
 				}
 			});
 
