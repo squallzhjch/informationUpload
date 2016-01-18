@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -129,8 +131,15 @@ public class MainFragment extends BaseFragment {
 	 * 是否需要刷新
 	 */
 	private boolean isneedrefresh=true;
-	 TextView tv1;
-     TextView tv2;
+
+	/**
+	 * infowindow显示的tv
+	 */
+	private  TextView tv1;
+	/**
+	 * inforwindow显示的tv
+	 */
+    private  TextView tv2;
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
 	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
@@ -318,12 +327,13 @@ public class MainFragment extends BaseFragment {
 			LatLng ll_Point = new LatLng(ret[0],ret[1]);
 			MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
 					.zIndex(9).draggable(true);
+			
 			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
 			
 			mMarker.setTitle(text+":"+list.get(i).getAddress());
            
-
-
+			mapManager.setMarker(ooA,mMarker);
+           
  
 		}
 		
@@ -407,7 +417,10 @@ public class MainFragment extends BaseFragment {
 				mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(linear), ll, -100, listener);
 				
 				mapManager.getMap().showInfoWindow(mInfoWindow);
-
+              
+                
+               
+                
 				return true;
 			}
 
