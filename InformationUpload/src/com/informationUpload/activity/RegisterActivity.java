@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.tool.StringTool;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
@@ -17,6 +18,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
@@ -104,6 +106,19 @@ public class RegisterActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				telNum = mTelephoneNum.getText().toString();
 				rgpassword = mRegisterPassword.getText().toString();
+
+				if(TextUtils.isEmpty(telNum)){
+
+					Toast.makeText(RegisterActivity.this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+					return;
+				}else if(!StringTool.isTelNum(telNum)){
+					Toast.makeText(RegisterActivity.this, "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				if(TextUtils.isEmpty(rgpassword)){
+					Toast.makeText(RegisterActivity.this, "请输入密码", Toast.LENGTH_SHORT).show();
+					return;
+				}
 				//注册	
 				register(telNum,rgpassword);
 
@@ -194,10 +209,18 @@ public class RegisterActivity extends BaseActivity {
 		Log.i("chentao", "errcode:"+errcode);
 		String errmsg=jsonObj.getString("errmsg");
 		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
-			Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
-			sp.edit().putString("user_tel",telNum).commit();
+			Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+			sp.edit().putString("user_tel", telNum).commit();
 			sp.edit().putString("is_login","0").commit();
-			startActivity(new Intent(RegisterActivity.this,MainActivity.class));
+			MainActivity mainActivity = new MainActivity();
+			if(mainActivity.mMainActivity != null) {
+				mainActivity.mMainActivity.finish();
+			}
+			LoginActivity loginActivity = new LoginActivity();
+			if(loginActivity.mLoginActivity != null) {
+				loginActivity.mLoginActivity.finish();
+			}
+			startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 			RegisterActivity.this.finish();
 
 		}else{
@@ -205,7 +228,7 @@ public class RegisterActivity extends BaseActivity {
 				Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
 				sp.edit().putString("user_tel",telNum).commit();
 				sp.edit().putString("is_login","1").commit();
-				startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+				startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
 			}else{
 				Toast.makeText(RegisterActivity.this,errmsg, Toast.LENGTH_SHORT).show();
 				
