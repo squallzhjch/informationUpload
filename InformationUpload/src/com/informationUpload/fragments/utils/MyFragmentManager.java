@@ -12,8 +12,8 @@ import com.informationUpload.R;
 import com.informationUpload.fragments.BaseFragment;
 import com.informationUpload.utils.SystemConfig;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * @author zhjch
@@ -27,7 +27,7 @@ public class MyFragmentManager {
     private FragmentManager mFragmentManager;
     private static volatile MyFragmentManager mInstance;
     private Context mContext;
-    private final List<BaseFragment> mFragmentList = new ArrayList<BaseFragment>();
+    private final Stack<BaseFragment> mFragmentStack = new Stack<BaseFragment>();
     private ActivityInstanceStateListener mActivityInstanceStateListener;
     public static MyFragmentManager getInstance() {
 
@@ -75,7 +75,13 @@ public class MyFragmentManager {
 
 
         if(fragment != null){
+            int index = mFragmentStack.search(fragment);
+            if(index > 0 ){
+                mFragmentStack.remove(fragment);
+                mFragmentStack.push(fragment);
+            }
             transformation.show(fragment).commitAllowingStateLoss();
+            fragment.onDataChange(intent.getExtras());
             return;
         }
         setFragmentPauseState(fragment);
@@ -84,32 +90,43 @@ public class MyFragmentManager {
         transformation.addToBackStack(null);
         transformation.add(R.id.main_fragment_layout, fragment, fragmentName);
         transformation.commitAllowingStateLoss();
-        mFragmentList.add(fragment);
+        mFragmentStack.push(fragment);
     }
 
 
     private void setFragmentPauseState(Fragment visibleFragment) {
-        if (mFragmentList != null) {
-            for (int i = 0; i < mFragmentList.size(); i++) {
-                BaseFragment curFragment = mFragmentList.get(i);
-                if (curFragment != null
-                        && curFragment != visibleFragment && curFragment.isVisible()) {
-                     curFragment.onFragmentDeactive();
+        if (mFragmentStack != null) {
+            for (BaseFragment fragment:mFragmentStack) {
+                if (fragment != null
+                        && fragment != visibleFragment && fragment.isVisible()) {
+                    fragment.onFragmentDeactive();
                 }
             }
         }
     }
 
+    public void removeFragment(Class<?> fragment){
+        if(fragment == null)
+            return;
+        for(BaseFragment fragment1:mFragmentStack){
+            if(fragment1.getClass().getName().equals(fragment.getName())){
+                mFragmentStack.remove(fragment1);
+                FragmentTransaction transformation = mFragmentManager.beginTransaction();
+                transformation.remove(fragment1);
+                return;
+            }
+        }
+    }
+
     public boolean  back(){
-        int fragmentSize =mFragmentList.size();
+        int fragmentSize = mFragmentStack.size();
         boolean canBack = fragmentSize > 1;
         if(canBack) {
-            BaseFragment currentFragment = mFragmentList.get(mFragmentList.size() - 1);
-            BaseFragment fragment = mFragmentList.get(mFragmentList.size() - 2);
+            BaseFragment currentFragment = mFragmentStack.peek();
+            if(currentFragment.getClass().getName().equals("MainFragment.class"))
+                return false;
 
-            if (currentFragment != null){
-                fragment.onFragmentDeactive();
-            }
+
             if(mActivityInstanceStateListener.isInstanceStateSaved()) {
                 if (currentFragment != null) {
                     currentFragment.markFragmentDisposed();
@@ -117,12 +134,17 @@ public class MyFragmentManager {
                 return false;
             }
 
-
             mFragmentManager.popBackStack();
 
             FragmentTransaction transformation = mFragmentManager.beginTransaction();
             transformation.remove(currentFragment);
-            mFragmentList.remove(currentFragment);
+            mFragmentStack.pop();
+
+            BaseFragment fragment = mFragmentStack.peek();
+            if (currentFragment != null){
+                fragment.onFragmentDeactive();
+            }
+
             transformation.show(fragment).commitAllowingStateLoss();
             fragment.onFragmentActive();
         }
@@ -134,7 +156,7 @@ public class MyFragmentManager {
     }
 
     public void onDestroy(){
-        mFragmentList.clear();
+        mFragmentStack.clear();
         mInstance = null;
     }
 }

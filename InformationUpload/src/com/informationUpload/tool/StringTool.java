@@ -2,6 +2,9 @@ package com.informationUpload.tool;
 
 import android.text.TextUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,5 +27,12 @@ public class StringTool {
         Matcher m = p.matcher(tel);
 
         return m.find();//boolean
+    }
+
+    public static String createUserId(){
+        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+        String time = df.format(new Date());
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        return time + uuid;
     }
 }

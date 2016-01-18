@@ -24,7 +24,12 @@
                 android:text="账号登录"
                 android:textSize="@dimen/text_size_large"
                 android:textColor="@color/title_text_color" />
-
+            <TextView
+                android:id="@+id/fragment_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:background="@drawable/back_selecter" />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

@@ -55,8 +55,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container) {
         View view = inflater.inflate(R.layout.fragment_select_point, null);
         
         TitleView title = (TitleView) view.findViewById(R.id.title_view);
@@ -106,6 +105,11 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
     public void onDetach() {
         super.onDetach();
         mMapManager.removeOnMapTouchListener(this);
+    }
+
+    @Override
+    public void onDataChange(Bundle bundle) {
+
     }
 
 ////    @Override

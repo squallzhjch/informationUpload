@@ -131,7 +131,13 @@ public class MainFragment extends BaseFragment {
 	private boolean isneedrefresh=true;
 	 TextView tv1;
      TextView tv2;
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+
+	@Override
+	public void onDataChange(Bundle bundle) {
+
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
 		mapManager=MapManager.getInstance();

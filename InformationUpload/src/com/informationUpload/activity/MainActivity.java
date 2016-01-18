@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapView;
+import com.informationUpload.fragments.LoginFragment;
 import com.informationUpload.fragments.MainFragment;
 //import com.informationUpload.fragments.ResetPasswordFragment;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -18,6 +19,7 @@ import com.informationUpload.fragments.utils.MyFragmentManager;
 
 import com.informationUpload.map.MapManager;
 import com.informationUpload.R;
+import com.informationUpload.system.LoginHelper;
 
 public class MainActivity extends BaseActivity implements OnClickListener, ActivityInstanceStateListener {
 
@@ -33,13 +35,24 @@ public class MainActivity extends BaseActivity implements OnClickListener, Activ
         if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
             MapView mapView = (MapView) findViewById(R.id.mapView);
-            mapView.showZoomControls(false);
-         
+
             mMapManager = MapManager.getInstance();
             mMapManager.init(this, mapView);
             myFragmentManager = MyFragmentManager.getInstance();
             myFragmentManager.init(getApplicationContext(), getSupportFragmentManager(), this);
             myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+
+            LoginHelper.checkLogin(this, new LoginHelper.OnCheckLoginListener() {
+                @Override
+                public void onAgree() {
+                    myFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, null));
+                }
+
+                @Override
+                public void onCancel() {
+
+                }
+            });
         }
     }
 

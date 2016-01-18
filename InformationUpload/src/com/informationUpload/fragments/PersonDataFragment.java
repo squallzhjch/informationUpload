@@ -6,8 +6,6 @@ import java.io.File;
 
 
 import com.informationUpload.R;
-import com.informationUpload.activity.RegisterActivity;
-import com.informationUpload.fragments.utils.IntentHelper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -64,8 +62,12 @@ public class PersonDataFragment extends BaseFragment{
 	private RelativeLayout TelRl;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onDataChange(Bundle bundle) {
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		view=inflater.inflate(R.layout.frgment_user_info,null);
 		//初始化
 		init();
@@ -85,26 +87,26 @@ public class PersonDataFragment extends BaseFragment{
 	//添加监听器
 	private void addListeners() {
 		//昵称rl
-		NameRl.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				Intent intent =new Intent(getActivity(),RegisterActivity.class);
-				getActivity().startActivity(intent);
-				
-			}
-		});
-		//手机rl
-		TelRl.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				
-				Intent intent =new Intent(getActivity(),RegisterActivity.class);
-				getActivity().startActivity(intent);
-				
-			}
-		});
+//		NameRl.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+//				getActivity().startActivity(intent);
+//
+//			}
+//		});
+//		//手机rl
+//		TelRl.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View arg0) {
+//
+//				Intent intent =new Intent(getActivity(),RegisterActivity.class);
+//				getActivity().startActivity(intent);
+//
+//			}
+//		});
 		//头像
 		IvHead.setOnClickListener(new OnClickListener() {
 

@@ -16,6 +16,15 @@ public class InformationMessage extends  BaseMessage{
     private String address;
     private int type;
     private int status;
+    private String adminCode;
+
+    public String getAdminCode() {
+        return adminCode;
+    }
+
+    public void setAdminCode(String adminCode) {
+        this.adminCode = adminCode;
+    }
 
     public int getStatus() {
         return status;

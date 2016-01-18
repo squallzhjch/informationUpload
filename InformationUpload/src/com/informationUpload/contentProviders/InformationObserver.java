@@ -8,6 +8,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.informationUpload.activity.MyApplication;
+import com.informationUpload.system.ConfigManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -87,7 +88,7 @@ public class InformationObserver extends ContentObserver{
         int localMessage = 0;
         int serviceMessage = 0;
         try {
-            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_LOCAL), mContext.getUserId()}, null);
+            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_LOCAL), ConfigManager.getInstance().getUserId()}, null);
             if (cursor != null) {
                 localMessage = cursor.getCount();
 
@@ -102,7 +103,7 @@ public class InformationObserver extends ContentObserver{
         }
 
         try {
-            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_SERVER), mContext.getUserId()}, null);
+            cursor = mContextResolver.query(Informations.Information.CONTENT_URI, SAMPLE_MESSAGE_PROJECTIONS, SAMPLE_MESSAGE_WHERE, new String[]{String.valueOf(Informations.Information.STATUS_SERVER), ConfigManager.getInstance().getUserId()}, null);
             if (cursor != null) {
                 serviceMessage = cursor.getCount();
             }

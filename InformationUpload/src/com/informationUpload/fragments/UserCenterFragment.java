@@ -2,12 +2,9 @@ package com.informationUpload.fragments;
 
 import java.io.File;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
-import com.informationUpload.activity.LoginActivity;
 import com.informationUpload.activity.OffLineMapActivity;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.system.ConfigManager;
+import com.informationUpload.system.LoginHelper;
 import com.informationUpload.utils.FileUtils;
 
 /**
@@ -73,40 +70,28 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private RelativeLayout mBack;
 	/**
-	 * 用户id
-	 */
-	private String userName;
-	/**
-	 * 用户电话
-	 */
-	private String userTel;
-	/**
-	 * 用户是否登录
-	 */
-	private String is_login;//0代表登录 1代表未登录
-	/**
 	 * 退出登录或者绑定手机号
 	 */
 	private Button mExitLogin;
-	/**
-	 * 存储个人信息的sp
-	 */
-	private SharedPreferences sp;
 
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+	@Override
+	public void onDataChange(Bundle bundle) {
+		if(!ConfigManager.getInstance().isLogin()){
+			mExitLogin.setText("登录/注册");
+		}else{
+			mExitLogin.setText("退出登录");
+		}
+	}
+
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		view = inflater.inflate(R.layout.fragment_user_center, null, true);
-		sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-		userName = sp.getString("user_name",null);
-		userTel = sp.getString("user_tel", null);
-		is_login = sp.getString("is_login","1");//0代表登录 1代表未登录
 		//初始化
 		init();
 		//添加监听器
 		addListeners();
 		return view;
 	}
-
 
 	/**
 	 * 初始化
@@ -133,31 +118,13 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private void addListeners() {
 		//绑定手机号或者退出登录
-		Log.i("chentao", "is_login:"+is_login);
-		if(is_login.equals("1")){
-			mExitLogin.setText("登录/注册");
-			mExitLogin.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-//					mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
-					Intent intent = new Intent(getActivity(), LoginActivity.class);
-					intent.putExtra("bFirst", false);
-					startActivityForResult(intent, 1001);
-				}
-			});
-		}else if(is_login.equals("0")){
-			mExitLogin.setText("退出登录");
-			mExitLogin.setOnClickListener(new OnClickListener() {
-
-				@Override
-				public void onClick(View arg0) {
-					sp.edit().putString("is_login","1").commit();
-					startActivity(new Intent(getActivity(),LoginActivity.class));
-					getActivity().finish();
-				}
-			});
-		}
+		mExitLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				LoginHelper.loginOut();
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, null));
+			}
+		});
 
 		//返回
 		mBack.setOnClickListener(new OnClickListener() {
@@ -165,7 +132,6 @@ public class UserCenterFragment extends BaseFragment{
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.back();
-
 			}
 		});
 		//个人资料
@@ -208,7 +174,6 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -233,7 +198,6 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -242,12 +206,9 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 
 			}
 		});
 
 	}
-
-
 }

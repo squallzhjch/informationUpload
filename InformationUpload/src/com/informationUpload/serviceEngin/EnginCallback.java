@@ -1,6 +1,7 @@
 package com.informationUpload.serviceEngin;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
@@ -13,13 +14,13 @@ import com.lidroid.xutils.http.callback.RequestCallBack;
 public class EnginCallback extends RequestCallBack {
 
 	private ProgressDialog pd;
-	private FragmentActivity context;
+	private Context context;
 	
 
 	/**
 	 * 构造函数,为公共进度条重写此回调
 	 */
-	public EnginCallback(FragmentActivity context) {
+	public EnginCallback(Context context) {
 		this.context = context;
 	}
 

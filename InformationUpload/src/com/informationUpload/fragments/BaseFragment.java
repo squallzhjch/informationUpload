@@ -2,8 +2,13 @@ package com.informationUpload.fragments;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.activity.MainActivity;
@@ -34,7 +39,7 @@ public abstract class BaseFragment extends Fragment {
     protected MainActivity mMainActivity;
     protected InformationManager mInformationManager;
     protected LocationManager mLocationManager;
-
+    private Bundle mBundle;
     protected boolean mIsActive = true;
     private List<AbstractOnContentUpdateListener> mOnContentUpdateListeners = new ArrayList<AbstractOnContentUpdateListener>();
     private volatile boolean mIsFragmentMarkDisposed = false;
@@ -51,6 +56,7 @@ public abstract class BaseFragment extends Fragment {
         mContentsManager = ContentsManager.getInstance();
         mInformationManager = InformationManager.getInstance();
         mLocationManager = LocationManager.getInstance();
+        mBundle = getArguments();
     }
 
     @Override
@@ -60,16 +66,38 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+        View view = onCreateView(inflater, container);
+        onDataChange(mBundle);
+        return view;
+    }
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
     @Override
     public void onDetach() {
-        super.onDetach();
+        hideInput();
         for (OnContentUpdateListener listener : mOnContentUpdateListeners) {
             mContentsManager.unregisterOnContentUpdateListener(listener);
         }
         mOnContentUpdateListeners.clear();
+        super.onDetach();
+    }
+
+    /**
+     * 强制隐藏输入法键盘
+     */
+    private void hideInput(){
+        InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        if (getActivity().getCurrentFocus() != null) {
+
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .hideSoftInputFromWindow(getActivity().getCurrentFocus()
+                                    .getWindowToken(),
+                            InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     public void onFragmentActive() {
@@ -95,4 +123,7 @@ public abstract class BaseFragment extends Fragment {
     public  void markFragmentDisposed() {
         mIsFragmentMarkDisposed = true;
     }
+
+    public abstract void onDataChange(Bundle bundle);
+    public abstract View onCreateView(LayoutInflater inflater,  ViewGroup container);
 }

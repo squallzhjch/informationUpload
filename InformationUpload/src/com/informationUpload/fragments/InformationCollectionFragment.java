@@ -66,6 +66,7 @@ import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.InnerScrollView;
@@ -408,67 +409,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		}
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment1_information_collection, null);
-
-		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		DisplayMetrics metric = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-		width = metric.widthPixels;     // 屏幕宽度（像素）
-
-
-		//初始化
-		init();
-		switch(mType){
-		case Informations.Information.INFORMATION_TYPE_BUS:
-			draw_txt="公交";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
-			break;
-		case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
-			draw_txt="设施";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
-			break;
-		case Informations.Information.INFORMATION_TYPE_ROAD:
-			draw_txt="道路";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
-			break;
-		case Informations.Information.INFORMATION_TYPE_AROUND:
-			draw_txt="周边其他";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
-			break;
-		}
-		mInformationCollectTitle.setText(draw_txt);
-		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
-				null,null,null);
-
-		mapManager=MapManager.getInstance();
-		if(mPoint == null){
-			mPoint = mLocationManager.getCurrentPoint();
-		}
-		Log.i("chentao",""+mPoint.getLat());
-		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
-
-
-
-			@Override
-			public void onFailure() {
-				Log.i("chentao",":onFailure");
-			}
-
-			@Override
-			public void OnSuccess(String address,String adminCode) {
-				mAddress = address;
-				mAdminCode=adminCode;
-				Log.i("chentao",":"+mAddress);
-				select_position.setText(address);
-
-			}
-		});
-		//添加监听器
-		addListeners();
-		return view;
-	}
 
 	/**
 	 * 初始化组件
@@ -1028,6 +968,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				mRowkey = UUID.randomUUID().toString().replaceAll("-", "");
 			}
 			InformationMessage message = new InformationMessage();
+			message.setAdminCode(mAdminCode);
 			message.setAddress(mAddress);
 			message.setType(mType);
 			message.setRowkey(mRowkey);
@@ -1037,7 +978,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setRemark(additional_remarks_et.getText().toString());
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
-			mInformationManager.saveInformation(mApplication.getUserId(), message,new OnDBListener() {
+			mInformationManager.saveInformation(ConfigManager.getInstance().getUserId(), message,new OnDBListener() {
 
 				@Override
 				public void onSuccess() {
@@ -1051,9 +992,6 @@ public class InformationCollectionFragment extends BaseFragment {
 							public void run() {
 								toast.cancel();
 								mFragmentManager.back();
-								
-								
-								
 							}
 						}, 600);
                   
@@ -1076,6 +1014,73 @@ public class InformationCollectionFragment extends BaseFragment {
 	public void onDetach() {
 		super.onDetach();
 		mVoicePop.onDestroy();
+	}
+
+	@Override
+	public void onDataChange(Bundle bundle) {
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
+		view = inflater.inflate(R.layout.fragment1_information_collection, null);
+
+		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+		DisplayMetrics metric = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+		width = metric.widthPixels;     // 屏幕宽度（像素）
+
+
+		//初始化
+		init();
+		switch(mType){
+			case Informations.Information.INFORMATION_TYPE_BUS:
+				draw_txt="公交";
+				draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
+				break;
+			case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
+				draw_txt="设施";
+				draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
+				break;
+			case Informations.Information.INFORMATION_TYPE_ROAD:
+				draw_txt="道路";
+				draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
+				break;
+			case Informations.Information.INFORMATION_TYPE_AROUND:
+				draw_txt="周边其他";
+				draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
+				break;
+		}
+		mInformationCollectTitle.setText(draw_txt);
+		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
+				null,null,null);
+
+		mapManager=MapManager.getInstance();
+		if(mPoint == null){
+			mPoint = mLocationManager.getCurrentPoint();
+		}
+		Log.i("chentao",""+mPoint.getLat());
+		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
+
+
+
+			@Override
+			public void onFailure() {
+				Log.i("chentao",":onFailure");
+			}
+
+			@Override
+			public void OnSuccess(String address,String adminCode) {
+				mAddress = address;
+				mAdminCode=adminCode;
+				Log.i("chentao",":"+mAddress);
+				select_position.setText(address);
+
+			}
+		});
+		//添加监听器
+		addListeners();
+		return view;
 	}
 
 	@Override
