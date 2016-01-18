@@ -102,7 +102,7 @@ public class ChatAdapter extends BaseAdapter {
 
 		vh.tv_chatcontent.setText("");
 		vh.tv_chatcontent.setLayoutParams(lp);
-		//		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
+	    vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.chatto_voice_playing, 0);
 		vh.tv_time.setText(getItem(position).getChattimelong()+"");
 
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {
