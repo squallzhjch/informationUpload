@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
+import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
 import com.informationUpload.utils.SystemConfig;
@@ -137,7 +138,7 @@ public class LoginFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-
+            	mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(RegisterFragment.class,null));
 //                LoginActivity.this.startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });

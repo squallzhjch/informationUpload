@@ -71,6 +71,8 @@ import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.InnerScrollView;
 import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.UploadUtil;
+import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
@@ -311,7 +313,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					@Override
 					public void run() {
-						uploadFile(new File(path_all_name));
+						UploadUtil.uploadFile(new File(path_all_name),handler);
 
 					}
 				}).start();
@@ -675,7 +677,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					Log.i("chentao",servicePara.toString());
 					list_servicepara.add(servicePara);
 					//将list在指定文件夹写成文本
-					doWriteFile(list_servicepara);
+					WriteFileUtil.doWriteFile(list_servicepara);
 
 
 
@@ -926,34 +928,34 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 将list写到文件中
 	 * @param list
 	 */
-	public  void doWriteFile(ArrayList<String> list){
-
-
-		if(!new File(path).exists()){
-			new File(path).mkdirs();
-		}
-
-		FileWriter fw = null;
-		PrintWriter pw = null;
-		try{
-			//创建字符流
-			fw = new FileWriter(path+"poi.txt");
-			Log.i("chentao","fw:"+path+"poi.txt");
-			//封装字符流的过滤流
-			pw = new PrintWriter(fw);
-			//文件写入
-			for(int i=0;i<list.size();i++){
-				pw.print(list.get(i)+"\r\n");
-			}
-		}catch(IOException e){
-			e.printStackTrace();
-		}finally{
-			//关闭外层流
-			if(pw != null){
-				pw.close();
-			}
-		}
-	}
+//	public  void doWriteFile(ArrayList<String> list){
+//
+//
+//		if(!new File(path).exists()){
+//			new File(path).mkdirs();
+//		}
+//
+//		FileWriter fw = null;
+//		PrintWriter pw = null;
+//		try{
+//			//创建字符流
+//			fw = new FileWriter(path+"poi.txt");
+//			Log.i("chentao","fw:"+path+"poi.txt");
+//			//封装字符流的过滤流
+//			pw = new PrintWriter(fw);
+//			//文件写入
+//			for(int i=0;i<list.size();i++){
+//				pw.print(list.get(i)+"\r\n");
+//			}
+//		}catch(IOException e){
+//			e.printStackTrace();
+//		}finally{
+//			//关闭外层流
+//			if(pw != null){
+//				pw.close();
+//			}
+//		}
+//	}
 	/**
 	 * 保存到本地数据库
 	 */
@@ -1129,82 +1131,82 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * @param file
 	 * @return
 	 */
-	private String uploadFile(File file) {
-		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识
-		// 随机生成
-		String PREFIX = "--", LINE_END = "\r\n";
-		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
-
-		String RequestURL = "http://192.168.3.155:8083/infor/information/inforimp/";
-		try {
-			URL url = new URL(RequestURL);
-			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(TIME_OUT);
-			conn.setConnectTimeout(TIME_OUT);
-			conn.setDoInput(true); // 允许输入流
-			conn.setDoOutput(true); // 允许输出流
-			conn.setUseCaches(false); // 不允许使用缓存
-			conn.setRequestMethod("POST"); // 请求方式
-			conn.setRequestProperty("Charset", CHARSET); // 设置编码
-			conn.setRequestProperty("connection", "keep-alive");
-			conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
-			if (file != null) {
-				System.out.println("----------" + file);
-				/**
-				 * 当文件不为空，把文件包装并且上传
-				 */
-				OutputStream outputSteam = conn.getOutputStream();
-
-				DataOutputStream dos = new DataOutputStream(outputSteam);
-				StringBuffer sb = new StringBuffer();
-				sb.append(PREFIX);
-				sb.append(BOUNDARY);
-				sb.append(LINE_END);
-				/**
-				 * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
-				 * filename是文件的名字，包含后缀名的 比如:abc.png
-				 */
-
-				sb.append("Content-Disposition: form-data; name=\"filenamepath\"; filename=\"" + file.getName() + "\"" + LINE_END);
-				System.out.println("----------" + file.getName());
-				sb.append("Content-Type: application/octet-stream;charset=" + CHARSET + LINE_END);
-				sb.append(LINE_END);
-				dos.write(sb.toString().getBytes());
-				dos.write("**你好啊ABCDFERGDFDFSFSDFD".getBytes(), 0, 22);
-				InputStream is = new FileInputStream(file);
-				byte[] bytes = new byte[1024];
-				int len = 0;
-				while ((len = is.read(bytes)) != -1) {
-					dos.write(bytes, 0, len);
-				}
-				is.close();
-				dos.write(LINE_END.getBytes());
-				byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
-				dos.write(end_data);
-				dos.flush();
-				/**
-				 * 获取响应码 200=成功 当响应成功，获取响应的流
-				 */
-				int res = conn.getResponseCode();
-				// BufferedReader br = new BufferedReader(new
-				// InputStreamReader(conn.getInputStream()));
-				// JSONObject jsonObject =
-				// JSONObject.parseObject(br.toString());
-				// String resultMsg = (String)
-				// jsonObject.get("ResultMsg");
-				// System.out.println("resultMsg*******"+resultMsg);
-				System.out.println("res----------------" + res);
-				if (res == 200) {
-					handler.sendEmptyMessage(2);
-					return SUCCESS;
-				}
-			}
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		handler.sendEmptyMessage(3);
-		return FAILURE;
-	}
+//	private String uploadFile(File file,Handler handler) {
+//		String BOUNDARY = UUID.randomUUID().toString(); // 边界标识
+//		// 随机生成
+//		String PREFIX = "--", LINE_END = "\r\n";
+//		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
+//
+//		String RequestURL = "http://192.168.3.155:8083/infor/information/inforimp/";
+//		try {
+//			URL url = new URL(RequestURL);
+//			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//			conn.setReadTimeout(TIME_OUT);
+//			conn.setConnectTimeout(TIME_OUT);
+//			conn.setDoInput(true); // 允许输入流
+//			conn.setDoOutput(true); // 允许输出流
+//			conn.setUseCaches(false); // 不允许使用缓存
+//			conn.setRequestMethod("POST"); // 请求方式
+//			conn.setRequestProperty("Charset", CHARSET); // 设置编码
+//			conn.setRequestProperty("connection", "keep-alive");
+//			conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+//			if (file != null) {
+//				System.out.println("----------" + file);
+//				/**
+//				 * 当文件不为空，把文件包装并且上传
+//				 */
+//				OutputStream outputSteam = conn.getOutputStream();
+//
+//				DataOutputStream dos = new DataOutputStream(outputSteam);
+//				StringBuffer sb = new StringBuffer();
+//				sb.append(PREFIX);
+//				sb.append(BOUNDARY);
+//				sb.append(LINE_END);
+//				/**
+//				 * 这里重点注意： name里面的值为服务器端需要key 只有这个key 才可以得到对应的文件
+//				 * filename是文件的名字，包含后缀名的 比如:abc.png
+//				 */
+//
+//				sb.append("Content-Disposition: form-data; name=\"filenamepath\"; filename=\"" + file.getName() + "\"" + LINE_END);
+//				System.out.println("----------" + file.getName());
+//				sb.append("Content-Type: application/octet-stream;charset=" + CHARSET + LINE_END);
+//				sb.append(LINE_END);
+//				dos.write(sb.toString().getBytes());
+//				dos.write("**你好啊ABCDFERGDFDFSFSDFD".getBytes(), 0, 22);
+//				InputStream is = new FileInputStream(file);
+//				byte[] bytes = new byte[1024];
+//				int len = 0;
+//				while ((len = is.read(bytes)) != -1) {
+//					dos.write(bytes, 0, len);
+//				}
+//				is.close();
+//				dos.write(LINE_END.getBytes());
+//				byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
+//				dos.write(end_data);
+//				dos.flush();
+//				/**
+//				 * 获取响应码 200=成功 当响应成功，获取响应的流
+//				 */
+//				int res = conn.getResponseCode();
+//				// BufferedReader br = new BufferedReader(new
+//				// InputStreamReader(conn.getInputStream()));
+//				// JSONObject jsonObject =
+//				// JSONObject.parseObject(br.toString());
+//				// String resultMsg = (String)
+//				// jsonObject.get("ResultMsg");
+//				// System.out.println("resultMsg*******"+resultMsg);
+//				System.out.println("res----------------" + res);
+//				if (res == 200) {
+//					handler.sendEmptyMessage(2);
+//					return SUCCESS;
+//				}
+//			}
+//		} catch (MalformedURLException e) {
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		handler.sendEmptyMessage(3);
+//		return FAILURE;
+//	}
 }

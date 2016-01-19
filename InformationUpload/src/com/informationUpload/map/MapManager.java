@@ -16,6 +16,8 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
@@ -27,6 +29,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.informationUpload.map.LocationManager.OnLocationListener;
+
 
 
 import java.lang.ref.WeakReference;
@@ -42,8 +45,13 @@ import java.util.List;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class MapManager {
-
+	/**
+	 * marker的list 
+	 */
+	public  ArrayList<MarkerOptions> list_markers_opt=new ArrayList<MarkerOptions>();
+	public  ArrayList<Marker> list_markers=new ArrayList<Marker>();
 	boolean isFirstLoc = true;// 是否首次定位
+	
 	private MapView mMapView;
 	private BaiduMap map;
 	private Context mContext;
@@ -73,6 +81,7 @@ public class MapManager {
 		mContext = context;
 		mMapView = mapView;
 		map = mMapView.getMap();
+	
 		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(17f));
 		mapView.getMap().setMyLocationEnabled(true);
 		mapView.showZoomControls(false);
@@ -80,6 +89,7 @@ public class MapManager {
 		mLocationManager = LocationManager.getInstance();
 		mLocationManager.startLocation();
 		mLocationManager.addOnLocationListener(listener);
+		
 		View child = mMapView.getChildAt(1);
 		if (child != null && (child instanceof ImageView || child instanceof ZoomControls)){
 			child.setVisibility(View.INVISIBLE);
@@ -182,6 +192,8 @@ public class MapManager {
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mMapView.getMap().animateMapStatus(u);
     }
+    
+  
 
 	public GeoPoint getCenter(){
 		final LatLng point = mMapView.getMap().getMapStatus().target;
@@ -310,6 +322,29 @@ public class MapManager {
 	 public void zoomOut(){
 		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomOut());
 	 }
+	 /**
+	  * 将marker添加到list
+	  * @param marker
+	  */
+	 public void setMarker(MarkerOptions markeropt,Marker marker){
+		 list_markers_opt.add(markeropt);
+		 list_markers.add(marker);
+		
+	 }
+	 /**
+	  * 获取markeroption的list
+	  * @return
+	  */
+	 public ArrayList<MarkerOptions> getMarkersOpt(){
+		 return list_markers_opt;
+	 }
+	 /**
+	  * 获取marke的list
+	  * @return
+	  */
+	 public ArrayList<Marker> getMarkers(){
+		 return list_markers;
+	 }
 
 	 public interface OnSearchAddressListener{
 		 void OnSuccess(String address,String admincode);
@@ -349,4 +384,5 @@ public class MapManager {
 		 gc.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(latLng.getLat(),latLng.getLon())));
 
 	 }
+	 
 }
