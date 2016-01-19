@@ -42,7 +42,8 @@ public class SystemConfig {
     public static String BUNDLE_DATA_GEOPOINT="bundle_data_geopoint";
 
     public static String BUNDLE_DATA_TYPE="bundle_data_type";
-    
+
+    public static String BUNDLE_DATA_LOGIN_OUT = "bundle_data_login_out";
     
     /**
      *解压过程中的消息

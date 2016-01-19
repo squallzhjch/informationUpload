@@ -20,6 +20,7 @@ import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.utils.FileUtils;
+import com.informationUpload.utils.SystemConfig;
 
 /**
  * @author zhjch
@@ -121,8 +122,13 @@ public class UserCenterFragment extends BaseFragment{
 		mExitLogin.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				LoginHelper.loginOut();
-				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, null));
+
+				Bundle bundle = new Bundle();
+				if(!ConfigManager.getInstance().isLogin())
+					bundle.putBoolean(SystemConfig.BUNDLE_DATA_LOGIN_OUT, true);
+				else
+					LoginHelper.loginOut();
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, bundle));
 			}
 		});
 

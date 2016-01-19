@@ -3,6 +3,8 @@ package com.informationUpload.fragments;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -138,7 +140,6 @@ public class MainFragment extends BaseFragment {
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-	
 		view = inflater.inflate(R.layout.fragment_main, null, true);
 		mapManager=MapManager.getInstance();
 		mengView = view.findViewById(R.id.meng_view);
@@ -158,7 +159,6 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View v) {
-
 				showPopview();
 
 			}
@@ -179,7 +179,6 @@ public class MainFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				//刷新码点
 				refreshmap();
-
 			}
 		});
 		
@@ -225,9 +224,7 @@ public class MainFragment extends BaseFragment {
 						refreshmap();
 						isneedrefresh=false;
 					}
-					
 				}
-				
 			}
 		}).start();
 		
@@ -327,10 +324,6 @@ public class MainFragment extends BaseFragment {
 			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
 			
 			mMarker.setTitle(text+":"+list.get(i).getAddress());
-           
-
-
- 
 		}
 		
 		mapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
@@ -388,10 +381,6 @@ public class MainFragment extends BaseFragment {
     						120);
                 	 lp.gravity=Gravity.CENTER;
                 }
-			
-				
-			   
-
 				if(tv2!=null){
 					tv2.setLayoutParams(lp);
 					tv2.setTextColor(Color.WHITE);
@@ -470,11 +459,8 @@ public class MainFragment extends BaseFragment {
 				Bundle bundle = new Bundle();
 				bundle.putInt(SystemConfig.BUNDLE_DATA_TYPE, Informations.Information.INFORMATION_TYPE_AROUND);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
-
 			}
 		});
-
-
 	}
 
 	//初始化popview
@@ -509,33 +495,46 @@ public class MainFragment extends BaseFragment {
 			}
 		});
 		popupWindow.update();
-
-
-
-
 	}
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		isneedrefresh=false;
 	}
 
+	@Override
+	public boolean onBackPressed() {
+		if(popupWindow != null && popupWindow.isShowing()) {
+			popupWindow.dismiss();
+		}else{
+			new AlertDialog.Builder(getActivity())
+					.setTitle("退出！")
+					.setMessage("您确定要退出吗？")
+					.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialogInterface, int i) {
+							getActivity().finish();
+							System.exit(0);
+						}
+					})
+					.setNegativeButton("取消", null).show();
+		}
+		return true;
+	}
+
+
 	private View.OnKeyListener backlistener = new View.OnKeyListener() {
 		@Override
 		public boolean onKey(View view, int i, KeyEvent keyEvent) {
-
 			if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
 				if (i == KeyEvent.KEYCODE_BACK) {  //表示按返回键 时的操作
-
-					popupWindow.dismiss();
+					if(popupWindow.isShowing()) {
+						popupWindow.dismiss();
+					}
 
 					return true;
-
-
 				}
 			}
-
 			return false;
 		}
 	};

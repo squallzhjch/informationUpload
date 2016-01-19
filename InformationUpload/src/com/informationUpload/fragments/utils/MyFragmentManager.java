@@ -47,6 +47,28 @@ public class MyFragmentManager {
         mActivityInstanceStateListener = activityInstanceStateListener;
     }
 
+    public void switchFragment(Intent intent){
+        if (intent == null
+                || mActivityInstanceStateListener.isInstanceStateSaved()) {
+            return ;
+        }
+
+        List<Fragment> fragments = mFragmentManager.getFragments();
+        if (fragments != null) {
+            if (fragments.size() > 0) {
+                mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+            for (int i = 0; i < fragments.size(); i++) {
+                Fragment fragment = fragments.get(i);
+                if(!fragment.getClass().getName().equals(intent.getComponent().getClassName())) {
+                    mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
+                }
+            }
+        }
+        mFragmentStack.removeAllElements();
+        showFragment(intent);
+    }
+
     public void showFragment(Intent intent){
         FragmentTransaction transformation = mFragmentManager.beginTransaction();
         String fragmentName = intent.getComponent().getClassName();
@@ -125,8 +147,6 @@ public class MyFragmentManager {
             BaseFragment currentFragment = mFragmentStack.peek();
             if(currentFragment.getClass().getName().equals("MainFragment.class"))
                 return false;
-
-
             if(mActivityInstanceStateListener.isInstanceStateSaved()) {
                 if (currentFragment != null) {
                     currentFragment.markFragmentDisposed();
@@ -158,5 +178,16 @@ public class MyFragmentManager {
     public void onDestroy(){
         mFragmentStack.clear();
         mInstance = null;
+    }
+
+    public boolean onBackPressed() {
+        if (mFragmentStack != null) {
+            for (BaseFragment fragment:mFragmentStack) {
+                if (fragment != null && fragment.isVisible()) {
+                    return fragment.onBackPressed();
+                }
+            }
+        }
+        return  false;
     }
 }

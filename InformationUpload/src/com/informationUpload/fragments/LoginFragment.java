@@ -1,13 +1,13 @@
 package com.informationUpload.fragments;
 
-import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +20,8 @@ import android.widget.Toast;
 import com.informationUpload.R;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
+import com.informationUpload.utils.SystemConfig;
 
-import java.util.HashMap;
 
 /**
  * @author zhjch
@@ -58,11 +58,16 @@ public class LoginFragment extends BaseFragment {
     private CheckBox mChangeStatePassword;
 
     private View mBackView;
-
+    private boolean mLoginOut;
 
     @Override
     public void onDataChange(Bundle bundle) {
-
+        if(bundle != null){
+            mLoginOut = bundle.getBoolean(SystemConfig.BUNDLE_DATA_LOGIN_OUT);
+        }
+        if(mLoginOut){
+            mBackView.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -114,6 +119,7 @@ public class LoginFragment extends BaseFragment {
                 }
 //				//登录
                 LoginHelper.Login(getActivity(), name,password);
+                hideSoftInput(getActivity());
             }
         });
 //        //找回密码
@@ -186,5 +192,22 @@ public class LoginFragment extends BaseFragment {
 
     }
 
-
+    @Override
+    public boolean onBackPressed() {
+        if(mLoginOut){
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("退出！")
+                    .setMessage("您确定要退出吗？")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getActivity().finish();
+                            System.exit(0);
+                        }
+                    })
+                    .setNegativeButton("取消", null).show();
+            return true;
+        }
+        return super.onBackPressed();
+    }
 }
