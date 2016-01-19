@@ -8,6 +8,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.informationUpload.utils.NetUtil;
+import com.informationUpload.utils.SystemConfig;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -29,6 +30,7 @@ public class ServiceEngin {
 
 //	private static String URL="http://172.23.44.11:8081/infor/information/";
 	private static String URL="http://fs.navinfo.com/infor/information/";
+
 
 	/**
 	 * 异步请求方法,请自行在callback中处理返回结果(callbackde success中自行解析result)
@@ -55,10 +57,10 @@ public class ServiceEngin {
 			}
 			//			
 			// 请求超时
-			httputil.configTimeout(1000 * 60);
-			httputil.configSoTimeout(1000 * 60);
+			httputil.configTimeout(1000 * 20);
+			httputil.configSoTimeout(1000 * 20);
 			// 发送请求
-			httputil.send(HttpRequest.HttpMethod.POST, URL+serviceName+"/",
+			httputil.send(HttpRequest.HttpMethod.POST, SystemConfig.REQUEST_URL +serviceName+"/",
 					params, callback);
 		} else {
 			Toast.makeText(context, "网络连接不可用", Toast.LENGTH_LONG).show();

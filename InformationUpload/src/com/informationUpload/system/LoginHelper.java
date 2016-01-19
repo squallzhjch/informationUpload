@@ -30,8 +30,6 @@ import java.util.HashMap;
  */
 public class LoginHelper {
 
-
-
     public interface OnCheckLoginListener{
         void onAgree();
         void onCancel();
@@ -56,7 +54,6 @@ public class LoginHelper {
         }else if(isLogin){
             isRegister = true;
         }
-        isRegister = false;
         if(!isRegister){
              new AlertDialog.Builder(context)
                     .setTitle("提示")
@@ -113,14 +110,7 @@ public class LoginHelper {
             ConfigManager.getInstance().setUserId(userid);
             ConfigManager.getInstance().setUserTel(tel);
             ConfigManager.getInstance().setLogin(true);
-            Bundle bundle = new Bundle();
             MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
-//            MainActivity mainActivity = new MainActivity();
-//            if(mainActivity.mMainActivity != null) {
-//                mainActivity.mMainActivity.finish();
-//            }
-//            LoginActivity.this.startActivity(new Intent(LoginActivity.this,MainActivity.class));
-//            LoginActivity.this.finish();
         }else{
             Toast.makeText(context, errmsg, Toast.LENGTH_SHORT).show();
         }
@@ -162,9 +152,6 @@ public class LoginHelper {
             ConfigManager.getInstance().setUserTel(telNum);
             ConfigManager.getInstance().setLogin(true);
             MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
-//            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-//            RegisterActivity.this.finish();
-
         }else{
             Toast.makeText(context,errmsg, Toast.LENGTH_SHORT).show();
         }

@@ -297,7 +297,8 @@ public class MainFragment extends BaseFragment {
 				list.add(aioformation);
 
 			}
-			mapManager.getMap().clear();
+			if(mapManager != null && mapManager.getMap() != null)
+				mapManager.getMap().clear();
 			//在地图上添加覆盖物
 			initOverlay(list);
 		}else{
