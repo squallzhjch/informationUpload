@@ -77,7 +77,7 @@ public abstract class BaseFragment extends Fragment {
     }
     @Override
     public void onDetach() {
-        hideInput();
+        hideSoftInput(getActivity());
         for (OnContentUpdateListener listener : mOnContentUpdateListeners) {
             mContentsManager.unregisterOnContentUpdateListener(listener);
         }
@@ -88,17 +88,14 @@ public abstract class BaseFragment extends Fragment {
     /**
      * 强制隐藏输入法键盘
      */
-    private void hideInput(){
-        InputMethodManager im = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        if (getActivity().getCurrentFocus() != null) {
-
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .hideSoftInputFromWindow(getActivity().getCurrentFocus()
-                                    .getWindowToken(),
-                            InputMethodManager.HIDE_NOT_ALWAYS);
+        protected    boolean hideSoftInput(Activity activity) {
+            View currentFocus;
+            if ((currentFocus = activity.getCurrentFocus()) != null) {
+                InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                return inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
+            return false;
         }
-    }
 
     public void onFragmentActive() {
         mIsActive = true;
@@ -126,4 +123,9 @@ public abstract class BaseFragment extends Fragment {
 
     public abstract void onDataChange(Bundle bundle);
     public abstract View onCreateView(LayoutInflater inflater,  ViewGroup container);
+    public boolean onBackPressed(){
+        mFragmentManager.back();
+        hideSoftInput(getActivity());
+        return false;
+    };
 }

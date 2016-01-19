@@ -1,11 +1,8 @@
 package com.informationUpload.system;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -56,8 +53,10 @@ public class LoginHelper {
             ConfigManager.getInstance().setUserId(userId);
         }else if(TextUtils.isEmpty(userTel)){
             isRegister = false;
+        }else if(isLogin){
+            isRegister = true;
         }
-
+        isRegister = false;
         if(!isRegister){
              new AlertDialog.Builder(context)
                     .setTitle("提示")
@@ -82,9 +81,9 @@ public class LoginHelper {
     }
 
     //登录
-    public static void Login(final Context context, String name,String password) {
+    public static void Login(final Context context,final String tel,String password) {
         HashMap<String,Object> map=new HashMap<String, Object>();
-        map.put("tel",name);
+        map.put("tel",tel);
         map.put("pwd",password);
         ServiceEngin.Request(context, map, "inforlogin", new EnginCallback(context) {
             @Override
@@ -92,7 +91,7 @@ public class LoginHelper {
                 super.onSuccess(arg0);
                 Log.e("请求成功", arg0.result.toString());
                 //进行json解析
-                parseLoginJson(context, arg0.result.toString());
+                parseLoginJson(context, arg0.result.toString(), tel);
             }
 
             @Override
@@ -104,7 +103,7 @@ public class LoginHelper {
     }
 
     //进行json解析
-    private static void parseLoginJson(Context context , String json) {
+    private static void parseLoginJson(Context context , String json, String tel) {
         JSONObject jsonObj = JSON.parseObject(json);
 
         String errcode = "" +	jsonObj.getInteger("errcode");
@@ -112,9 +111,10 @@ public class LoginHelper {
         if(null != errcode && !"".equals(errcode) &&"0".equals(errcode)){
             String userid =	jsonObj.getString("data");
             ConfigManager.getInstance().setUserId(userid);
+            ConfigManager.getInstance().setUserTel(tel);
             ConfigManager.getInstance().setLogin(true);
             Bundle bundle = new Bundle();
-            MyFragmentManager.getInstance().showFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+            MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
 //            MainActivity mainActivity = new MainActivity();
 //            if(mainActivity.mMainActivity != null) {
 //                mainActivity.mMainActivity.finish();
@@ -161,7 +161,7 @@ public class LoginHelper {
             Toast.makeText(context, "注册成功", Toast.LENGTH_SHORT).show();
             ConfigManager.getInstance().setUserTel(telNum);
             ConfigManager.getInstance().setLogin(true);
-            MyFragmentManager.getInstance().showFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+            MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
 //            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
 //            RegisterActivity.this.finish();
 
