@@ -66,12 +66,12 @@ import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.InnerScrollView;
 import com.informationUpload.utils.PoiRecordPopup;
-import com.informationUpload.utils.UploadUtil;
 import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -313,7 +313,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					@Override
 					public void run() {
-						UploadUtil.uploadFile(new File(path_all_name),handler);
+						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler);
 
 					}
 				}).start();
@@ -618,11 +618,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				saveorreport="0";
 				saveLocal();
-
-
-
-
-
 			}
 		});
 

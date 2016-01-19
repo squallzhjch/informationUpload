@@ -82,7 +82,7 @@ public class LoginHelper {
         HashMap<String,Object> map=new HashMap<String, Object>();
         map.put("tel",tel);
         map.put("pwd",password);
-        ServiceEngin.Request(context, map, "inforlogin", new EnginCallback(context) {
+        ServiceEngin.getInstance().Request(context, map, "inforlogin", new EnginCallback(context) {
             @Override
             public void onSuccess(ResponseInfo arg0) {
                 super.onSuccess(arg0);
@@ -123,7 +123,7 @@ public class LoginHelper {
         map.put("tel", telNum);
         map.put("pwd", telpassword);
         map.put("uuid", userId);
-        ServiceEngin.Request(context, map, "inforegist", new EnginCallback(context) {
+        ServiceEngin.getInstance().Request(context, map, "inforegist", new EnginCallback(context) {
             @Override
             public void onSuccess(ResponseInfo arg0) {
                 super.onSuccess(arg0);
