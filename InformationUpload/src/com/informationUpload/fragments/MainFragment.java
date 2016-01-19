@@ -556,7 +556,7 @@ public class MainFragment extends BaseFragment {
 					if(popupWindow.isShowing()) {
 						popupWindow.dismiss();
 					}
-
+                    
 					return true;
 				}
 			}
