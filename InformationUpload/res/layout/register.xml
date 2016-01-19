@@ -15,23 +15,21 @@
             android:background="@android:color/white"
             android:orientation="horizontal"
             android:paddingTop="13dp" >
-            
-               <RelativeLayout
-                    android:id="@+id/register_back"
+
+            <RelativeLayout
+                android:id="@+id/register_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:padding="5dp" >
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:padding="5dp" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/back_selecter" />
-                </RelativeLayout>
-
-            
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/back_selecter" />
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/title"
@@ -39,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="注册"
-                android:textSize="@dimen/text_size_large"
-                android:textColor="@color/title_text_color" />
+                android:textColor="@color/title_text_color"
+                android:textSize="@dimen/text_size_large" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -71,7 +69,9 @@
                 android:layout_marginRight="15dp"
                 android:background="@null"
                 android:hint="手机号码"
-                android:textColor="@color/login_item_color" />
+                android:inputType ="number"
+                android:textColor="#666666"
+                android:textColorHint="@color/login_item_color" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -97,12 +97,50 @@
                     android:layout_weight="1"
                     android:background="@null"
                     android:hint="输入密码"
-                     android:inputType="textPassword"
-                    android:textColor="@color/login_item_color" />
-
+                    android:inputType="textPassword"
+                    android:textColor="#666666"
+                    android:textColorHint="@color/login_item_color" />
 
                 <CheckBox
                     android:id="@+id/change_state_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="10dp"
+                    android:button="@drawable/password_change_state_selector" />
+            </LinearLayout>
+
+               <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/horizontal_line_color" />
+            
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/confirm_register_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:hint="确认密码"
+                    android:inputType="textPassword"
+                    android:textColor="#666666"
+                    android:textColorHint="@color/login_item_color" />
+
+                <CheckBox
+                    android:id="@+id/confirm_change_state_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -119,7 +157,7 @@
 
         <TextView
             android:id="@+id/register_tv"
-           android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="20dp"

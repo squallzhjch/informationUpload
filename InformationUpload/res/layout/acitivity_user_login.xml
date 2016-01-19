@@ -22,14 +22,16 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="账号登录"
-                android:textSize="@dimen/text_size_large"
-                android:textColor="@color/title_text_color" />
+                android:textColor="@color/title_text_color"
+                android:textSize="@dimen/text_size_large" />
+
             <TextView
                 android:id="@+id/fragment_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:background="@drawable/back_selecter" />
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -58,8 +60,10 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:background="@null"
-                android:hint="用户名"
-                android:textColor="@color/login_item_color" />
+                android:hint="手机号码"
+                android:inputType ="number"
+                android:textColor="#666666"
+                android:textColorHint="@color/login_item_color" />
 
             <ImageView
                 android:layout_width="match_parent"
@@ -86,7 +90,8 @@
                     android:background="@null"
                     android:hint="请输入密码"
                     android:inputType="textPassword"
-                    android:textColor="@color/login_item_color" />
+                    android:textColor="#666666"
+                    android:textColorHint="@color/login_item_color" />
 
                 <CheckBox
                     android:id="@+id/change_state_password"
@@ -131,8 +136,8 @@
                 android:layout_marginLeft="15dp"
                 android:gravity="center"
                 android:text="忘记密码?"
-                android:visibility="invisible"
-                android:textColor="@color/forget_register_bt_color" />
+                android:textColor="@color/forget_register_bt_color"
+                android:visibility="invisible" />
 
             <TextView
                 android:layout_width="wrap_content"
