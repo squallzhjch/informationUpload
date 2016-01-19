@@ -279,10 +279,11 @@ public class ReportRecordFragment extends BaseFragment{
 							double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
 							map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
 							map.put("info_type",infomessage.getType());
-//							map.put("adminCode",mAdminCode);
-//							map.put("address",mAddress);
-							map.put("adminCode","北京市朝阳区");
-							map.put("address","北京市朝阳区望京北路");
+							Log.i("chentao","adminCode:"+infomessage.getAdminCode());
+							Log.i("chentao","address:"+infomessage.getAddress());
+							map.put("adminCode",infomessage.getAdminCode());
+							map.put("address",infomessage.getAddress());
+							
 							List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
 							List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
 							for(int m=0;m<chatmsglist.size();m++){

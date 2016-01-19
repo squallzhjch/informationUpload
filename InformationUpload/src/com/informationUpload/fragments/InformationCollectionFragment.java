@@ -192,7 +192,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 录音信息数组
 	 */
 	private ArrayList<ChatMessage> mChatList=new ArrayList<ChatMessage>();
-	/**
+	/**report_at_once
 	 * 图片数组
 	 */
 	private ArrayList<PictureMessage> mPicList=new ArrayList<PictureMessage>();;
@@ -325,10 +325,13 @@ public class InformationCollectionFragment extends BaseFragment {
 				Log.i("chentao","uploadFile:"+"压缩失败");
 				break;
 			case 2:
+				saveorreport="1";
 				pb.dismiss();
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
 				mInformationManager.updateInformation(mRowkey,values);
+				
+				
                 final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
 				toast.show();
                 
@@ -616,7 +619,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				saveorreport="0";
+			
 				saveLocal();
 
 
@@ -631,7 +634,16 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				saveorreport="1";
+				
+				
+			     if(mChatList.size()==0 && mPicList.size()==0){
+			        	Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
+			        	return ;
+			        }
+			        if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
+			        	Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
+			        	return ;
+			        }
 				if(mAddress.equals("")){
 					Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行上报，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
 				}else{
@@ -961,10 +973,17 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 保存到本地数据库
 	 */
 	private void  saveLocal(){
-
+        if(mChatList.size()==0 && mPicList.size()==0){
+        	Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
+        	return ;
+        }
+        if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
+        	Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
+        	return ;
+        }
 		if(mAddress.equals("")){
 
-			Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(getActivity(),"您好,没有获取到地址！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
 
 		}else{
 			if (TextUtils.isEmpty(mRowkey)) {
@@ -985,7 +1004,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 				@Override
 				public void onSuccess() {
-
+					saveorreport="0";
 					if(saveorreport.equals("0")){
 						final Toast toast = Toast.makeText(getActivity(), "保存成功",300);
 						toast.show();

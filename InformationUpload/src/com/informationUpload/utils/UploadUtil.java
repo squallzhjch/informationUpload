@@ -41,7 +41,7 @@ public class UploadUtil {
 		String PREFIX = "--", LINE_END = "\r\n";
 		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
 
-		String RequestURL = "http://192.168.3.155:8083/infor/information/inforimp/";
+		String RequestURL = "http://fs.navinfo.com/infor/information/inforimp/";
 		try {
 			URL url = new URL(RequestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();

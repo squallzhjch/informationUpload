@@ -28,7 +28,7 @@ public class ServiceEngin {
 	
 
 //	private static String URL="http://172.23.44.11:8081/infor/information/";
-	private static String URL="http://192.168.3.155:8083/infor/information/";
+	private static String URL="http://fs.navinfo.com/infor/information/";
 
 	/**
 	 * 异步请求方法,请自行在callback中处理返回结果(callbackde success中自行解析result)
