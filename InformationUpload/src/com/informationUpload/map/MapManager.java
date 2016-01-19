@@ -362,7 +362,7 @@ public class MapManager {
 			 public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
 				 Log.i("chentao","onGetReverseGeoCodeResult:"+arg0.getAddress());
 
-				 if(listener!=null){
+				 if(listener!=null  && arg0  != null && arg0.getAddressDetail() != null){
 					 String province=arg0.getAddressDetail().province;
 					 String city = arg0.getAddressDetail().city;
 					 String district=arg0.getAddressDetail().district;

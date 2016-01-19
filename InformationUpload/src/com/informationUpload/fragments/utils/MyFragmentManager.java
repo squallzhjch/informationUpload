@@ -54,12 +54,13 @@ public class MyFragmentManager {
             return ;
         }
 
-        if (intent != null) {
-//            mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        }
+
 
         List<Fragment> fragments = mFragmentManager.getFragments();
         if (fragments != null) {
+            if(fragments.size() > 0){
+//                mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
             for (int i = 0; i < fragments.size(); i++) {
                 Fragment fragment = fragments.get(i);
                 if (fragment != null) {

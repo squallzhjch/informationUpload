@@ -124,10 +124,11 @@ public class UserCenterFragment extends BaseFragment{
 			public void onClick(View arg0) {
 
 				Bundle bundle = new Bundle();
-				if(!ConfigManager.getInstance().isLogin())
+				if(ConfigManager.getInstance().isLogin()) {
 					bundle.putBoolean(SystemConfig.BUNDLE_DATA_LOGIN_OUT, true);
-				else
 					LoginHelper.loginOut();
+				}
+
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, bundle));
 			}
 		});
@@ -145,7 +146,7 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+//				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
 
 			}
 		});

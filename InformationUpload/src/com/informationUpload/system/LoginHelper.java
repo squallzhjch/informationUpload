@@ -56,7 +56,6 @@ public class LoginHelper {
         }else if(isLogin){
             isRegister = true;
         }
-        isRegister = false;
         if(!isRegister){
              new AlertDialog.Builder(context)
                     .setTitle("提示")
