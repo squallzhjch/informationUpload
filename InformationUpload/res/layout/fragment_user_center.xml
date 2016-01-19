@@ -154,7 +154,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="新闻中心"
-                android:textColor="@color/select_pop_title_color" />
+                android:textColor="#CCC" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -222,7 +222,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="意见反馈"
-                android:textColor="@color/select_pop_title_color" />
+                android:textColor="#CCC" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -254,7 +254,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
                 android:text="关于"
-                android:textColor="@color/select_pop_title_color" />
+                android:textColor="#CCC" />
 
             <ImageView
                 android:layout_width="wrap_content"

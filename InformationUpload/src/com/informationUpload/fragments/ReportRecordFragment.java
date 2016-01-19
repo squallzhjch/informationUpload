@@ -56,6 +56,7 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.SystemConfig;
@@ -222,7 +223,7 @@ public class ReportRecordFragment extends BaseFragment{
 	}
 
 
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundle) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		View view = inflater.inflate(R.layout.fragment_my_confirm_record, null, true);
 		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		//初始化
@@ -428,7 +429,7 @@ public class ReportRecordFragment extends BaseFragment{
 				Informations.Information.CONTENT_URI,
 				LocalInformationAdapter.KEY_MAPPING,
 				LocalInformationAdapter.WHERE,
-				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)},
+				new String[]{ConfigManager.getInstance().getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)},
 				LocalInformationAdapter.ORDER_BY
 				), false,"local");
 
@@ -436,7 +437,7 @@ public class ReportRecordFragment extends BaseFragment{
 				Informations.Information.CONTENT_URI,
 				LocalInformationAdapter.KEY_MAPPING,
 				LocalInformationAdapter.WHERE,
-				new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)},
+				new String[]{ConfigManager.getInstance().getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)},
 				LocalInformationAdapter.ORDER_BY
 				), false,"server");
 		for( int i=0;i<mLocalAdapter.getCount();i++){
@@ -456,7 +457,7 @@ public class ReportRecordFragment extends BaseFragment{
 			public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 				return new CursorLoader(mApplication, Informations.Information.CONTENT_URI,
 						mLocalAdapter.KEY_MAPPING, mLocalAdapter.WHERE,
-						new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)}, LocalInformationAdapter.ORDER_BY);
+						new String[]{ConfigManager.getInstance().getUserId(), String.valueOf(Informations.Information.STATUS_LOCAL)}, LocalInformationAdapter.ORDER_BY);
 			}
 
 			@Override
@@ -474,7 +475,7 @@ public class ReportRecordFragment extends BaseFragment{
 			public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 				return new CursorLoader(mApplication, Informations.Information.CONTENT_URI,
 						mLocalAdapter.KEY_MAPPING, mLocalAdapter.WHERE,
-						new String[]{mApplication.getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)}, LocalInformationAdapter.ORDER_BY);
+						new String[]{ConfigManager.getInstance().getUserId(), String.valueOf(Informations.Information.STATUS_SERVER)}, LocalInformationAdapter.ORDER_BY);
 			}
 
 			@Override
@@ -557,6 +558,12 @@ public class ReportRecordFragment extends BaseFragment{
 		super.onDetach();
 		mApplication.getContentResolver().unregisterContentObserver(mInformationObserver);
 	}
+
+	@Override
+	public void onDataChange(Bundle bundle) {
+
+	}
+
 	public static void set(Integer i,Boolean bl){
 		//    	if(map==null){
 		//    		map=new HashMap<Integer,Boolean>();

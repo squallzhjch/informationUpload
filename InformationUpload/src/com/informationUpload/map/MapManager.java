@@ -82,7 +82,7 @@ public class MapManager {
 		map = mMapView.getMap();
 		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(17f));
 		mapView.getMap().setMyLocationEnabled(true);
-
+		mapView.showZoomControls(false);
 
 		mLocationManager = LocationManager.getInstance();
 		mLocationManager.startLocation();

@@ -61,9 +61,14 @@ public class PhotoViewpagerFragment extends BaseFragment{
 		  }
 	
 	  }
+
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public void onDataChange(Bundle bundle) {
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		view =inflater.inflate(R.layout.photoviewpagerfragment,null);
 
 

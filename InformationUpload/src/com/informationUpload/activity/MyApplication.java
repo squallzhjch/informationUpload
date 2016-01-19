@@ -3,6 +3,7 @@ package com.informationUpload.activity;
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.voiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -34,14 +35,6 @@ public class MyApplication extends Application{
         InformationManager.getInstance().init(this);
         LocationManager.getInstance().init(this);
         PoiRecordPopup.getInstance().init(this, SystemConfig.DATA_CHAT_PATH);
-
-        setUserId("10000");
+        ConfigManager.getInstance().init(this);
 	}
-    public String getUserId() {
-        return mUserId;
-    }
-
-    public void setUserId(String userId) {
-        this.mUserId = userId;
-    }
 }

@@ -21,6 +21,9 @@ public class SystemConfig {
     //隐藏所有其他fragment
     public static String HIDE_OTHER_FRAGMENT = "fragment_hide_other";
 
+    //就地释放
+    public static String FREE_FRAGMENT = "fragment_free";
+
     /**
      * fragment 接收消息的类别
      */

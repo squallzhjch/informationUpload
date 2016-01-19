@@ -43,4 +43,8 @@ public interface InformationColumns extends MyBaseColumns {
      * 备注
      */
     String REMARK = "information_remark";
+    /**
+     * 行政编码
+     */
+    String ADMINCODE = "information_admincode";
 }

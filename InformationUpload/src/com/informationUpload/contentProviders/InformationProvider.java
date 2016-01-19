@@ -25,7 +25,7 @@ public class InformationProvider extends ContentProviderWithDecorator{
 
     private static final String LOG_TAG = "InformationProvider";
     private static final String DATABASE_NAME = "informationsDB.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String INFORMATION_TABLE_NAME = "informationTable";
     private static final String VIDEO_DATA_TABLE_NAME = "videoDataTable";
 
@@ -67,7 +67,8 @@ public class InformationProvider extends ContentProviderWithDecorator{
                     + Informations.Information.LATITUDE + " DOUBLE,"
                     + Informations.Information.LONGITUDE + " DOUBLE,"
                     + Informations.Information.REMARK + " TEXT,"
-                    + Informations.Information.ADDRESS+ " TEXT"
+                    + Informations.Information.ADDRESS+ " TEXT,"
+                    + Informations.Information.ADMINCODE+ " TEXT"
             + ");");
 
             db.execSQL("CREATE TABLE " + VIDEO_DATA_TABLE_NAME + " ("
@@ -134,7 +135,8 @@ public class InformationProvider extends ContentProviderWithDecorator{
         maps.put(Informations.Information.LATITUDE, Informations.Information.LATITUDE);
         maps.put(Informations.Information.REMARK, Informations.Information.REMARK);
         maps.put(Informations.Information.ADDRESS, Informations.Information.ADDRESS);
-        
+        maps.put(Informations.Information.ADMINCODE, Informations.Information.ADMINCODE);
+
         maps.put(Informations.VideoData.ID, Informations.VideoData.ID);
         maps.put(Informations.VideoData.ROWKEY, Informations.VideoData.ROWKEY);
         maps.put(Informations.VideoData.TIME, Informations.VideoData.TIME);

@@ -47,7 +47,8 @@ public class InformationManager {
             Informations.VideoData.TYPE, //11
             Informations.VideoData.ROWKEY, //12
             Informations.VideoData.TIME, //13
-            Informations.VideoData.PARENT_ID //14
+            Informations.VideoData.PARENT_ID, //14
+            Informations.Information.ADMINCODE //15
 
     };
     private final static String[] INFORMATION_PROJECTION_SMAPLE = new String[]{
@@ -129,6 +130,9 @@ public class InformationManager {
 
                         if (!TextUtils.isEmpty(message.getAddress())) {
                             values.put(Informations.Information.ADDRESS, message.getAddress());
+                        }
+                        if (!TextUtils.isEmpty(message.getAdminCode())) {
+                            values.put(Informations.Information.ADMINCODE, message.getAdminCode());
                         }
                         values.put(Informations.Information.TIME, System.currentTimeMillis());
                         values.put(Informations.Information.LATITUDE, message.getLat());
@@ -316,6 +320,10 @@ public class InformationManager {
                     String address = cursor.getString(6);
                     if (!TextUtils.isEmpty(address)) {
                         informationMessage.setAddress(address);
+                    }
+                    String adminCode = cursor.getString(15);
+                    if (!TextUtils.isEmpty(adminCode)) {
+                        informationMessage.setAdminCode(adminCode);
                     }
                     String childRowkey = cursor.getString(12);
                     if(TextUtils.isEmpty(childRowkey)){
