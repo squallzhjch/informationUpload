@@ -15,10 +15,10 @@
 
         <CheckBox
             android:id="@+id/cb"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_centerVertical="true"
-             android:button="@drawable/infocheckbox_selecter"
+             android:button="@drawable/infocheckbox_big_selecter"
              android:layout_marginLeft="5dp"
              
             android:textSize="12sp"

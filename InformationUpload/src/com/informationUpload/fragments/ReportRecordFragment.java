@@ -180,15 +180,15 @@ public class ReportRecordFragment extends BaseFragment{
                 final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
 				toast.show();
                 
-				  handler.postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							toast.cancel();
-							mFragmentManager.back();
-							
-						}
-					}, 600);
+//				  handler.postDelayed(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							toast.cancel();
+//							mFragmentManager.back();
+//							
+//						}
+//					}, 600);
 				break;
 			case 3:	
 				pb.dismiss();

@@ -1,5 +1,6 @@
 package com.informationUpload.adapter;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -33,6 +34,7 @@ public class LocalInformationAdapter extends CursorAdapter {
 	private HashMap<Integer, Boolean> map;
 	private int position;
 	private String mWhereadapter;//已提交或者待提交的adapter
+	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
 
 	public static final String[] KEY_MAPPING = new String[]{
 		Informations.Information.ID, // Map to 0
@@ -86,8 +88,9 @@ public class LocalInformationAdapter extends CursorAdapter {
 			rowkey = getCursor().getString(2);
 			int type = getCursor().getInt(3);
 			long time = getCursor().getLong(1);
-
-			holder.time.setText(String.valueOf(time));
+			String str_time = df.format(time);
+			String[] timestr=str_time.split("-");
+			holder.time.setText(timestr[0]+"年"+timestr[1]+"月"+timestr[2]+"日"+timestr[3]+"时"+timestr[3]+"分");
 			if (type == Informations.Information.INFORMATION_TYPE_BUS) {
 				type_str = "公交上报";
 			} else if (type == Informations.Information.INFORMATION_TYPE_ESTABLISHMENT) {
@@ -130,8 +133,6 @@ public class LocalInformationAdapter extends CursorAdapter {
 
 
 					ReportRecordFragment.set((Integer) arg0.getTag(), arg1);
-
-
 
 
 

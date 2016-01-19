@@ -638,6 +638,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					saveLocal();
 					pb=new ProgressDialog(getActivity());
 					pb.setMessage("正在上传");
+					pb.setCancelable(false);
 					pb.show();
 
 					ArrayList<String> list_servicepara=new ArrayList<String>();
