@@ -41,9 +41,9 @@ public class UploadUtil {
 		String PREFIX = "--", LINE_END = "\r\n";
 		String CONTENT_TYPE = "multipart/form-data"; // 内容类型
 
-		String RequestURL = "http://192.168.3.155:8083/infor/information/inforimp/";
+
 		try {
-			URL url = new URL(RequestURL);
+			URL url = new URL(SystemConfig.REQUEST_URL + "inforimp/");
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setReadTimeout(TIME_OUT);
 			conn.setConnectTimeout(TIME_OUT);
