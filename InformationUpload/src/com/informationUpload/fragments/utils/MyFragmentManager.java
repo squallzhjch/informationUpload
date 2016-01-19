@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 
 import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.R;
@@ -53,27 +54,78 @@ public class MyFragmentManager {
             return ;
         }
 
+        if (intent != null) {
+//            mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
         List<Fragment> fragments = mFragmentManager.getFragments();
         if (fragments != null) {
-            if (fragments.size() > 0) {
-                mFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-            }
             for (int i = 0; i < fragments.size(); i++) {
                 Fragment fragment = fragments.get(i);
-                if(!fragment.getClass().getName().equals(intent.getComponent().getClassName())) {
-                    mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
+                if (fragment != null) {
+                    if (!isFragmentAllowedSwitch(fragment)) {
+                        mFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss();
+                        removeAllStacks(fragment.getClass().getName());
+                    } else {
+                        mFragmentManager.beginTransaction().hide(fragment).commitAllowingStateLoss();
+                    }
                 }
             }
         }
-        mFragmentStack.removeAllElements();
-        showFragment(intent);
+
+        Fragment visibleFragment = null;
+            String tagName = getTag(intent.getComponent().getClassName());
+            BaseFragment fragment = (BaseFragment) mFragmentManager.findFragmentByTag(tagName);
+            BaseFragment fragmentS =  getFragment(tagName);
+            if (fragment == null || fragmentS == null) {
+                showFragment(intent);
+            } else {
+                mFragmentManager.beginTransaction().show(fragment).commitAllowingStateLoss();
+                visibleFragment = fragment;
+                fragment.onFragmentActive();
+                mFragmentStack.remove(fragment);
+                mFragmentStack.push(fragment);
+            }
+
+
+        if (visibleFragment != null) {
+            setFragmentPauseState(visibleFragment);
+        }
+    }
+
+    private String getTag(String componentName) {
+        for (int idx = 0; idx < mFragmentStack.size(); idx++) {
+            if (TextUtils.equals(mFragmentStack.get(idx).getClass().getName(), componentName)) {
+                return mFragmentStack.get(idx).getClass().getName();
+            }
+        }
+        return null;
+    }
+
+    private void removeAllStacks(String componentName) {
+        for (int idx = 0; idx < mFragmentStack.size(); idx++) {
+            if (mFragmentStack.get(idx).getClass().getName().startsWith(componentName)) {
+                 mFragmentStack.remove(idx);
+                idx--;
+            }
+        }
+    }
+
+    private boolean isFragmentAllowedSwitch(Fragment fragment) {
+        String componentName = fragment.getClass().getName();
+        for (int idx = 0; idx < mFragmentStack.size(); idx++) {
+            if (TextUtils.equals(mFragmentStack.get(idx).getClass().getName(), componentName)) {
+                return  ((BaseFragment) fragment).isFragmentAllowedSwitch();
+            }
+        }
+        return false;
     }
 
     public void showFragment(Intent intent){
         FragmentTransaction transformation = mFragmentManager.beginTransaction();
         String fragmentName = intent.getComponent().getClassName();
         BaseFragment fragment = (BaseFragment) mFragmentManager.findFragmentByTag(fragmentName);
-
+        BaseFragment fragmentS =  getFragment(fragmentName);
 
         boolean hideAllOtherFragment = false;
         if (intent != null) {
@@ -96,7 +148,7 @@ public class MyFragmentManager {
         }
 
 
-        if(fragment != null){
+        if(fragment != null && fragmentS != null){
             int index = mFragmentStack.search(fragment);
             if(index > 0 ){
                 mFragmentStack.remove(fragment);
@@ -169,6 +221,17 @@ public class MyFragmentManager {
             fragment.onFragmentActive();
         }
         return  canBack;
+    }
+
+    public BaseFragment getFragment(String fragmentName){
+        if(mFragmentStack != null){
+            for(BaseFragment fragment:mFragmentStack){
+                if(TextUtils.equals(fragment.getClass().getName(), fragmentName)){
+                    return fragment;
+                }
+            }
+        }
+        return null;
     }
 
     public void hideFragment(){

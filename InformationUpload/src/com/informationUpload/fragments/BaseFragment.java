@@ -127,5 +127,9 @@ public abstract class BaseFragment extends Fragment {
         mFragmentManager.back();
         hideSoftInput(getActivity());
         return false;
-    };
+    }
+
+    public boolean isFragmentAllowedSwitch() {
+        return false;
+    }
 }

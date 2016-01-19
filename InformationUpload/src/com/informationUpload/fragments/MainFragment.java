@@ -538,4 +538,9 @@ public class MainFragment extends BaseFragment {
 			return false;
 		}
 	};
+
+	@Override
+	public boolean isFragmentAllowedSwitch() {
+		return true;
+	}
 }
