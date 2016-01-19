@@ -190,6 +190,7 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
+			
 				//刷新码点
 				refreshmap();
 			}
@@ -202,7 +203,7 @@ public class MainFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-
+			
 				mapManager.FixPositionAgain();
 
 			}
@@ -296,6 +297,7 @@ public class MainFragment extends BaseFragment {
 				list.add(aioformation);
 
 			}
+			mapManager.getMap().clear();
 			//在地图上添加覆盖物
 			initOverlay(list);
 		}else{
@@ -338,6 +340,7 @@ public class MainFragment extends BaseFragment {
 			Marker mMarker = (Marker) (mapManager.getMap().addOverlay(ooA));
 			
 			mMarker.setTitle(text+":"+list.get(i).getAddress());
+			
 			mapManager.setMarker(ooA,mMarker);
 
 		}

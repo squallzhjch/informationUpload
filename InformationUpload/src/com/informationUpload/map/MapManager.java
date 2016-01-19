@@ -31,6 +31,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.informationUpload.map.LocationManager.OnLocationListener;
 
 
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +81,7 @@ public class MapManager {
 		mContext = context;
 		mMapView = mapView;
 		map = mMapView.getMap();
+	
 		mMapView.getMap().setMapStatus(MapStatusUpdateFactory.zoomTo(17f));
 		mapView.getMap().setMyLocationEnabled(true);
 		mapView.showZoomControls(false);
@@ -191,12 +193,7 @@ public class MapManager {
 		mMapView.getMap().animateMapStatus(u);
     }
     
-    public void getalloverlay(){
-             for(int i=0;i<mMapView.getChildCount();i++){
-            	 View ove = mMapView.getChildAt(i);
-                 ove.setVisibility(View.GONE);
-             }
-    }
+  
 
 	public GeoPoint getCenter(){
 		final LatLng point = mMapView.getMap().getMapStatus().target;
@@ -332,6 +329,7 @@ public class MapManager {
 	 public void setMarker(MarkerOptions markeropt,Marker marker){
 		 list_markers_opt.add(markeropt);
 		 list_markers.add(marker);
+		
 	 }
 	 /**
 	  * 获取markeroption的list
