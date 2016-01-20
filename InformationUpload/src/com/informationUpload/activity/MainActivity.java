@@ -11,6 +11,7 @@ import com.informationUpload.fragments.utils.MyFragmentManager;
 
 import com.informationUpload.map.MapManager;
 import com.informationUpload.R;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.LoginHelper;
 
 public class MainActivity extends BaseActivity implements ActivityInstanceStateListener {
@@ -92,7 +93,9 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
 
     @Override
     public void onBackPressed() {
-        myFragmentManager.onBackPressed();
+        if(!ServiceEngin.getInstance().canclDialog()) {
+            myFragmentManager.onBackPressed();
+        }
     }
     @Override
     public boolean isInstanceStateSaved() {

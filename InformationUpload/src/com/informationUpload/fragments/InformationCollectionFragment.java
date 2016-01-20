@@ -3,18 +3,10 @@ package com.informationUpload.fragments;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -66,12 +58,12 @@ import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.utils.Bimp;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.InnerScrollView;
 import com.informationUpload.utils.PoiRecordPopup;
-import com.informationUpload.utils.UploadUtil;
 import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -99,22 +91,6 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private ArrayList<attachmentsMessage> list_att;
 	/**
-	 * 上传超时
-	 */
-	private static final int TIME_OUT = 10 * 10000000; 
-	/**
-	 *  设置编码
-	 */
-	private static final String CHARSET = "utf-8"; 
-	/**
-	 * 成功码
-	 */
-	public static final String SUCCESS = "1";
-	/**
-	 * 失败码
-	 */
-	public static final String FAILURE = "0";
-	/**
 	 * 上传时候的进度条
 	 */
 	private ProgressDialog pb;
@@ -122,10 +98,6 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 返回的字节数组
 	 */
 	private static byte[] byt;
-	/**
-	 * 点击的拍照LinearLayout中 的哪一个
-	 */
-	private int i;
 	/**
 	 * 压缩后的bitmap
 	 */
@@ -318,7 +290,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					@Override
 					public void run() {
-						UploadUtil.uploadFile(new File(path_all_name),handler);
+						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler);
 
 					}
 				}).start();
@@ -647,11 +619,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 
 				saveLocal();
-
-
-
-
-
 			}
 		});
 
@@ -718,11 +685,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					//将list在指定文件夹写成文本
 					WriteFileUtil.doWriteFile(list_servicepara);
 
-
-
 					new Thread(new Runnable() {
-
-
 
 						@Override
 						public void run() {
@@ -823,9 +786,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		imageUri = Uri.fromFile(file);
 		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		startActivityForResult(openCameraIntent, TAKE_PICTURE);
-
-
-
 	}
 
 	public void photo() {

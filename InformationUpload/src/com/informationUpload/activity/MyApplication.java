@@ -3,6 +3,7 @@ package com.informationUpload.activity;
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.voiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentProviders.InformationManager;
@@ -36,5 +37,6 @@ public class MyApplication extends Application{
         LocationManager.getInstance().init(this);
         PoiRecordPopup.getInstance().init(this, SystemConfig.DATA_CHAT_PATH);
         ConfigManager.getInstance().init(this);
+        ServiceEngin.getInstance().init(this);
 	}
 }

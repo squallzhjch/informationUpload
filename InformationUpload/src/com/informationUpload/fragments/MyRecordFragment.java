@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.system.ConfigManager;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
@@ -71,8 +72,8 @@ public class MyRecordFragment extends BaseFragment {
 		SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
 		String userName = sp.getString("user_name",null);
 		//		map.put("userid", userName);
-		map.put("userid","201512291815556b9ff21d591d465d8769451e2bf338d9");
-		ServiceEngin.Request(getActivity(), map, "inforcount", new EnginCallback(getActivity()){
+		map.put("userid", ConfigManager.getInstance().getUserId());
+		ServiceEngin.getInstance().Request(getActivity(), map, "inforcount", new EnginCallback(getActivity()) {
 			@Override
 			public void onSuccess(ResponseInfo arg0) {
 				// TODO Auto-generated method stub
@@ -81,11 +82,12 @@ public class MyRecordFragment extends BaseFragment {
 				//进行json解析
 				parseJson(arg0.result.toString());
 			}
+
 			@Override
 			public void onFailure(HttpException arg0, String arg1) {
 				// TODO Auto-generated method stub
 				super.onFailure(arg0, arg1);
-				Log.e("请求失败",arg1);
+				Log.e("请求失败", arg1);
 			}
 		});
 
@@ -109,10 +111,6 @@ public class MyRecordFragment extends BaseFragment {
 		mTvName=(TextView)view.findViewById(R.id.myrecord_num_tv_name);
 		mMyrecordNumTv=(TextView)view.findViewById(R.id.myrecord_num_tv);
 		mMyrecordNumBack=(RelativeLayout)view.findViewById(R.id.myrecord_num_back);
-
-
-
-
 	}
 	//添加监听器
 	private void addListeners() {

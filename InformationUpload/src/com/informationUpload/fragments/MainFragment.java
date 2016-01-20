@@ -234,7 +234,7 @@ public class MainFragment extends BaseFragment {
 			public void run() {
 				while(isneedrefresh){
 					
-					if(mLocationManager.getCurrentPoint().getLat()!=0.0&&mLocationManager.getCurrentPoint().getLon()!=0.0){
+					if(mLocationManager.getCurrentPoint().getLat()!=0.0 && mLocationManager.getCurrentPoint().getLon()!=0.0){
 						refreshmap();
 						isneedrefresh=false;
 					}
@@ -252,11 +252,13 @@ public class MainFragment extends BaseFragment {
 		map.put("latitude",(ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+5));
 		map.put("longitude",(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+5));
      
-		ServiceEngin.Request(getActivity(), map, "inforquery" ,new EnginCallback(getActivity()){
+		ServiceEngin.getInstance().Request(getActivity(), map, "inforquery" ,new EnginCallback(getActivity()){
 			@Override
 			public void onSuccess(ResponseInfo arg0) {
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0);
+				if(!mIsActive)
+					return;
 				Log.e("请求成功",arg0.result.toString());
 				//进行json解析
 				parseJson(arg0.result.toString());

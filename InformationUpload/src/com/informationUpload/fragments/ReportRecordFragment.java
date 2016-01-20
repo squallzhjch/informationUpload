@@ -56,11 +56,11 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.utils.SystemConfig;
-import com.informationUpload.utils.UploadUtil;
 import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.widget.TitleView;
@@ -156,7 +156,7 @@ public class ReportRecordFragment extends BaseFragment{
 
 					@Override
 					public void run() {
-						UploadUtil.uploadFile(new File(path_all_name),handler);
+						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler);
 
 					}
 				}).start();
