@@ -271,10 +271,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 垂直主布局的Linearlayout
 	 */
 	private LinearLayout svll;
-	/**
-	 * 保存还是上报
-	 */
-	private String saveorreport;//保存0,上报1
+	
 	/**
 	 * 从哪个fragment过来的
 	 * 
@@ -302,7 +299,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				Log.i("chentao","uploadFile:"+"压缩失败");
 				break;
 			case 2:
-				saveorreport="1";
+				
 				pb.dismiss();
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
@@ -619,7 +616,31 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onClick(View arg0) {
 
-				saveLocal();
+				saveLocal(new OnDBListener() {
+					
+					@Override
+					public void onSuccess() {
+						final Toast toast=Toast.makeText(getActivity(),"保存成功",300);
+						toast.show();
+
+						handler.postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								toast.cancel();
+								mFragmentManager.back();
+
+							}
+						}, 600);
+						
+					}
+					
+					@Override
+					public void onFailed() {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			}
 		});
 
@@ -641,83 +662,97 @@ public class InformationCollectionFragment extends BaseFragment {
 				if(mAddress.equals("")){
 					Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行上报，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
 				}else{
-					saveLocal();
-					pb=new ProgressDialog(getActivity());
-					pb.setMessage("正在上传");
-					pb.setCancelable(false);
-					pb.show();
-
-					ArrayList<String> list_servicepara=new ArrayList<String>();
-					InformationMessage infomessage = InformationManager.getInstance().getInformation(mRowkey);
-
-					HashMap<String,Object> map=new HashMap<String,Object>();
-					map.put("info_fid",infomessage.getRowkey());
-					double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
-					map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
-					map.put("info_type",infomessage.getType());
-					map.put("adminCode",mAdminCode);
-					map.put("address",mAddress);
-					list_att=new ArrayList<attachmentsMessage>();
-					List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
-					List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
-					for(int j=0;j<chatmsglist.size();j++){
-						ChatMessage chatmsg = chatmsglist.get(j);
-						Log.i("chentao","chatmsg:"+chatmsg.getPath());
-						double[] ret_chat = ChangePointUtil.baidutoreal(chatmsg.getLat(),chatmsg.getLon());
-						list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
-								df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)ret_chat[0],(float)ret_chat[1])));
-					}
-					for(int f=0;f<picmsglist.size();f++){
-						PictureMessage picmsg = picmsglist.get(f);
-						double[] ret_pic = ChangePointUtil.baidutoreal(picmsg.getLat(),picmsg.getLon());
-						list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
-								df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)ret_pic[0],(float)ret_pic[1])));
-					}
-					map.put("attachments",list_att);
-
-					map.put("operateDate",df.format(infomessage.getTime()));
-					SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-					String userName = sp.getString("user_name",null);
-					map.put("user_id",userName);
-					map.put("remark", infomessage.getRemark());
-					servicePara = JSON.toJSONString(map);
-					Log.i("chentao",servicePara.toString());
-					list_servicepara.add(servicePara);
-					//将list在指定文件夹写成文本
-					WriteFileUtil.doWriteFile(list_servicepara);
-
-					new Thread(new Runnable() {
+					saveLocal(new OnDBListener() {
 
 						@Override
-						public void run() {
-							try {
-								ArrayList<String> listall=new ArrayList<String>();
-								for(int h=0;h<list_att.size();h++){
-									Log.i("chentao","h:"+list_att.get(h).getUrl());
-									if(list_att.get(h).getType()==1){
-										Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
-										listall.add(path_chat+list_att.get(h).getUrl());
-									}else if(list_att.get(h).getType()==0){
-										listall.add(path_pic+list_att.get(h).getUrl());
+						public void onSuccess() {
+							pb=new ProgressDialog(getActivity());
+							pb.setMessage("正在上传");
+							pb.setCancelable(false);
+							pb.show();
+
+							ArrayList<String> list_servicepara=new ArrayList<String>();
+							InformationMessage infomessage = InformationManager.getInstance().getInformation(mRowkey);
+
+							HashMap<String,Object> map=new HashMap<String,Object>();
+							map.put("info_fid",infomessage.getRowkey());
+							double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
+							map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
+							map.put("info_type",infomessage.getType());
+							map.put("adminCode",mAdminCode);
+							map.put("address",mAddress);
+							list_att=new ArrayList<attachmentsMessage>();
+							List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
+							List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
+							for(int j=0;j<chatmsglist.size();j++){
+								ChatMessage chatmsg = chatmsglist.get(j);
+								Log.i("chentao","chatmsg:"+chatmsg.getPath());
+								double[] ret_chat = ChangePointUtil.baidutoreal(chatmsg.getLat(),chatmsg.getLon());
+								list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
+										df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)ret_chat[0],(float)ret_chat[1])));
+							}
+							for(int f=0;f<picmsglist.size();f++){
+								PictureMessage picmsg = picmsglist.get(f);
+								double[] ret_pic = ChangePointUtil.baidutoreal(picmsg.getLat(),picmsg.getLon());
+								list_att.add(new attachmentsMessage(0,picmsg.getPath().substring(picmsg.getPath().lastIndexOf("/")+1, picmsg.getPath().length()),
+										df.format(picmsg.getTime()),picmsg.getRemark(),new locationMessage((float)ret_pic[0],(float)ret_pic[1])));
+							}
+							map.put("attachments",list_att);
+
+							map.put("operateDate",df.format(infomessage.getTime()));
+							SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
+							String userName = sp.getString("user_name",null);
+							map.put("user_id",userName);
+							map.put("remark", infomessage.getRemark());
+							servicePara = JSON.toJSONString(map);
+							Log.i("chentao",servicePara.toString());
+							list_servicepara.add(servicePara);
+							//将list在指定文件夹写成文本
+							WriteFileUtil.doWriteFile(list_servicepara);
+
+							new Thread(new Runnable() {
+
+								@Override
+								public void run() {
+									try {
+										ArrayList<String> listall=new ArrayList<String>();
+										for(int h=0;h<list_att.size();h++){
+											Log.i("chentao","h:"+list_att.get(h).getUrl());
+											if(list_att.get(h).getType()==1){
+												Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
+												listall.add(path_chat+list_att.get(h).getUrl());
+											}else if(list_att.get(h).getType()==0){
+												listall.add(path_pic+list_att.get(h).getUrl());
+											}
+										}
+										listall.add(path+"poi.txt");
+										path_all_name=path+df.format(new Date())+".zip";
+										ZipUtil.zip(
+												listall, path_all_name);
+
+
+										handler.sendEmptyMessage(0);
+										Log.i("chentao", "压缩成功");
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+										handler.sendEmptyMessage(1);
+										Log.i("chentao", "压缩失败");
 									}
+
 								}
-								listall.add(path+"poi.txt");
-								path_all_name=path+df.format(new Date())+".zip";
-								ZipUtil.zip(
-										listall, path_all_name);
+							}).start();
 
-
-								handler.sendEmptyMessage(0);
-								Log.i("chentao", "压缩成功");
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-								handler.sendEmptyMessage(1);
-								Log.i("chentao", "压缩失败");
 							}
 
+
+						@Override
+						public void onFailed() {
+							Toast.makeText(getActivity(), "保存失败",Toast.LENGTH_SHORT).show();
+
 						}
-					}).start();
+					});
+		
 				}
 			}
 		});
@@ -954,7 +989,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 保存到本地数据库
 	 */
-	private void  saveLocal(){
+	private void  saveLocal(OnDBListener listener){
 		if(mChatList.size()==0 && mPicList.size()==0){
 			Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
 			return ;
@@ -982,33 +1017,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setRemark(additional_remarks_et.getText().toString());
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
-			mInformationManager.saveInformation(ConfigManager.getInstance().getUserId(), message,new OnDBListener() {
-
-				@Override
-				public void onSuccess() {
-					saveorreport="0";
-					if(saveorreport.equals("0")){
-						final Toast toast = Toast.makeText(getActivity(), "保存成功",300);
-						toast.show();
-						handler.postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
-								toast.cancel();
-								mFragmentManager.back();
-							}
-						}, 600);
-
-					}
-
-				}
-
-				@Override
-				public void onFailed() {
-					Toast.makeText(getActivity(), "保存失败",Toast.LENGTH_SHORT).show();
-
-				}
-			});
+			mInformationManager.saveInformation(ConfigManager.getInstance().getUserId(), message,listener);
 
 		}
 

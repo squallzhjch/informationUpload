@@ -368,7 +368,8 @@ public class ReportRecordFragment extends BaseFragment{
 				bsubmit=true;
 				select_all.setVisibility(View.VISIBLE);
 				mListView.setAdapter(mLocalAdapter);
-
+				mTvDeleteItem.setVisibility(View.VISIBLE);
+				mSubmit.setVisibility(View.VISIBLE);
 			}
 		});
 		//已提交
@@ -376,6 +377,8 @@ public class ReportRecordFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
+				mTvDeleteItem.setVisibility(View.INVISIBLE);
+				mSubmit.setVisibility(View.INVISIBLE);
 				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
 				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
 				mAlreadySubmitIv.setLayoutParams(lp);
@@ -384,7 +387,7 @@ public class ReportRecordFragment extends BaseFragment{
 				bsubmit=false;
 
 				mListView.setAdapter(mServiceAdapter);
-
+                    
 			}
 		});
 
