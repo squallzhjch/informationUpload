@@ -51,18 +51,18 @@ public class LoginHelper {
         boolean isRegister = false;
 
         if(TextUtils.isEmpty(userId)){
-            isRegister = false;
+            isRegister = true;
             userId = StringTool.createUserId();
             ConfigManager.getInstance().setUserId(userId);
         }else if(TextUtils.isEmpty(userTel)){
-            isRegister = false;
+            isRegister = true;
         }else if(isLogin){
             isRegister = true;
         }
         if(!isRegister){
              new AlertDialog.Builder(context)
                     .setTitle("提示")
-                    .setMessage("您还没有绑定手机号或登录，作业战绩将不能记录在您名下，是否去\"绑定or登录\"")
+                    .setMessage("您还没有登录，作业成绩将无法记录到您名下，是否马上登录？")
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {

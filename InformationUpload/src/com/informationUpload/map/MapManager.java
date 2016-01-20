@@ -29,6 +29,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.informationUpload.map.LocationManager.OnLocationListener;
 
 
@@ -398,5 +399,12 @@ public class MapManager {
 		 gc.reverseGeoCode(new ReverseGeoCodeOption().location(new LatLng(latLng.getLat(),latLng.getLon())));
 
 	 }
-	 
+
+	public double getDistance(GeoPoint point1, GeoPoint point2){
+		if(point1 == null || point1 == null){
+			return -1;
+		}
+		return DistanceUtil.getDistance(new LatLng(point1.getLat(), point1.getLon()), new LatLng(point2.getLat(), point2.getLon()));
+	}
+
 }
