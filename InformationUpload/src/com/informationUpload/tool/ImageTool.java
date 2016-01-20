@@ -15,7 +15,7 @@ import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

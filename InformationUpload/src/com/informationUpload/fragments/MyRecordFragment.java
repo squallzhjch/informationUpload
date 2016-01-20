@@ -78,6 +78,8 @@ public class MyRecordFragment extends BaseFragment {
 			public void onSuccess(ResponseInfo arg0) {
 				// TODO Auto-generated method stub
 				super.onSuccess(arg0);
+				if(!mIsActive)
+					return;
 				Log.e("请求成功", arg0.result.toString());
 				//进行json解析
 				parseJson(arg0.result.toString());

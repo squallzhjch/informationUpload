@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.R;
 import com.informationUpload.fragments.BaseFragment;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 import java.util.List;
 import java.util.Stack;

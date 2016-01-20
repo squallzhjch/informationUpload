@@ -60,7 +60,7 @@ import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.ChangePointUtil;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.widget.TitleView;

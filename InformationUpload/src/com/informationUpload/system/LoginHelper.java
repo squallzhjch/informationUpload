@@ -35,6 +35,11 @@ public class LoginHelper {
         void onCancel();
     }
 
+    public interface OnEnginCallbackListener{
+        void onSuccess();
+        void onFailed();
+    }
+
     public static void loginOut(){
         ConfigManager.getInstance().setLogin(false);
     }
@@ -78,7 +83,7 @@ public class LoginHelper {
     }
 
     //登录
-    public static void Login(final Context context,final String tel,String password) {
+    public static void Login(final Context context,final String tel,final String password, final OnEnginCallbackListener listener) {
         HashMap<String,Object> map=new HashMap<String, Object>();
         map.put("tel",tel);
         map.put("pwd",password);
@@ -88,19 +93,22 @@ public class LoginHelper {
                 super.onSuccess(arg0);
                 Log.e("请求成功", arg0.result.toString());
                 //进行json解析
-                parseLoginJson(context, arg0.result.toString(), tel);
+                parseLoginJson(context, arg0.result.toString(), tel, password, listener);
             }
 
             @Override
             public void onFailure(HttpException arg0, String arg1) {
                 super.onFailure(arg0, arg1);
                 Log.e("请求失败", arg1);
+                if(listener != null){
+                    listener.onFailed();
+                }
             }
         });
     }
 
     //进行json解析
-    private static void parseLoginJson(Context context , String json, String tel) {
+    private static void parseLoginJson(Context context , String json, String tel, String password, OnEnginCallbackListener listener) {
         JSONObject jsonObj = JSON.parseObject(json);
 
         String errcode = "" +	jsonObj.getInteger("errcode");
@@ -110,18 +118,25 @@ public class LoginHelper {
             ConfigManager.getInstance().setUserId(userid);
             ConfigManager.getInstance().setUserTel(tel);
             ConfigManager.getInstance().setLogin(true);
-            MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+            ConfigManager.getInstance().setUserPassword(password);
+            if(listener != null){
+                listener.onSuccess();
+            }
+
         }else{
+            if(listener != null){
+                listener.onFailed();
+            }
             Toast.makeText(context, errmsg, Toast.LENGTH_SHORT).show();
         }
     }
 
     //注册
-    public static void register(final Context context, final String telNum,final String telpassword) {
+    public static void register(final Context context, final String telNum,final String password,final OnEnginCallbackListener listener) {
         String userId = ConfigManager.getInstance().getUserId();
         HashMap<String,Object> map=new HashMap<String, Object>();
         map.put("tel", telNum);
-        map.put("pwd", telpassword);
+        map.put("pwd", password);
         map.put("uuid", userId);
         ServiceEngin.getInstance().Request(context, map, "inforegist", new EnginCallback(context) {
             @Override
@@ -129,12 +144,15 @@ public class LoginHelper {
                 super.onSuccess(arg0);
                 Log.e("请求成功", arg0.result.toString());
                 //进行json解析
-                parseRegisterJson(context, arg0.result.toString(), telNum);
+                parseRegisterJson(context, arg0.result.toString(), telNum, password,listener);
             }
 
             @Override
             public void onFailure(HttpException arg0, String arg1) {
                 super.onFailure(arg0, arg1);
+                if(listener != null){
+                    listener.onFailed();
+                }
                 Log.e("请求失败", arg1);
             }
         });
@@ -142,7 +160,7 @@ public class LoginHelper {
     }
 
     //进行json解析
-    private static void parseRegisterJson(Context context, String json, String telNum) {
+    private static void parseRegisterJson(Context context, String json, String telNum, String password, OnEnginCallbackListener listener) {
         JSONObject jsonObj = JSON.parseObject(json);
         String errcode=""+jsonObj.getInteger("errcode");
         Log.i("chentao", "errcode:" + errcode);
@@ -151,8 +169,14 @@ public class LoginHelper {
             Toast.makeText(context, "注册成功", Toast.LENGTH_SHORT).show();
             ConfigManager.getInstance().setUserTel(telNum);
             ConfigManager.getInstance().setLogin(true);
-            MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
-        }else{
+            ConfigManager.getInstance().setUserPassword(password);
+            if(listener != null){
+                listener.onSuccess();
+            }
+        } else{
+            if(listener != null){
+                listener.onFailed();
+            }
             Toast.makeText(context,errmsg, Toast.LENGTH_SHORT).show();
         }
 

@@ -24,11 +24,11 @@ import java.util.zip.ZipOutputStream;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
-import android.util.JsonToken;
 import android.util.Log;
+
+import com.informationUpload.system.SystemConfig;
 
 public class ZipUtil {
     

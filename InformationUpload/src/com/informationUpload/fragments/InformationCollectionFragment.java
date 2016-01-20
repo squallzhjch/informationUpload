@@ -71,7 +71,7 @@ import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
 import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 /**
  * @author chentao
  * @version V1.0
@@ -573,6 +573,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				Bundle bundle = new Bundle();
 				bundle.putBoolean(SystemConfig.HIDE_OTHER_FRAGMENT, true);
+				MapManager.getInstance().clear(false);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(SelectPointFragment.class, bundle));
 			}
 		});

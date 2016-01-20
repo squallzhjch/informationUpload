@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.widget.Toast;
 
 import com.informationUpload.utils.NetUtil;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
@@ -75,9 +75,8 @@ public class ServiceEngin {
 			pd = new ProgressDialog(mContext);
 			pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 			pd.setMessage("正在请求服务器...");
-			pd.setCancelable(false);
-			pd.show();
 		}
+		pd.show();
 	}
 
 	/**

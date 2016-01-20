@@ -20,7 +20,7 @@ import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.utils.FileUtils;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 /**
  * @author zhjch

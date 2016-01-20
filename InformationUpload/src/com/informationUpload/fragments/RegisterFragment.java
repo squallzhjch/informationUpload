@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
+import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
 
@@ -145,7 +147,18 @@ public class RegisterFragment extends BaseFragment {
 				imm.hideSoftInputFromWindow(mRegister.getWindowToken(), 0); //强制隐藏键盘  
 
 				//注册
-				LoginHelper.register(getActivity(), telNum, rgpassword);
+				LoginHelper.register(getActivity(), telNum, rgpassword, new LoginHelper.OnEnginCallbackListener() {
+					@Override
+					public void onSuccess() {
+						if(mIsActive)
+							MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+					}
+
+					@Override
+					public void onFailed() {
+
+					}
+				});
 
 			}
 		});

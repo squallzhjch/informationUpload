@@ -2,6 +2,7 @@ package com.informationUpload.map;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -48,14 +49,11 @@ public class MapManager {
 	/**
 	 * marker的list 
 	 */
-	public  ArrayList<MarkerOptions> list_markers_opt=new ArrayList<MarkerOptions>();
-	public  ArrayList<Marker> list_markers=new ArrayList<Marker>();
-	boolean isFirstLoc = true;// 是否首次定位
-	
+	private  List<MarkerOptionsInfo> mMarkerOptsList = new ArrayList<MarkerOptionsInfo>();
+	private boolean isFirstLoc = true;// 是否首次定位
 	private MapView mMapView;
 	private BaiduMap map;
 	private Context mContext;
-	private Boolean bFirst = true;
 	private LocationManager mLocationManager;
 	private final List<WeakReference<OnMapStatusChangeListener>> mOnMapStatusChangeListeners = new ArrayList<WeakReference<OnMapStatusChangeListener>>();
 	private final List<WeakReference<OnMapClickListener>> mOnMapClickListeners = new ArrayList<WeakReference<OnMapClickListener>>();
@@ -70,6 +68,16 @@ public class MapManager {
 		}
 		return mInstance;
 	}
+
+	private class MarkerOptionsInfo{
+		MarkerOptions options;
+		String title;
+		public MarkerOptionsInfo(MarkerOptions options, String title){
+			this.options = options;
+			this.title = title;
+		}
+	}
+
     //获得地图操作类
 	public BaiduMap getMap(){
 		return map;
@@ -178,11 +186,6 @@ public class MapManager {
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mMapView.getMap().animateMapStatus(u);
 			}
-			//            // 更新 location 图层
-			//            mMapView.getMap().setMyLocationConfigeration(new MyLocationConfiguration(
-			//                    LocationMode.NORMAL, true, null));
-			//            bFirst = false;
-			//            mMapView.getMap().setMapStatus(MapStatusUpdateFactory.newLatLng(new LatLng(location.getLat(), location.getLon())));
 		}
 	};
     //使某点居中显示
@@ -193,8 +196,6 @@ public class MapManager {
 		mMapView.getMap().animateMapStatus(u);
     }
     
-  
-
 	public GeoPoint getCenter(){
 		final LatLng point = mMapView.getMap().getMapStatus().target;
 		GeoPoint point1 = new GeoPoint(point.latitude, point.longitude);
@@ -303,12 +304,32 @@ public class MapManager {
 	/**
 	 * 重新定位
 	 */
-	 public void FixPositionAgain(){
-		LatLng ll = new LatLng(mLocationManager.getCurrentPoint().getLat(),
-				mLocationManager.getCurrentPoint().getLon());
-		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-		mMapView.getMap().animateMapStatus(u);
+	 public void setCenter(){
+		 if(mLocationManager.getCurrentPoint() != null && mLocationManager.getCurrentPoint().getLat() != 0 && mLocationManager.getCurrentPoint().getLon() != 0) {
+			 LatLng ll = new LatLng(mLocationManager.getCurrentPoint().getLat(),
+					 mLocationManager.getCurrentPoint().getLon());
+			 MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+			 mMapView.getMap().animateMapStatus(u);
+		 }
 	}
+
+	public void clear(boolean b){
+		map.clear();
+		if(b) {
+			mMarkerOptsList.clear();
+		}
+	}
+
+	public void showMarkers(){
+		map.clear();
+		for(MarkerOptionsInfo info:mMarkerOptsList){
+			Marker mMarker = (Marker) (map.addOverlay(info.options));
+			if(!TextUtils.isEmpty(info.title)) {
+				mMarker.setTitle(info.title);
+			}
+		}
+	}
+
 	/**
 	 * 放大
 	 */
@@ -324,27 +345,20 @@ public class MapManager {
 	 }
 	 /**
 	  * 将marker添加到list
-	  * @param marker
+	  * @param
 	  */
-	 public void setMarker(MarkerOptions markeropt,Marker marker){
-		 list_markers_opt.add(markeropt);
-		 list_markers.add(marker);
-		
+	 public void setMarker(MarkerOptions markeropt, String title){
+
+		 Marker mMarker = (Marker) (map.addOverlay(markeropt));
+		 mMarker.setTitle(title);
+		 mMarkerOptsList.add(new MarkerOptionsInfo(markeropt, title));
 	 }
-	 /**
-	  * 获取markeroption的list
-	  * @return
-	  */
-	 public ArrayList<MarkerOptions> getMarkersOpt(){
-		 return list_markers_opt;
-	 }
+
+
 	 /**
 	  * 获取marke的list
 	  * @return
 	  */
-	 public ArrayList<Marker> getMarkers(){
-		 return list_markers;
-	 }
 
 	 public interface OnSearchAddressListener{
 		 void OnSuccess(String address,String admincode);

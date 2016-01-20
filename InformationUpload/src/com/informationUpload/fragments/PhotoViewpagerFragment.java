@@ -7,11 +7,10 @@ import java.util.List;
 
 import com.informationUpload.R;
 import com.informationUpload.entity.PictureMessage;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;

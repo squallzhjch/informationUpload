@@ -92,6 +92,7 @@
     <orderEntry type="library" exported="" name="baidumapapi_search_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_base_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="fastjson-1.1.31" level="project" />
+    <orderEntry type="library" exported="" name="umeng-update-v2.6.0.1" level="project" />
     <orderEntry type="library" exported="" name="Sunflower" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_util_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="locSDK_6.13" level="project" />

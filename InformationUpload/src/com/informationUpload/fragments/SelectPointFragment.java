@@ -2,27 +2,20 @@ package com.informationUpload.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.model.LatLng;
 import com.informationUpload.R;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.LocationManager;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 import com.informationUpload.widget.SelectPointView;
 import com.informationUpload.widget.TitleView;
 
@@ -97,68 +90,22 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 				mSelectView.setAddressText("");
 			}
 		});
-		for(int i=0;i<MapManager.getInstance().getMarkers().size();i++){
-			MapManager.getInstance().getMarkers().get(i).setVisible(false);
-			MapManager.getInstance().getMarkersOpt().get(i).visible(false);
-		}
 		return view;
 	}
 
 	@Override
 	public void onStop() {
-
 		super.onStop();
-
-
-		
-
 	}
 	@Override
 	public void onDetach() {
 		super.onDetach();
-		for(int i=0;i<MapManager.getInstance().getMarkers().size();i++){
-			MapManager.getInstance().getMarkers().get(i).setVisible(true);
-			MapManager.getInstance().getMarkersOpt().get(i).visible(true);
-		}
 		mMapManager.removeOnMapTouchListener(this);
 	}
 
-	////    @Override
-	//    public void onMaipClick(LatLng latLng) {
-	//        mMapManager.getMap().clear();
-	//        bd = BitmapDescriptorFactory
-	//                .fromResource(R.drawable.type_bus);
-	//
-	//        LatLng ll_Point = new LatLng(latLng.latitude, latLng.longitude);
-	//        MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
-	//                .zIndex(9).draggable(true);
-	//        Marker mMarker = (Marker) (mMapManager.getMap().addOverlay(ooA));
-	//        mPoint = new GeoPoint();
-	//
-	//        mPoint.setLat(latLng.latitude);
-	//        mPoint.setLon(latLng.longitude);
-	//        mMapManager.searchAddress(mPoint, new OnSearchAddressListener() {
-	//            @Override
-	//            public void OnSuccess(String address, String adminCode) {
-	//                mMapManager.setCenter(mPoint);
-	//                mAdminCode = adminCode;
-	//                mAddress = address;
-	//                mSelectView.setAddressText(address);
-	//            }
-	//
-	//            @Override
-	//            public void onFailure() {
-	//                mSelectView.setAddressText("");
-	//            }
-	//        });
-	//    }
-
-
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
-		mMapManager.getMap().clear();
 		if (bd != null) {
 			bd.recycle();
 		}
@@ -195,7 +142,6 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 
 	@Override
 	public void onDataChange(Bundle bundle) {
-		// TODO Auto-generated method stub
-		
+
 	}
 }

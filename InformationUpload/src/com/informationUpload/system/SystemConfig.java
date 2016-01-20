@@ -1,4 +1,4 @@
-package com.informationUpload.utils;
+package com.informationUpload.system;
 
 import android.os.Environment;
 import android.support.v4.os.EnvironmentCompat;
@@ -45,7 +45,7 @@ public class SystemConfig {
 
     public static String BUNDLE_DATA_LOGIN_OUT = "bundle_data_login_out";
 
-    //	public static String REQUEST_URL = "http://172.23.44.11:8081/infor/information/";
+//    	public static String REQUEST_URL = "http://172.23.44.11:8081/infor/information/";
 //    public static String REQUEST_URL = "http://192.168.3.155:8083/infor/information/";
     public static String REQUEST_URL = "http://fs.navinfo.com/infor/information/";
     /**

@@ -3,7 +3,6 @@ package com.informationUpload.activity;
 import android.app.Application;
 
 import com.baidu.mapapi.SDKInitializer;
-import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.voiceSpeech.VoiceSpeechManager;
 import com.informationUpload.contentProviders.InformationManager;
@@ -11,7 +10,7 @@ import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.LocationManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.PoiRecordPopup;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 /**
  * @author zhjch
@@ -37,6 +36,6 @@ public class MyApplication extends Application{
         LocationManager.getInstance().init(this);
         PoiRecordPopup.getInstance().init(this, SystemConfig.DATA_CHAT_PATH);
         ConfigManager.getInstance().init(this);
-        ServiceEngin.getInstance().init(this);
+
 	}
 }

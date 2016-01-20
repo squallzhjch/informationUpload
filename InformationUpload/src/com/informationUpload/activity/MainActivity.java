@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
             myFragmentManager = MyFragmentManager.getInstance();
             myFragmentManager.init(getApplicationContext(), getSupportFragmentManager(), this);
             myFragmentManager.switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
-
+            ServiceEngin.getInstance().init(this);
             LoginHelper.checkLogin(this, new LoginHelper.OnCheckLoginListener() {
                 @Override
                 public void onAgree() {

@@ -1,8 +1,6 @@
 package com.informationUpload.serviceEngin;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -15,15 +13,19 @@ public class EnginCallback extends RequestCallBack {
 
 
 	private Context context;
-	
+	private boolean bLoading = true;
 
 	/**
 	 * 构造函数,为公共进度条重写此回调
 	 */
+	public EnginCallback(Context context, boolean bLoading) {
+		this.context = context;
+		this.bLoading = bLoading;
+	}
+
 	public EnginCallback(Context context) {
 		this.context = context;
 	}
-
 	@Override
 	public void onFailure(HttpException arg0, String arg1) {
 		// TODO Auto-generated method stub
@@ -43,7 +45,9 @@ public class EnginCallback extends RequestCallBack {
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-
+		if(bLoading) {
+			ServiceEngin.getInstance().startDialog();
+		}
 	}
 
 }

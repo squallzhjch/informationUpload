@@ -19,9 +19,11 @@ import android.widget.Toast;
 
 import com.informationUpload.R;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.fragments.utils.MyFragmentManager;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
-import com.informationUpload.utils.SystemConfig;
+import com.informationUpload.system.SystemConfig;
 
 
 /**
@@ -63,12 +65,19 @@ public class LoginFragment extends BaseFragment {
 
     @Override
     public void onDataChange(Bundle bundle) {
+        String tel = ConfigManager.getInstance().getUserTel();
+        String password = ConfigManager.getInstance().getUserPassword();
+        if(!TextUtils.isEmpty(tel))
+            mUserName.setText(tel);
+        if(!TextUtils.isEmpty(password))
+            mPassword.setText(password);
         if(bundle != null){
             mLoginOut = bundle.getBoolean(SystemConfig.BUNDLE_DATA_LOGIN_OUT);
         }
         if(mLoginOut){
             mBackView.setVisibility(View.INVISIBLE);
         }
+
     }
 
     @Override
@@ -119,7 +128,19 @@ public class LoginFragment extends BaseFragment {
                     return;
                 }
 //				//登录
-                LoginHelper.Login(getActivity(), name,password);
+                LoginHelper.Login(getActivity(), name, password, new LoginHelper.OnEnginCallbackListener() {
+                    @Override
+                    public void onSuccess() {
+                        if(mIsActive) {
+                            MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+                        }
+                    }
+
+                    @Override
+                    public void onFailed() {
+
+                    }
+                });
                 hideSoftInput(getActivity());
             }
         });

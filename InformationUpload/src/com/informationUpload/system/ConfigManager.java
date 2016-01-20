@@ -38,6 +38,17 @@ public class ConfigManager {
         return mSharePre.getString("user_id", null);
     }
 
+    public void setUserPassword(String password){
+        if(TextUtils.isEmpty(password)){
+            return;
+        }
+        mSharePre.edit().putString("user_password", password).commit();
+    }
+
+    public String getUserPassword(){
+        return mSharePre.getString("user_password", null);
+    }
+
     public void setUserId(String userId){
         if(TextUtils.isEmpty(userId)){
             return;
