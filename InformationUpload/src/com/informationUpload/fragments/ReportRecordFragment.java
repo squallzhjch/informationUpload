@@ -500,6 +500,7 @@ public class ReportRecordFragment extends BaseFragment{
 						if(bsubmit){
 							Bundle bundle = new Bundle();
 							bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
+							bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,false);
 							mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
 						}
 					}

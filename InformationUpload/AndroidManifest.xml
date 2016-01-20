@@ -23,7 +23,7 @@
         <meta-data android:value="information" android:name="UMENG_CHANNEL"/>
         <!--<meta-data-->
         <!--android:name="com.baidu.lbsapi.API_KEY"-->
-        <!--android:value="GOPiXdUydTEP2qil5UFnvUQ1" />-->
+        <!--android:value="XKHotnKekALGN24xIw6qTGpe" />-->
 
         <service
             android:name="com.baidu.location.f"
