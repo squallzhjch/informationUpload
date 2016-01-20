@@ -303,6 +303,11 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 保存还是上报
 	 */
 	private String saveorreport;//保存0,上报1
+	/**
+	 * 从哪个fragment过来的
+	 * 
+	 */
+	private Boolean source;//来源
 
 
 	Handler handler=new Handler(){
@@ -330,73 +335,48 @@ public class InformationCollectionFragment extends BaseFragment {
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
 				mInformationManager.updateInformation(mRowkey,values);
-				
-				
-                final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
+
+
+				final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
 				toast.show();
-                
-				  handler.postDelayed(new Runnable() {
-						
-						@Override
-						public void run() {
-							toast.cancel();
-							mFragmentManager.back();
-							
-						}
-					}, 600);
+
+				handler.postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						toast.cancel();
+						mFragmentManager.back();
+
+					}
+				}, 600);
 				break;
 			case 3:	
 				pb.dismiss();
 				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
-			
+
 			}
 		}
 	};
-
-
-
-
+	private InformationMessage message;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		
-		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
-
-
-			@Override
-			public void onContentUpdated(List<Object[]> values) {
-				if (values != null) {
-					mAddress = (String) values.get(0)[0];
-					mAdminCode=(String) values.get(0)[1];
-					select_position.setText(mAddress);
-					mPoint = (GeoPoint) values.get(0)[2];
-					Log.i("chentao","mAddress:"+mAddress+",mAdminCode:"+mAdminCode+",mPoint"+mPoint.getLat());
-				}
-			}
-
-			@Override
-			public boolean isActive() {
-				return mIsActive;
-			}
-
-			@Override
-			public String getKey() {
-				return SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS;
-			}
-		});
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
+			source= bundle.getBoolean(SystemConfig.BUNDLE_DATA_SOURCE);
 			mType = bundle.getInt(SystemConfig.BUNDLE_DATA_TYPE);
 			if(!TextUtils.isEmpty(mRowkey)) {
-				InformationMessage message = mInformationManager.getInformation(mRowkey);
+				  message = mInformationManager.getInformation(mRowkey);
 				if(message == null){
 					mRowkey = null;
 					mPoint = null;
 				}else{
 					mChatList=(ArrayList<ChatMessage>) message.getChatMessageList();
-
+					for(int i=0;i<mChatList.size();i++){
+						Log.i("chentao","time"+i+":"+mChatList.get(i).getChattimelong());
+					}
 					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();
 					Log.i("chentao","PicList:"+mPicList.size());
 					remark = message.getRemark();
@@ -412,6 +392,30 @@ public class InformationCollectionFragment extends BaseFragment {
 			mRowkey = null;
 			mPoint = null;
 		}
+		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
+
+
+			@Override
+			public void onContentUpdated(List<Object[]> values) {
+				if (values != null) {
+						mAddress = (String) values.get(0)[0];
+						mAdminCode=(String) values.get(0)[1];
+						select_position.setText(mAddress);
+						mPoint = (GeoPoint) values.get(0)[2];
+				}
+			}
+
+			@Override
+			public boolean isActive() {
+				return mIsActive;
+			}
+
+			@Override
+			public String getKey() {
+				return SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS;
+			}
+		});
+	
 	}
 
 
@@ -444,16 +448,66 @@ public class InformationCollectionFragment extends BaseFragment {
 		select_position.setText(mAddress);
 
 		for(int i=0;i<mPicList.size();i++){
+			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
+			//			lp_rl.setMargins(10,0,10,0);
+
+			RelativeLayout rl=new RelativeLayout(getActivity());
+
+			rl.setLayoutParams(lp_rl);
+
 			ImageView imageView = new ImageView(getActivity());
-			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
 			lp.setMargins(5,0,5,0);
+
 			imageView.setLayoutParams(lp);
+
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-
-			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath()))
-					);
+			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath())));
 			imageView.setTag(i);
+			ImageView iv_delete = new ImageView(getActivity());
 
+			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
+			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
+			lp_del.setMargins(2,2,5,2);
+
+			iv_delete.setLayoutParams(lp_del);
+			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
+			iv_delete.setBackgroundResource(R.drawable.delete_item);
+			//删除
+			iv_delete.setTag(listview.size());
+			iv_delete.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View arg0) {
+					int j = (Integer) arg0.getTag();
+					Log.i("chentao","j:"+j);
+					Log.i("chentao","listview:"+ listview.size()+"");
+					for(int m=0;m<listview.size();m++){
+						int index = (Integer) listview.get(m).getTag();
+						if(index==j){
+							hlinearlayout.removeView(listview.get(m));
+							listview.remove(m);
+						}
+					}
+
+
+				}
+			});
+
+			rl.addView(imageView);
+			rl.addView(iv_delete);
+			//			ImageView imageView = new ImageView(getActivity());
+			//			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
+			//			lp.setMargins(5,0,5,0);
+			//			imageView.setLayoutParams(lp);
+			//			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			//
+			//			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath()))
+			//					);
+			//			imageView.setTag(i);
+			//          
 			imageView.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -466,10 +520,9 @@ public class InformationCollectionFragment extends BaseFragment {
 
 				}
 			});
-
-
-			hlinearlayout.addView(imageView, 0);
-			listview.add(imageView);
+			rl.setTag(listview.size());       
+			hlinearlayout.addView(rl, 0);
+			listview.add(rl);
 
 			if (hscrollview.getWidth() >= width) {
 				new Handler().post(new Runnable() {
@@ -497,33 +550,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onStopSpeech(String path) {
 
-				synchronized (mChatList) {
-
-					//					try {
-					//						md = new MediaPlayer();
-					//						md.reset();
-					//						md.setDataSource(path);
-					//						md.prepare();
-					//					} catch (Exception e) {
-					//						e.printStackTrace();
-					//
-					//					}
-					//					long timeLong = md.getDuration();
-					//
-					//					md.release();
-					//
-					//					ChatMessage chatmsg = new ChatMessage();
-					//					mChatList.add(chatmsg);
-					//					chatmsg.setPath(path);
-					//					chatmsg.setChattimelong(timeLong);
-					//					chatmsg.setParentId(mRowkey);
-					//					chatmsg.setLat(mLocationManager.getCurrentPoint().getLat());
-					//					chatmsg.setLon(mLocationManager.getCurrentPoint().getLon());
-					//					chatmsg.setTime(System.currentTimeMillis());
-					//					adapter.setData(mChatList);
-					//					adapter.notifadataset();
-					//					resetListView();
-				}
 			}
 			@Override
 			public void onParseResult(String path, String result) {
@@ -619,7 +645,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-			
+
 				saveLocal();
 
 
@@ -634,16 +660,16 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				
-				
-			     if(mChatList.size()==0 && mPicList.size()==0){
-			        	Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
-			        	return ;
-			        }
-			        if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
-			        	Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
-			        	return ;
-			        }
+
+
+				if(mChatList.size()==0 && mPicList.size()==0){
+					Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
+					return ;
+				}
+				if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
+					Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
+					return ;
+				}
 				if(mAddress.equals("")){
 					Toast.makeText(getActivity(),"您好，定位还没有成功！不能进行上报，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
 				}else{
@@ -729,11 +755,6 @@ public class InformationCollectionFragment extends BaseFragment {
 						}
 					}).start();
 				}
-
-
-
-
-
 			}
 		});
 		//删除照片
@@ -832,18 +853,18 @@ public class InformationCollectionFragment extends BaseFragment {
 		switch (requestCode) {
 		case TAKE_PICTURE:
 			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
-//			lp_rl.setMargins(10,0,10,0);
-            
+			//			lp_rl.setMargins(10,0,10,0);
+
 			RelativeLayout rl=new RelativeLayout(getActivity());
 
 			rl.setLayoutParams(lp_rl);
-         
+
 			ImageView imageView = new ImageView(getActivity());
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
-				lp.setMargins(5,0,5,0);
-				
+			lp.setMargins(5,0,5,0);
+
 			imageView.setLayoutParams(lp);
-			
+
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			ImageView iv_delete = new ImageView(getActivity());
 
@@ -851,7 +872,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-            lp_del.setMargins(2,2,5,2);
+			lp_del.setMargins(2,2,5,2);
 
 			iv_delete.setLayoutParams(lp_del);
 			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -941,46 +962,46 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 将list写到文件中
 	 * @param list
 	 */
-//	public  void doWriteFile(ArrayList<String> list){
-//
-//
-//		if(!new File(path).exists()){
-//			new File(path).mkdirs();
-//		}
-//
-//		FileWriter fw = null;
-//		PrintWriter pw = null;
-//		try{
-//			//创建字符流
-//			fw = new FileWriter(path+"poi.txt");
-//			Log.i("chentao","fw:"+path+"poi.txt");
-//			//封装字符流的过滤流
-//			pw = new PrintWriter(fw);
-//			//文件写入
-//			for(int i=0;i<list.size();i++){
-//				pw.print(list.get(i)+"\r\n");
-//			}
-//		}catch(IOException e){
-//			e.printStackTrace();
-//		}finally{
-//			//关闭外层流
-//			if(pw != null){
-//				pw.close();
-//			}
-//		}
-//	}
+	//	public  void doWriteFile(ArrayList<String> list){
+	//
+	//
+	//		if(!new File(path).exists()){
+	//			new File(path).mkdirs();
+	//		}
+	//
+	//		FileWriter fw = null;
+	//		PrintWriter pw = null;
+	//		try{
+	//			//创建字符流
+	//			fw = new FileWriter(path+"poi.txt");
+	//			Log.i("chentao","fw:"+path+"poi.txt");
+	//			//封装字符流的过滤流
+	//			pw = new PrintWriter(fw);
+	//			//文件写入
+	//			for(int i=0;i<list.size();i++){
+	//				pw.print(list.get(i)+"\r\n");
+	//			}
+	//		}catch(IOException e){
+	//			e.printStackTrace();
+	//		}finally{
+	//			//关闭外层流
+	//			if(pw != null){
+	//				pw.close();
+	//			}
+	//		}
+	//	}
 	/**
 	 * 保存到本地数据库
 	 */
 	private void  saveLocal(){
-        if(mChatList.size()==0 && mPicList.size()==0){
-        	Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
-        	return ;
-        }
-        if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
-        	Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
-        	return ;
-        }
+		if(mChatList.size()==0 && mPicList.size()==0){
+			Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
+			return ;
+		}
+		if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
+			Toast.makeText(getActivity(),"您好，没有返回正确的经纬度!", Toast.LENGTH_SHORT).show();
+			return ;
+		}
 		if(mAddress.equals("")){
 
 			Toast.makeText(getActivity(),"您好,没有获取到地址！不能进行保存，请您耐心等待谢谢!", Toast.LENGTH_SHORT).show();
@@ -1008,15 +1029,15 @@ public class InformationCollectionFragment extends BaseFragment {
 					if(saveorreport.equals("0")){
 						final Toast toast = Toast.makeText(getActivity(), "保存成功",300);
 						toast.show();
-					    handler.postDelayed(new Runnable() {
-							
+						handler.postDelayed(new Runnable() {
+
 							@Override
 							public void run() {
 								toast.cancel();
 								mFragmentManager.back();
 							}
 						}, 600);
-                  
+
 					}
 
 				}
@@ -1040,7 +1061,34 @@ public class InformationCollectionFragment extends BaseFragment {
 
 	@Override
 	public void onDataChange(Bundle bundle) {
-
+		if(source){
+			if(mPoint == null){
+				mPoint = mLocationManager.getCurrentPoint();
+			}
+			Log.i("chentao",""+mPoint.getLat());
+			mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
+	
+	
+				@Override
+				public void onFailure() {
+					Log.i("chentao",":onFailure");
+				}
+	
+				@Override
+				public void OnSuccess(String address,String adminCode) {
+					mAddress = address;
+					mAdminCode=adminCode;
+					Log.i("chentao",":"+mAddress);
+					select_position.setText(address);
+	
+				}
+			});
+		}else{
+			mPoint=new GeoPoint(message.getLat(),message.getLon());
+			mAddress=message.getAddress();
+			mAdminCode=message.getAdminCode();
+			select_position.setText(mAddress);
+		}
 	}
 
 	@Override
@@ -1056,50 +1104,29 @@ public class InformationCollectionFragment extends BaseFragment {
 		//初始化
 		init();
 		switch(mType){
-			case Informations.Information.INFORMATION_TYPE_BUS:
-				draw_txt="公交";
-				draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
-				break;
-			case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
-				draw_txt="设施";
-				draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
-				break;
-			case Informations.Information.INFORMATION_TYPE_ROAD:
-				draw_txt="道路";
-				draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
-				break;
-			case Informations.Information.INFORMATION_TYPE_AROUND:
-				draw_txt="周边其他";
-				draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
-				break;
+		case Informations.Information.INFORMATION_TYPE_BUS:
+			draw_txt="公交";
+			draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
+			draw_txt="设施";
+			draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_ROAD:
+			draw_txt="道路";
+			draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
+			break;
+		case Informations.Information.INFORMATION_TYPE_AROUND:
+			draw_txt="周边其他";
+			draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
+			break;
 		}
 		mInformationCollectTitle.setText(draw_txt);
 		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
 				null,null,null);
 
 		mapManager=MapManager.getInstance();
-		if(mPoint == null){
-			mPoint = mLocationManager.getCurrentPoint();
-		}
-		Log.i("chentao",""+mPoint.getLat());
-		mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
-
-
-
-			@Override
-			public void onFailure() {
-				Log.i("chentao",":onFailure");
-			}
-
-			@Override
-			public void OnSuccess(String address,String adminCode) {
-				mAddress = address;
-				mAdminCode=adminCode;
-				Log.i("chentao",":"+mAddress);
-				select_position.setText(address);
-
-			}
-		});
+		
 		//添加监听器
 		addListeners();
 		return view;

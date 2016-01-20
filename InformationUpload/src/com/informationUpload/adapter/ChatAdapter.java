@@ -40,6 +40,7 @@ public class ChatAdapter extends BaseAdapter {
 	private InformationCollectionFragment fragm;
 	private AnimationDrawable animation;
 	private ViewHolder vh;
+	private MediaPlayer md;
 
 
 	public ChatAdapter(Context context,InformationCollectionFragment fragm,ArrayList<ChatMessage> list){
@@ -92,20 +93,33 @@ public class ChatAdapter extends BaseAdapter {
 		}else{
 			vh=(ViewHolder) Convertview.getTag();
 		}
-		int longti= (int) (getItem(position).getChattimelong());
+		try {
+			md = new MediaPlayer();
+			md.reset();
+			md.setDataSource(getItem(position).getPath());
+			md.prepare();
+		} catch (Exception e) {
+			e.printStackTrace();
 
+		}
+		long timeLong = md.getDuration();
+
+		md.release();
+		md=null;
+		int longti= (int) timeLong;
+        Log.i("chentao","time:"+longti);
 		LayoutParams lp;
 
 
 
-		lp = new LayoutParams(200+longti*10,70);  
+		lp = new LayoutParams(200+longti/1000*10,70);  
 
 
 
 		vh.tv_chatcontent.setText("");
 		vh.tv_chatcontent.setLayoutParams(lp);
 		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
-		vh.tv_time.setText(getItem(position).getChattimelong()+"''");
+		vh.tv_time.setText(longti/1000+"''");
 
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {
 

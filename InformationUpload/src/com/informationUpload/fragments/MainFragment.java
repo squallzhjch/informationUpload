@@ -443,6 +443,7 @@ public class MainFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				popupWindow.dismiss();
 				Bundle bundle = new Bundle();
+				bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,true);
 				bundle.putInt(SystemConfig.BUNDLE_DATA_TYPE, Informations.Information.INFORMATION_TYPE_BUS);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
 
@@ -455,6 +456,7 @@ public class MainFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				popupWindow.dismiss();
 				Bundle bundle = new Bundle();
+				bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,true);
 				bundle.putInt(SystemConfig.BUNDLE_DATA_TYPE, Informations.Information.INFORMATION_TYPE_ESTABLISHMENT);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
 
@@ -468,6 +470,7 @@ public class MainFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				popupWindow.dismiss();
 				Bundle bundle = new Bundle();
+				bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,true);
 				bundle.putInt(SystemConfig.BUNDLE_DATA_TYPE, Informations.Information.INFORMATION_TYPE_ROAD);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
 
@@ -480,6 +483,7 @@ public class MainFragment extends BaseFragment {
 			public void onClick(View arg0) {
 				popupWindow.dismiss();
 				Bundle bundle = new Bundle();
+				bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,true);
 				bundle.putInt(SystemConfig.BUNDLE_DATA_TYPE, Informations.Information.INFORMATION_TYPE_AROUND);
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
 			}
