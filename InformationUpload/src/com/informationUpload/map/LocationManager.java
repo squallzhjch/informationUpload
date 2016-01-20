@@ -54,14 +54,8 @@ public class LocationManager  implements BDLocationListener{
         if(mCurrentLocation == null){
             mCurrentLocation = new GeoPoint();
         }
-        
-       
-        
-        
-        
+
         synchronized (mCurrentLocation) {
-        	
-        	
         	
             mCurrentLocation.setLat(bdLocation.getLatitude());
             mCurrentLocation.setLon(bdLocation.getLongitude());

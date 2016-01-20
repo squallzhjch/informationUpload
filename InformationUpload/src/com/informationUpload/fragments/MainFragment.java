@@ -6,17 +6,15 @@ import java.util.HashMap;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -25,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow.OnDismissListener;
-import android.widget.RelativeLayout;
 import android.widget.PopupWindow;
 
 
@@ -46,6 +43,7 @@ import com.informationUpload.entity.AroundInformation;
 import com.informationUpload.fragments.utils.IntentHelper;
 
 import com.informationUpload.map.GeoPoint;
+import com.informationUpload.map.LocationManager;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
@@ -62,7 +60,7 @@ import com.lidroid.xutils.http.ResponseInfo;
  * @Date 2015/12/8
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements LocationManager.OnLocationListener{
     /**
      * 发现情况按钮
      */
@@ -118,7 +116,7 @@ public class MainFragment extends BaseFragment {
     /**
      * 地图管理类
      */
-    private MapManager mapManager;
+    private MapManager mMapManager;
     /**
      * 地图上的图标背景
      */
@@ -128,14 +126,7 @@ public class MainFragment extends BaseFragment {
      */
     private String text;
 
-    private View mengView;
-    /**
-     *
-     * 是否需要刷新
-     */
-    private boolean isneedrefresh=true;
-
-
+    private View mMengView;
     /**
      * infowindow显示的tv
      */
@@ -145,6 +136,15 @@ public class MainFragment extends BaseFragment {
      */
     private  TextView tv2;
 
+    /**
+     * 上一个定位点
+     */
+    private GeoPoint mLastLocationPoint;
+
+    /**
+     * 上次定位成功时间
+     */
+    private long mLastLocationTime = 0;
 
 
     @Override
@@ -155,8 +155,9 @@ public class MainFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 
         view = inflater.inflate(R.layout.fragment_main, null, true);
-        mapManager=MapManager.getInstance();
-        mengView = view.findViewById(R.id.meng_view);
+        mMapManager = MapManager.getInstance();
+        LocationManager.getInstance().addOnLocationListener(this);
+        mMengView = view.findViewById(R.id.meng_view);
         popview = inflater.inflate(R.layout.main_fragment_select_pop, null);
         //初始化popview
         initPopview();
@@ -164,12 +165,10 @@ public class MainFragment extends BaseFragment {
         addPopListeners();
         popview.setFocusable(true);//这个和下面的这个命令必须要设置了，才能监听back事件。
         popview.setFocusableInTouchMode(true);
-        popview.setOnKeyListener(backlistener);
 
         mDiscoverySituationBtn = (Button) view.findViewById(R.id.discovery_situation);
         //发现情况按钮
         mDiscoverySituationBtn.setOnClickListener(new OnClickListener() {
-
 
             @Override
             public void onClick(View v) {
@@ -191,9 +190,8 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-
                 //刷新码点
-                refreshmap(true);
+                refreshMap(true);
             }
         });
 
@@ -204,7 +202,7 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-                mapManager.setCenter();
+                mMapManager.setCenter();
             }
         });
         //对地图放大按钮
@@ -213,7 +211,7 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-                mapManager.zoomIn();
+                mMapManager.zoomIn();
 
             }
         });
@@ -223,31 +221,22 @@ public class MainFragment extends BaseFragment {
 
             @Override
             public void onClick(View arg0) {
-                mapManager.zoomOut();
+                mMapManager.zoomOut();
 
             }
         });
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                while(isneedrefresh){
-
-                    if(mLocationManager.getCurrentPoint().getLat()!=0.0 && mLocationManager.getCurrentPoint().getLon()!=0.0){
-                        refreshmap(false);
-                        isneedrefresh=false;
-                    }
-                }
-            }
-        }).start();
 
         return view;
     }
-    //刷新码点
-    protected void refreshmap(boolean bLoading) {
+
+    /**
+     * /刷新码点
+     * bLoading : 是否显示loading动画
+     */
+
+    protected void refreshMap(boolean bLoading) {
         HashMap<String,Object> map=new HashMap<String, Object>();
         double[] ret = ChangePointUtil.baidutoreal(mLocationManager.getCurrentPoint().getLat(),mLocationManager.getCurrentPoint().getLon());
-        Log.i("chentao", "ret[o]:"+ret[0]+",ret[1]:"+ret[1]);
         map.put("latitude",(ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+5));
         map.put("longitude",(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+5));
 
@@ -299,14 +288,13 @@ public class MainFragment extends BaseFragment {
                 list.add(aioformation);
 
             }
-            if(mapManager != null && mapManager.getMap() != null)
-                mapManager.clear(true);
+            if(mMapManager != null && mMapManager.getMap() != null)
+                mMapManager.clear(true);
             //在地图上添加覆盖物
             initOverlay(list);
         }else{
             Toast.makeText(getActivity(),errmsg,Toast.LENGTH_SHORT).show();
         }
-
 
     }
     /**
@@ -341,10 +329,10 @@ public class MainFragment extends BaseFragment {
                     .zIndex(9).draggable(true);
 
             String title = text + ":" + list.get(i).getAddress();
-            mapManager.setMarker(ooA, title);
+            mMapManager.setMarker(ooA, title);
         }
 
-        mapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
+        mMapManager.getMap().setOnMarkerClickListener(new OnMarkerClickListener() {
             //弹窗
             private InfoWindow mInfoWindow;
             private LayoutParams lp;
@@ -357,7 +345,7 @@ public class MainFragment extends BaseFragment {
                 LatLng ll = marker.getPosition();
                 double lat = ll.latitude;
                 double lon = ll.longitude;
-                mapManager.setCenter(new GeoPoint(lat,lon));
+                mMapManager.setCenter(new GeoPoint(lat,lon));
 
                 String[] title = marker.getTitle().split(":");
 
@@ -407,26 +395,16 @@ public class MainFragment extends BaseFragment {
                 }
                 OnInfoWindowClickListener listener = new OnInfoWindowClickListener() {
                     public void onInfoWindowClick() {
-                        mapManager.getMap().hideInfoWindow();
-
+                        mMapManager.getMap().hideInfoWindow();
                     }
                 };
 
-
                 mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(linear), ll, -100, listener);
-
-                mapManager.getMap().showInfoWindow(mInfoWindow);
-
-
-
-
+                mMapManager.getMap().showInfoWindow(mInfoWindow);
                 return true;
             }
-
         });
-
     }
-
 
     //添加popwindow监听器
     private void addPopListeners() {
@@ -496,31 +474,26 @@ public class MainFragment extends BaseFragment {
     //打开popwindow
     protected void showPopview() {
         //
-        mengView.setVisibility(View.VISIBLE);
+        mMengView.setVisibility(View.VISIBLE);
         popupWindow = new PopupWindow(popview, PointTool.Dp2Px(getActivity(), 250),PointTool.Dp2Px(getActivity(), 250));
-        //设置popwindow显示位置
-        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 200);
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
         //获取popwindow焦点
         popupWindow.setFocusable(true);
-        //		ColorDrawable cd = new ColorDrawable(0x000000);
-        //
-        //		popupWindow.setBackgroundDrawable(cd);
         //设置popwindow如果点击外面区域，便关闭。
         popupWindow.setOutsideTouchable(true);
         popupWindow.setOnDismissListener(new OnDismissListener() {
 
             @Override
             public void onDismiss() {
-                mengView.setVisibility(View.GONE);
-
+                mMengView.setVisibility(View.GONE);
             }
         });
         popupWindow.update();
+        popupWindow.showAtLocation(view, Gravity.BOTTOM, 0, 200);
     }
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isneedrefresh=false;
     }
 
     @Override
@@ -543,23 +516,6 @@ public class MainFragment extends BaseFragment {
         return true;
     }
 
-
-    private View.OnKeyListener backlistener = new View.OnKeyListener() {
-        @Override
-        public boolean onKey(View view, int i, KeyEvent keyEvent) {
-            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                if (i == KeyEvent.KEYCODE_BACK) {  //表示按返回键 时的操作
-                    if(popupWindow.isShowing()) {
-                        popupWindow.dismiss();
-                    }
-
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-
     @Override
     public boolean isFragmentAllowedSwitch() {
         return true;
@@ -568,8 +524,26 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onFragmentActive() {
         super.onFragmentActive();
-        if(mapManager != null) {
-            mapManager.showMarkers();
+        if(mMapManager != null) {
+            mMapManager.showMarkers();
+        }
+    }
+
+    @Override
+    public void onLocationChanged(GeoPoint location, String address, float radius) {
+        if(!mIsActive || mMapManager == null || location == null)
+            return;
+        long time = System.currentTimeMillis();
+        double dis = mMapManager.getDistance(mLastLocationPoint, location);
+        if(
+                mLastLocationTime == 0 ||
+                mLastLocationPoint == null ||
+                (mMapManager.getDistance(mLastLocationPoint, location) > 500 &&
+                 time - mLastLocationTime > 5 * 1000 * 60 )
+                ){
+            mLastLocationPoint = location;
+            mLastLocationTime = time;
+            refreshMap(false);
         }
     }
 }
