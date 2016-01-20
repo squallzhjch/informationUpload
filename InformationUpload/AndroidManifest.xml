@@ -17,10 +17,9 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="XKHotnKekALGN24xIw6qTGpe" />
+            android:value="GOPiXdUydTEP2qil5UFnvUQ1" />
+       
 
-        <meta-data android:value="569ed99667e58e5d3000064a" android:name="UMENG_APPKEY"/>
-        <meta-data android:value="information" android:name="UMENG_CHANNEL"/>
         <!--<meta-data-->
         <!--android:name="com.baidu.lbsapi.API_KEY"-->
         <!--android:value="XKHotnKekALGN24xIw6qTGpe" />-->
@@ -68,7 +67,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity
-            android:name="com.informationUpload.activity.FindPasswordActivity"
+            android:name=".activity.FindPasswordActivity"
             android:configChanges="orientation|keyboardHidden|navigation"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
