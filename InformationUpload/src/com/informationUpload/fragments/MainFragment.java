@@ -534,13 +534,14 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
         if(!mIsActive || mMapManager == null || location == null)
             return;
         long time = System.currentTimeMillis();
+   
         double dis = mMapManager.getDistance(mLastLocationPoint, location);
         Log.i("chentao","dis:"+dis);
         if(
                 mLastLocationTime == 0 ||
                 mLastLocationPoint == null ||
                 (mMapManager.getDistance(mLastLocationPoint, location) > 500 &&
-                 time - mLastLocationTime > 5 * 1000 * 60 )
+                 time - mLastLocationTime > 1 * 1000 * 60 )
                 ){
             mLastLocationPoint = location;
             mLastLocationTime = time;

@@ -13,6 +13,7 @@ import com.informationUpload.map.MapManager;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.LoginHelper;
+import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity implements ActivityInstanceStateListener {
 
@@ -22,6 +23,7 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        UmengUpdateAgent.update(this);
         mOnSaveInstanceStateInvoked = false;
         if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);

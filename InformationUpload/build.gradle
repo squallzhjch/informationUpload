@@ -16,10 +16,14 @@ android {
         release {
             keyAlias 'informationUpload'
             keyPassword 'navinfo'
-            storeFile file('../informationUpload.jks')
+            storeFile file('G:/git/informationUpload/informationUpload.jks')
             storePassword 'navinfo'
         }
         debug {
+            keyAlias 'informationUpload'
+            keyPassword 'navinfo'
+            storeFile file('G:/git/informationUpload/informationUpload.jks')
+            storePassword 'navinfo'
         }
     }
     compileSdkVersion 18
@@ -56,7 +60,8 @@ android {
         debug {
             debuggable true
             jniDebuggable true
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
+            renderscriptDebuggable true
         }
     }
 }

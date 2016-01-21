@@ -30,6 +30,7 @@ public class InformationManager {
     private ThreadManager mThreadManager;
     private Context mContext;
 
+    private final static String WHERE_ROWKEY_FROM_VIDEO = Informations.VideoData.ROWKEY + " = ? ";
     private final static String WHERE_ROWKEY = Informations.Information.ROWKEY + " = ? ";
     private final static String WHERE_PARENT = Informations.VideoData.PARENT_ID + " = ? ";
     private final static String[] INFORMATION_PROJECTION = new String[]{
@@ -273,7 +274,7 @@ public class InformationManager {
                     @Override
                     public Boolean doInBackground() {
                         ContentResolver contentResolver = mContext.getContentResolver();
-                        contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_ROWKEY, new String[]{rowkey});
+                        contentResolver.delete(Informations.VideoData.CONTENT_URI, WHERE_ROWKEY_FROM_VIDEO, new String[]{rowkey});
                         try {
                             FileUtils.delFile(path);
                         }catch (Exception e){

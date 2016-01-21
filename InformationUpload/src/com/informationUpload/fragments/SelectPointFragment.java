@@ -2,6 +2,7 @@ package com.informationUpload.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.ImageView;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.informationUpload.R;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.LocationManager;
@@ -120,11 +123,24 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 	public void onMapStatusChange(MapStatus mapStatus) {
 
 	}
+	
+	GeoPoint lastPoint = null;
+	LatLng lastLatLng = null;
 
 	@Override
 	public void onMapStatusChangeFinish(MapStatus mapStatus) {
 		pointIcon.setBackgroundResource(R.drawable.default_point);
 		GeoPoint point = new GeoPoint(mapStatus.target.latitude, mapStatus.target.longitude);
+		if(lastPoint != null){
+			double dis1= mMapManager.getDistance(lastPoint, point);
+			
+			double dis2 = DistanceUtil.getDistance(lastLatLng, mapStatus.target);
+			
+			Log.i("chentao","dis1:"+dis1);
+			Log.i("chentao","dis2:"+dis2);
+		}
+		lastPoint = point;
+		lastLatLng = mapStatus.target;
 		mMapManager.searchAddress(point, new OnSearchAddressListener() {
 			@Override
 			public void OnSuccess(String address, String adminCode) {
