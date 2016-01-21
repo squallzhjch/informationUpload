@@ -667,9 +667,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							map.put("attachments",list_att);
 
 							map.put("operateDate",df.format(infomessage.getTime()));
-							SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-							String userName = sp.getString("user_name",null);
-							map.put("user_id",userName);
+							map.put("user_id",ConfigManager.getInstance().getUserId());
 							map.put("remark", infomessage.getRemark());
 							servicePara = JSON.toJSONString(map);
 							Log.i("chentao",servicePara.toString());

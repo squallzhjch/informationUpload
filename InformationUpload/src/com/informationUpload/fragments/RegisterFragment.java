@@ -1,7 +1,6 @@
 package com.informationUpload.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -54,10 +53,7 @@ public class RegisterFragment extends BaseFragment {
 	 * 改变密码状态
 	 */
 	private CheckBox mChangeStatePassword;
-	/**
-	 * 存取用户信息的
-	 */
-	private SharedPreferences sp;
+
 	/**
 	 * 注册电话号码
 	 */

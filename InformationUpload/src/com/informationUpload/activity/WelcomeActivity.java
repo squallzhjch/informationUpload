@@ -1,6 +1,7 @@
 package com.informationUpload.activity;
 
 import com.informationUpload.R;
+import com.umeng.update.UmengUpdateAgent;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,6 +15,7 @@ public class WelcomeActivity extends Activity{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.welcomepage);
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
