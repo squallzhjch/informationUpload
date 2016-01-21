@@ -18,11 +18,11 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="GOPiXdUydTEP2qil5UFnvUQ1" />
-       
+      
 
         <!--<meta-data-->
-        <!--android:name="com.baidu.lbsapi.API_KEY"-->
-        <!--android:value="XKHotnKekALGN24xIw6qTGpe" />-->
+        <!--android:name="XKHotnKekALGN24xIw6qTGpe"-->
+        <!--android:value="" />-->
 
         <service
             android:name="com.baidu.location.f"

@@ -13,9 +13,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import com.alibaba.fastjson.JSON;
-import com.informationUpload.R;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -31,14 +31,12 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -48,6 +46,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.informationUpload.R;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.contentProviders.InformationManager.OnDBListener;
@@ -58,20 +59,20 @@ import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
-import com.informationUpload.serviceEngin.ServiceEngin;
-import com.informationUpload.system.ConfigManager;
-import com.informationUpload.utils.Bimp;
-import com.informationUpload.utils.ChangePointUtil;
-import com.informationUpload.utils.InnerScrollView;
-import com.informationUpload.utils.PoiRecordPopup;
-import com.informationUpload.utils.WriteFileUtil;
-import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
-import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
+import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.SystemConfig;
+import com.informationUpload.utils.Bimp;
+import com.informationUpload.utils.ChangePointUtil;
+import com.informationUpload.utils.InnerScrollView;
+import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
+import com.informationUpload.utils.WriteFileUtil;
+import com.informationUpload.utils.ZipUtil;
 /**
  * @author chentao
  * @version V1.0
@@ -271,7 +272,6 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 垂直主布局的Linearlayout
 	 */
 	private LinearLayout svll;
-	
 	/**
 	 * 从哪个fragment过来的
 	 * 
@@ -282,7 +282,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case 0:
+			case ServiceEngin.ZIP_SUCCESS:
 				new Thread(new Runnable() {
 
 					@Override
@@ -293,12 +293,12 @@ public class InformationCollectionFragment extends BaseFragment {
 				}).start();
 				break;
 
-			case 1:
+			case ServiceEngin.ZIP_FAILURE:
 				pb.dismiss();
 				Toast.makeText(getActivity(),"压缩失败", Toast.LENGTH_SHORT).show();
 				Log.i("chentao","uploadFile:"+"压缩失败");
 				break;
-			case 2:
+			case ServiceEngin.UPLOAD_SUCCESS:
 				
 				pb.dismiss();
 				ContentValues values = new ContentValues();
@@ -319,7 +319,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					}
 				}, 600);
 				break;
-			case 3:	
+			case ServiceEngin.UPLOAD_FAILURE:	
 				pb.dismiss();
 				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
@@ -731,12 +731,12 @@ public class InformationCollectionFragment extends BaseFragment {
 												listall, path_all_name);
 
 
-										handler.sendEmptyMessage(0);
+										handler.sendEmptyMessage(ServiceEngin.ZIP_SUCCESS);
 										Log.i("chentao", "压缩成功");
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
-										handler.sendEmptyMessage(1);
+										handler.sendEmptyMessage(ServiceEngin.ZIP_FAILURE);
 										Log.i("chentao", "压缩失败");
 									}
 
