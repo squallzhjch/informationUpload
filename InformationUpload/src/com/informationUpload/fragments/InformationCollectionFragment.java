@@ -271,6 +271,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 
 	 */
 	private Boolean source;//来源
+	
 
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
@@ -963,7 +964,8 @@ public class InformationCollectionFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
-
+	
+		
 		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);

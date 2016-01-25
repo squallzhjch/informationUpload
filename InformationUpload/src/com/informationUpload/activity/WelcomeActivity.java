@@ -23,7 +23,7 @@ import android.widget.ImageView;
 public class WelcomeActivity extends Activity{
 	private final String mPageName = "WelcomeActivity";
 	private WelcomeActivity mContext;
-	private ImageView wel;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,7 +62,7 @@ public class WelcomeActivity extends Activity{
 				}
 
 			});
-			wel.setBackgroundResource(R.drawable.ic_launcher);
+		
 
 
 	

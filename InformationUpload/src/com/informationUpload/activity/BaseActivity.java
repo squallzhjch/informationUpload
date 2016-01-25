@@ -38,5 +38,12 @@ public class BaseActivity extends FragmentActivity  implements ActivityInstanceS
         MobclickAgent.onResume(this);
         super.onResume();
     }
-  
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
+
 }
