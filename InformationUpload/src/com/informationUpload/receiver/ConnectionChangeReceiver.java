@@ -4,6 +4,8 @@ package com.informationUpload.receiver;
 
 
 
+import com.informationUpload.system.SystemConfig;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,7 +35,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		
-		mSharePre = context.getSharedPreferences("USER_INFO",
+		mSharePre = context.getSharedPreferences(SystemConfig.NET_WORK_STATE,
 				Context.MODE_PRIVATE);
 		editor = mSharePre.edit();
 		

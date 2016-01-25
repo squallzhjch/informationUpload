@@ -11,8 +11,6 @@ import com.informationUpload.system.ConfigManager;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,9 +67,9 @@ public class MyRecordFragment extends BaseFragment {
 	 */
 	private void getworkInfo() {
 		HashMap<String,Object> map=new HashMap<String, Object>();
-		SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-		String userName = sp.getString("user_name",null);
+		
 		//		map.put("userid", userName);
+		Log.i("chentao",""+"userid:"+ConfigManager.getInstance().getUserId());
 		map.put("userid", ConfigManager.getInstance().getUserId());
 		ServiceEngin.getInstance().Request(getActivity(), map, "inforcount", new EnginCallback(getActivity()) {
 			@Override
@@ -99,7 +97,7 @@ public class MyRecordFragment extends BaseFragment {
 		JSONObject jsonObj = JSON.parseObject(json);
 		String errcode = jsonObj.getString("errcode");
 		String errmsg = jsonObj.getString("errmsg");
-		if(!"".equals(errcode)&&null!=errcode&&"0".equals(errcode)){
+		if(null!=errcode&&!"".equals(errcode)&&"0".equals(errcode)){
 		JSONObject data = jsonObj.getJSONObject("data");
 		JSONObject total = data.getJSONObject("total");
 		String count = total.getString("count");

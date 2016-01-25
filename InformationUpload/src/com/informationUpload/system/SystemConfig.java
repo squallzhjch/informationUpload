@@ -11,7 +11,7 @@ import android.support.v4.os.EnvironmentCompat;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class SystemConfig {
-
+   
     public static String DATA_BASE_PATH = Environment
             .getExternalStorageDirectory() + "/InformationUpload/";
 
@@ -63,4 +63,7 @@ public class SystemConfig {
  	public static final String MAX_SIZE = "maxSize";
  // 进度变化的常量
  	public static final String CHANGE_SIZE = "changeSize";
+ 	
+ 	//网络状态变化
+ 	public static final String NET_WORK_STATE="NetWorkState";
 }

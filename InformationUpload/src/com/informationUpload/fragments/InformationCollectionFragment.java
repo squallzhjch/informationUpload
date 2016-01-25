@@ -1,6 +1,4 @@
 package com.informationUpload.fragments;
-
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,9 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import com.alibaba.fastjson.JSON;
-import com.informationUpload.R;
-
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -31,14 +28,12 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -48,6 +43,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.alibaba.fastjson.JSON;
+import com.informationUpload.R;
 import com.informationUpload.adapter.ChatAdapter;
 import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.contentProviders.InformationManager.OnDBListener;
@@ -58,20 +55,20 @@ import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
-import com.informationUpload.serviceEngin.ServiceEngin;
-import com.informationUpload.system.ConfigManager;
-import com.informationUpload.utils.Bimp;
-import com.informationUpload.utils.ChangePointUtil;
-import com.informationUpload.utils.InnerScrollView;
-import com.informationUpload.utils.PoiRecordPopup;
-import com.informationUpload.utils.WriteFileUtil;
-import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.map.GeoPoint;
 import com.informationUpload.map.MapManager;
 import com.informationUpload.map.MapManager.OnSearchAddressListener;
-import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
+import com.informationUpload.serviceEngin.ServiceEngin;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.SystemConfig;
+import com.informationUpload.utils.Bimp;
+import com.informationUpload.utils.ChangePointUtil;
+import com.informationUpload.utils.InnerScrollView;
+import com.informationUpload.utils.PoiRecordPopup;
+import com.informationUpload.utils.PoiRecordPopup.OnRecorListener;
+import com.informationUpload.utils.WriteFileUtil;
+import com.informationUpload.utils.ZipUtil;
 /**
  * @author chentao
  * @version V1.0
@@ -79,8 +76,6 @@ import com.informationUpload.system.SystemConfig;
  * @Date 2015/12/3
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
-
-
 public class InformationCollectionFragment extends BaseFragment {
 	/**
 	 * 上传文件全名
@@ -128,7 +123,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 */
 	private ImageView hliv;
 	/**
-	 * 语音的李斯特
+	 * 语音的listview
 	 */
 	private ListView voice_collection_lv;
 	/**
@@ -271,18 +266,16 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 垂直主布局的Linearlayout
 	 */
 	private LinearLayout svll;
-	
 	/**
 	 * 从哪个fragment过来的
 	 * 
 	 */
 	private Boolean source;//来源
 
-
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case 0:
+			case ServiceEngin.ZIP_SUCCESS:
 				new Thread(new Runnable() {
 
 					@Override
@@ -292,20 +285,17 @@ public class InformationCollectionFragment extends BaseFragment {
 					}
 				}).start();
 				break;
-
-			case 1:
+			case ServiceEngin.ZIP_FAILURE:
 				pb.dismiss();
 				Toast.makeText(getActivity(),"压缩失败", Toast.LENGTH_SHORT).show();
 				Log.i("chentao","uploadFile:"+"压缩失败");
 				break;
-			case 2:
+			case ServiceEngin.UPLOAD_SUCCESS:
 				
 				pb.dismiss();
 				ContentValues values = new ContentValues();
 				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
 				mInformationManager.updateInformation(mRowkey,values);
-
-
 				final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
 				toast.show();
 
@@ -315,15 +305,13 @@ public class InformationCollectionFragment extends BaseFragment {
 					public void run() {
 						toast.cancel();
 						mFragmentManager.back();
-
 					}
 				}, 600);
 				break;
-			case 3:	
+			case ServiceEngin.UPLOAD_FAILURE:	
 				pb.dismiss();
 				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
-
 			}
 		}
 	};
@@ -349,7 +337,6 @@ public class InformationCollectionFragment extends BaseFragment {
 					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();
 					Log.i("chentao","PicList:"+mPicList.size());
 					remark = message.getRemark();
-
 					mType = message.getType();
 					mRowkey =message.getRowkey();
 				} 
@@ -362,8 +349,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			mPoint = null;
 		}
 		registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
-
-
 			@Override
 			public void onContentUpdated(List<Object[]> values) {
 				if (values != null) {
@@ -373,21 +358,16 @@ public class InformationCollectionFragment extends BaseFragment {
 						mPoint = (GeoPoint) values.get(0)[2];
 				}
 			}
-
 			@Override
 			public boolean isActive() {
 				return mIsActive;
 			}
-
 			@Override
 			public String getKey() {
 				return SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS;
 			}
 		});
-	
 	}
-
-
 	/**
 	 * 初始化组件
 	 */
@@ -415,7 +395,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		resetListView();
 		voice_collection_lv.setAdapter(adapter);
 		select_position.setText(mAddress);
-
 		for(int i=0;i<mPicList.size();i++){
 			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
 			//			lp_rl.setMargins(10,0,10,0);
@@ -458,25 +437,14 @@ public class InformationCollectionFragment extends BaseFragment {
 						if(index==j){
 							hlinearlayout.removeView(listview.get(m));
 							listview.remove(m);
+							InformationManager.getInstance().deleteVideo(mPicList.get(m).getRowkey(), mPicList.get(m).getPath());
+							mPicList.remove(m);
 						}
 					}
-
-
 				}
 			});
-
 			rl.addView(imageView);
 			rl.addView(iv_delete);
-			//			ImageView imageView = new ImageView(getActivity());
-			//			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(180,180);
-			//			lp.setMargins(5,0,5,0);
-			//			imageView.setLayoutParams(lp);
-			//			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-			//
-			//			imageView.setImageURI(Uri.fromFile(new File(mPicList.get(i).getPath()))
-			//					);
-			//			imageView.setTag(i);
-			//          
 			imageView.setOnClickListener(new OnClickListener() {
 
 				@Override
@@ -505,7 +473,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		}
 	}
-
 	/**
 	 * 添加监听器
 	 */
@@ -700,9 +667,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							map.put("attachments",list_att);
 
 							map.put("operateDate",df.format(infomessage.getTime()));
-							SharedPreferences sp = getActivity().getSharedPreferences("user_info", Context.MODE_PRIVATE);
-							String userName = sp.getString("user_name",null);
-							map.put("user_id",userName);
+							map.put("user_id",ConfigManager.getInstance().getUserId());
 							map.put("remark", infomessage.getRemark());
 							servicePara = JSON.toJSONString(map);
 							Log.i("chentao",servicePara.toString());
@@ -731,12 +696,12 @@ public class InformationCollectionFragment extends BaseFragment {
 												listall, path_all_name);
 
 
-										handler.sendEmptyMessage(0);
+										handler.sendEmptyMessage(ServiceEngin.ZIP_SUCCESS);
 										Log.i("chentao", "压缩成功");
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
-										handler.sendEmptyMessage(1);
+										handler.sendEmptyMessage(ServiceEngin.ZIP_FAILURE);
 										Log.i("chentao", "压缩失败");
 									}
 
@@ -744,8 +709,6 @@ public class InformationCollectionFragment extends BaseFragment {
 							}).start();
 
 							}
-
-
 						@Override
 						public void onFailed() {
 							Toast.makeText(getActivity(), "保存失败",Toast.LENGTH_SHORT).show();
@@ -772,7 +735,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		});
 	}
-
 	//重新计算高度
 	public void resetListView() {
 
@@ -796,7 +758,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 		}
 	}
-
 	public void startCamera(){
 		final Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		openCameraIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -807,9 +768,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			Toast.makeText(mApplication, "没有检测到存储卡", Toast.LENGTH_SHORT).show();
 			return;
 		}
-
 		File fileDir = new File(sDir.toString());
-
 		if (!fileDir.exists()) {
 			boolean a = fileDir.mkdirs();
 			if(!a){
@@ -823,10 +782,8 @@ public class InformationCollectionFragment extends BaseFragment {
 		openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 		startActivityForResult(openCameraIntent, TAKE_PICTURE);
 	}
-
 	public void photo() {
 		picMsg = new PictureMessage();
-
 		picMsg.setParentId(mRowkey);
 		picMsg.setPath(file.getPath());
 		picMsg.setLat(mLocationManager.getCurrentPoint().getLat());
@@ -835,7 +792,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		mPicList.add(picMsg);
 		bitmap=null;
 	}
-
 	public static boolean hasSDcard() {
 		String status = Environment.getExternalStorageState();
 		if (status.equals(Environment.MEDIA_MOUNTED)) {
@@ -844,46 +800,31 @@ public class InformationCollectionFragment extends BaseFragment {
 			return false;
 		}
 	}
-
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case TAKE_PICTURE:
 			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
-			//			lp_rl.setMargins(10,0,10,0);
-
 			RelativeLayout rl=new RelativeLayout(getActivity());
-
 			rl.setLayoutParams(lp_rl);
-
 			ImageView imageView = new ImageView(getActivity());
 			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
 			lp.setMargins(5,0,5,0);
-
 			imageView.setLayoutParams(lp);
-
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
 			ImageView iv_delete = new ImageView(getActivity());
-
 			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
-
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
 			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
 			lp_del.setMargins(2,2,5,2);
-
 			iv_delete.setLayoutParams(lp_del);
 			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
 			iv_delete.setBackgroundResource(R.drawable.delete_item);
-
 			rl.addView(imageView);
 			rl.addView(iv_delete);
-
 			try {
-
 				bitmap = Bimp.revitionImageSize(file.getPath());
-
 				if(new File(file.getPath()).exists()){
 					new File(file.getPath()).delete();
-
 					FileOutputStream out = new FileOutputStream(file.getPath());
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -898,7 +839,6 @@ public class InformationCollectionFragment extends BaseFragment {
 				e.printStackTrace();
 			}
 			if(bitmap!=null){
-
 				imageView.setImageBitmap(bitmap);
 				imageView.setTag(listview.size());
 				imageView.setOnClickListener(new OnClickListener() {
@@ -928,10 +868,9 @@ public class InformationCollectionFragment extends BaseFragment {
 							if(index==j){
 								hlinearlayout.removeView(listview.get(m));
 								listview.remove(m);
+								mPicList.remove(m);
 							}
 						}
-
-
 					}
 				});
 				rl.setTag(listview.size());
@@ -954,38 +893,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			break;
 		}
 	}
-	/**
-	 * 将list写到文件中
-	 * @param list
-	 */
-	//	public  void doWriteFile(ArrayList<String> list){
-	//
-	//
-	//		if(!new File(path).exists()){
-	//			new File(path).mkdirs();
-	//		}
-	//
-	//		FileWriter fw = null;
-	//		PrintWriter pw = null;
-	//		try{
-	//			//创建字符流
-	//			fw = new FileWriter(path+"poi.txt");
-	//			Log.i("chentao","fw:"+path+"poi.txt");
-	//			//封装字符流的过滤流
-	//			pw = new PrintWriter(fw);
-	//			//文件写入
-	//			for(int i=0;i<list.size();i++){
-	//				pw.print(list.get(i)+"\r\n");
-	//			}
-	//		}catch(IOException e){
-	//			e.printStackTrace();
-	//		}finally{
-	//			//关闭外层流
-	//			if(pw != null){
-	//				pw.close();
-	//			}
-	//		}
-	//	}
 	/**
 	 * 保存到本地数据库
 	 */
@@ -1018,39 +925,32 @@ public class InformationCollectionFragment extends BaseFragment {
 			message.setChatMessageList(mChatList);
 			message.setPictureMessageList(mPicList);
 			mInformationManager.saveInformation(ConfigManager.getInstance().getUserId(), message,listener);
-
 		}
-
-
 	}
 	@Override
 	public void onDetach() {
 		super.onDetach();
 		mVoicePop.onDestroy();
 	}
-
 	@Override
 	public void onDataChange(Bundle bundle) {
 		if(source){
 			if(mPoint == null){
 				mPoint = mLocationManager.getCurrentPoint();
 			}
-			Log.i("chentao",""+mPoint.getLat());
+			Log.i("chentao","mPoint:"+mPoint.getLat());
 			mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
-	
 	
 				@Override
 				public void onFailure() {
 					Log.i("chentao",":onFailure");
 				}
-	
 				@Override
 				public void OnSuccess(String address,String adminCode) {
 					mAddress = address;
 					mAdminCode=adminCode;
 					Log.i("chentao",":"+mAddress);
 					select_position.setText(address);
-	
 				}
 			});
 		}else{
@@ -1060,7 +960,6 @@ public class InformationCollectionFragment extends BaseFragment {
 			select_position.setText(mAddress);
 		}
 	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 		view = inflater.inflate(R.layout.fragment1_information_collection, null);
@@ -1069,8 +968,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
 		width = metric.widthPixels;     // 屏幕宽度（像素）
-
-
 		//初始化
 		init();
 		switch(mType){
@@ -1094,14 +991,11 @@ public class InformationCollectionFragment extends BaseFragment {
 		mInformationCollectTitle.setText(draw_txt);
 		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
 				null,null,null);
-
 		mapManager=MapManager.getInstance();
-		
 		//添加监听器
 		addListeners();
 		return view;
 	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -1117,7 +1011,6 @@ public class InformationCollectionFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		super.onViewStateRestored(savedInstanceState);
 	}
-
 	public static byte[] readInputStream(InputStream inputStream) {
 
 		// 1.建立通道对象
@@ -1141,5 +1034,11 @@ public class InformationCollectionFragment extends BaseFragment {
 			e.printStackTrace();
 		}
 		return byt;
+	}
+	public void removeChatList(int index){
+		
+		mChatList.remove(index);
+		adapter.setData(mChatList);
+		adapter.notifadataset();
 	}
 }

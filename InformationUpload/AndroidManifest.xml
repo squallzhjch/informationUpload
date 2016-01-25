@@ -15,14 +15,16 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <!--<meta-data-->
-            <!--android:name="com.baidu.lbsapi.API_KEY"-->
-            <!--android:value="GOPiXdUydTEP2qil5UFnvUQ1" />-->
-       
 
         <meta-data
-        android:name="com.baidu.lbsapi.API_KEY"
-        android:value="XKHotnKekALGN24xIw6qTGpe" />
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="GOPiXdUydTEP2qil5UFnvUQ1" />
+      
+
+        <!--<meta-data-->
+        <!--android:name="XKHotnKekALGN24xIw6qTGpe"-->
+        <!--android:value="" />-->
+
 
         <meta-data android:value="569ed99667e58e5d3000064a" android:name="UMENG_APPKEY"/>
         <meta-data android:value="information" android:name="UMENG_CHANNEL"/>
@@ -35,6 +37,7 @@
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+
 
         <service
             android:name="com.baidu.location.f"

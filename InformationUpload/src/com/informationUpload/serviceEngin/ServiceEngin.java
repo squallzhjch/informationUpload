@@ -34,8 +34,12 @@ import com.lidroid.xutils.http.client.HttpRequest;
  * 
  */
 public class ServiceEngin {
+	public final static int ZIP_SUCCESS=0;
+	public final static int ZIP_FAILURE=1;
 
-	private static HttpUtils httputil = new HttpUtils();
+	public final static int UPLOAD_SUCCESS=2;
+	public final static int UPLOAD_FAILURE=3;
+	private final static HttpUtils httputil = new HttpUtils();
 	private ProgressDialog pd;
 	private Context mContext;
 
@@ -202,7 +206,7 @@ public class ServiceEngin {
 				// System.out.println("resultMsg*******"+resultMsg);
 				System.out.println("res----------------" + res);
 				if (res == 200) {
-					handler.sendEmptyMessage(2);
+					handler.sendEmptyMessage(UPLOAD_SUCCESS);
 					return SUCCESS;
 				}
 			}
@@ -211,7 +215,7 @@ public class ServiceEngin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		handler.sendEmptyMessage(3);
+		handler.sendEmptyMessage(UPLOAD_FAILURE);
 		return FAILURE;
 	}
 

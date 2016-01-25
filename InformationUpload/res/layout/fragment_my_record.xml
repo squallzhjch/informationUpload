@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@+id/myrecord_num_unit"
              android:layout_centerVertical="true"
-            android:text="44444"
+            
             android:textColor="@color/delete_photo_color" />
         <TextView
             android:id="@+id/myrecord_num_unit"

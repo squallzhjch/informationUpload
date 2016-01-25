@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 
 import com.informationUpload.R;
+import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.fragments.InformationCollectionFragment;
 
@@ -30,9 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ChatAdapter extends BaseAdapter {
-
-
-
 	private ArrayList<ChatMessage> list;
 	private LayoutInflater inflater;
 	private MediaPlayer mMediaPlayer = new MediaPlayer();
@@ -41,8 +39,6 @@ public class ChatAdapter extends BaseAdapter {
 	private AnimationDrawable animation;
 	private ViewHolder vh;
 	private MediaPlayer md;
-
-
 	public ChatAdapter(Context context,InformationCollectionFragment fragm,ArrayList<ChatMessage> list){
 		this.fragm=fragm;
 		this.context=context;
@@ -60,26 +56,20 @@ public class ChatAdapter extends BaseAdapter {
 	public void notifadataset(){
 		this.notifyDataSetChanged();
 	}
-
-
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
 		return list.size();
 	}
-
 	@Override
 	public ChatMessage getItem(int position) {
 		// TODO Auto-generated method stub
 		return list.get(position);
 	}
-
 	@Override
 	public long getItemId(int position) {
-
 		return position ;
 	}
-
 	@Override
 	public View getView(final int position, View Convertview, ViewGroup viewgroup) {
 		vh=null;
@@ -110,11 +100,7 @@ public class ChatAdapter extends BaseAdapter {
         Log.i("chentao","time:"+longti);
 		LayoutParams lp;
 
-
-
 		lp = new LayoutParams(200+longti/1000*10,70);  
-
-
 
 		vh.tv_chatcontent.setText("");
 		vh.tv_chatcontent.setLayoutParams(lp);
@@ -129,14 +115,12 @@ public class ChatAdapter extends BaseAdapter {
 				if(file.exists()){
 					file.delete();
 				}
-				list.remove(position);
-
-
-				ChatAdapter.this.notifadataset();
-
+//				list.remove(position);
+				InformationManager.getInstance().deleteVideo(getItem(position).getRowkey(),getItem(position).getPath());
+				fragm.removeChatList(position);
+				
+//				ChatAdapter.this.notifadataset();
 				fragm.resetListView();
-
-
 				Toast.makeText(context,"已经删除",Toast.LENGTH_LONG).show();
 			}
 		});
@@ -154,21 +138,16 @@ public class ChatAdapter extends BaseAdapter {
 				}
 			}
 		});
-
 		return Convertview;
 	}
-
 	/**
 	 * @Description
 	 * @param name
 	 */
 	private void playMusic(String name,final TextView tv_chatcontent) {
 		try {
-
 			if (mMediaPlayer.isPlaying()) {
-
 				mMediaPlayer.stop();
-
 			}
 			mMediaPlayer.reset();
 			mMediaPlayer.setDataSource(name);
@@ -187,17 +166,13 @@ public class ChatAdapter extends BaseAdapter {
 					tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
 				}
 			});
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
-
 	public class ViewHolder{
 		public ImageView iv_userhead;
 		public 	TextView tv_chatcontent;
 		public TextView tv_time;
 	}
-
 }
