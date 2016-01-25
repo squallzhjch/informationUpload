@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.informationUpload"
-    android:versionCode="3"
+    android:versionCode="1"
     android:versionName="1.3">
 
     <uses-sdk
@@ -16,14 +16,14 @@
         android:theme="@style/AppTheme">
 
 
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="GOPiXdUydTEP2qil5UFnvUQ1" />
+        <!--<meta-data-->
+            <!--android:name="com.baidu.lbsapi.API_KEY"-->
+            <!--android:value="GOPiXdUydTEP2qil5UFnvUQ1" />-->
       
 
-        <!--<meta-data-->
-        <!--android:name="XKHotnKekALGN24xIw6qTGpe"-->
-        <!--android:value="" />-->
+        <meta-data
+        android:name="com.baidu.lbsapi.API_KEY"
+        android:value="XKHotnKekALGN24xIw6qTGpe"/>
 
 
         <meta-data android:value="569ed99667e58e5d3000064a" android:name="UMENG_APPKEY"/>

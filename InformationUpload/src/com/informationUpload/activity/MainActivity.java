@@ -23,8 +23,7 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UmengUpdateAgent.setUpdateOnlyWifi(false);
-		UmengUpdateAgent.update(this);
+
         mOnSaveInstanceStateInvoked = false;
         if (savedInstanceState == null) {
             setContentView(R.layout.activity_main);
