@@ -13,6 +13,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.model.LatLng;
 import com.informationUpload.R;
+import com.umeng.analytics.MobclickAgent;
 
 
 /**
@@ -37,20 +38,22 @@ public class MapControlActivity extends Activity {
 	private TextView mStateBar;
 	private TextView cityName;
 	private Button back_btn;
+	private MapControlActivity mContext;
+	private final String mPageName = "MapControlActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_mapcontrol);
-		
+		mContext=this;
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		mStateBar = (TextView) findViewById(R.id.state);
 		cityName = (TextView) findViewById(R.id.cityName);
 		back_btn = (Button) findViewById(R.id.back_btn);
-		
+
 		back_btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				finish();	
@@ -60,8 +63,8 @@ public class MapControlActivity extends Activity {
 	}
 
 	private void initListener() {
-		
-		
+
+
 		Intent intent = getIntent();
 		Bundle b = intent.getExtras();
 		if (intent.hasExtra("x") && intent.hasExtra("y")) {
@@ -70,11 +73,11 @@ public class MapControlActivity extends Activity {
 			MapStatus ms = new MapStatus.Builder(new MapStatus.Builder().target(p).build()).build();
 			MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(ms);
 			mBaiduMap.animateMapStatus(u);
-			
+
 		} else {
 			//mMapView = new MapView(this, new BaiduMapOptions());
 		}
-		
+
 		cityName.setText(b.getString("cityName"));
 		mMapView.showScaleControl(false);
 		mMapView.showZoomControls(false);
@@ -82,29 +85,35 @@ public class MapControlActivity extends Activity {
 		mMapView.getMap().getUiSettings().setOverlookingGesturesEnabled(false);
 		mMapView.getMap().getUiSettings().setCompassEnabled(false);
 		mMapView.getMap().getUiSettings().setRotateGesturesEnabled(false);
-	
+
 
 	}
 
 
-	@Override
-	protected void onPause() {
-		// MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
-		mMapView.onPause();
-		super.onPause();
-	}
 
-	@Override
-	protected void onResume() {
-		// MapView的生命周期与Activity同步，当activity恢复时需调用MapView.onResume()
-		mMapView.onResume();
-		super.onResume();
-	}
 
 	@Override
 	protected void onDestroy() {
 		// MapView的生命周期与Activity同步，当activity销毁时需调用MapView.destroy()
 		mMapView.onDestroy();
 		super.onDestroy();
+	}
+	@Override
+	public void onResume() {
+		// MapView的生命周期与Activity同步，当activity恢复时需调用MapView.onResume()
+		mMapView.onResume();
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+		MobclickAgent.onResume(mContext);
+	}
+
+	@Override
+	public void onPause() {
+
+		// MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
+		mMapView.onPause();
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+		MobclickAgent.onPause(mContext);
 	}
 }

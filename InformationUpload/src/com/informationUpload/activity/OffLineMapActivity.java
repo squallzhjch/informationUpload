@@ -40,17 +40,18 @@ import com.baidu.mapapi.map.offline.MKOfflineMapListener;
 
 import com.informationUpload.R;
 import com.informationUpload.receiver.ConnectionChangeReceiver.ConChangeCallBack;
+import com.umeng.analytics.MobclickAgent;
 
 
 
 
 public class OffLineMapActivity extends Activity implements
-		MKOfflineMapListener, OnClickListener {
+MKOfflineMapListener, OnClickListener {
 
 	private MKOfflineMap mOffline = null;
 	private TextView cidView;
 	private TextView stateView, allcityl_tv, hotcitylist_tv, finished_tv,
-			localingTitle_tv;
+	localingTitle_tv;
 	private EditText cityNameView;
 	private Button localButton, clButton, user_back_btn;
 
@@ -80,11 +81,14 @@ public class OffLineMapActivity extends Activity implements
 	private BroadcastReceiver mReceiver;
 	private ConnectivityManager connectivityManager;
 	private NetworkInfo info;
+	private OffLineMapActivity mContext;
+	private final String mPageName = "OffLineMapActivity";
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_offline);
+		mContext=this;
 		mOffline = new MKOfflineMap();
 		mOffline.init(this);
 
@@ -269,7 +273,7 @@ public class OffLineMapActivity extends Activity implements
 		if (localMapList == null) {
 			localMapList = new ArrayList<MKOLUpdateElement>();
 		}
-		
+
 		localMapListView = (ExpandableListView) findViewById(R.id.localmaplist);
 		localMapListView.setGroupIndicator(null);
 		lAdapter = new LoadMapListAdapter(OffLineMapActivity.this, false);
@@ -307,20 +311,20 @@ public class OffLineMapActivity extends Activity implements
 		});
 
 		downloadingmaplist
-				.setOnGroupExpandListener(new OnGroupExpandListener() {
+		.setOnGroupExpandListener(new OnGroupExpandListener() {
 
-					@Override
-					public void onGroupExpand(int groupPosition) {
+			@Override
+			public void onGroupExpand(int groupPosition) {
 
-						if (lastItem_unfinish >= 0) {
-							if (lastItem_unfinish != groupPosition) {
-								downloadingmaplist
-										.collapseGroup(lastItem_unfinish);
-							}
-						}
-						lastItem_unfinish = groupPosition;
+				if (lastItem_unfinish >= 0) {
+					if (lastItem_unfinish != groupPosition) {
+						downloadingmaplist
+						.collapseGroup(lastItem_unfinish);
 					}
-				});
+				}
+				lastItem_unfinish = groupPosition;
+			}
+		});
 		initLocalState();
 		updateView();
 		clickCityListButton(null);
@@ -411,7 +415,7 @@ public class OffLineMapActivity extends Activity implements
 			return;
 		records1 = records;
 		hotCityList
-				.setAdapter(new MyAdapter(OffLineMapActivity.this, records1));
+		.setAdapter(new MyAdapter(OffLineMapActivity.this, records1));
 
 	}
 
@@ -695,18 +699,9 @@ public class OffLineMapActivity extends Activity implements
 
 	}
 
-	@Override
-	protected void onPause() {
 
-		// int cityid = Integer.parseInt(cidView.getText().toString());
-		// mOffline.pause(cityid);
-		super.onPause();
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
+
 
 	public String formatDataSize(int size) {
 		String ret = "";
@@ -740,7 +735,7 @@ public class OffLineMapActivity extends Activity implements
 				updateView();
 			}
 		}
-			break;
+		break;
 		case MKOfflineMap.TYPE_NEW_OFFLINE:
 			// 有新离线地图安装
 			Log.d("OfflineDemo", String.format("add offlinemap num:%d", state));
@@ -903,7 +898,7 @@ public class OffLineMapActivity extends Activity implements
 
 				convertView.setTag(holder);
 				convertView
-						.setBackgroundResource(R.drawable.icon_list_item_default);
+				.setBackgroundResource(R.drawable.icon_list_item_default);
 
 			} else {
 
@@ -1011,7 +1006,7 @@ public class OffLineMapActivity extends Activity implements
 			final Button start_download = (Button) convertView
 					.findViewById(R.id.start_download);
 			convertView
-					.setBackgroundResource(R.drawable.icon_list_item_default);
+			.setBackgroundResource(R.drawable.icon_list_item_default);
 
 			if (e.ratio != 100) {
 				start_download.setEnabled(true);
@@ -1139,7 +1134,7 @@ public class OffLineMapActivity extends Activity implements
 			convertView = View.inflate(OffLineMapActivity.this,
 					R.layout.offline_localmap_list, null);
 			convertView
-					.setBackgroundResource(R.drawable.icon_list_item_default);
+			.setBackgroundResource(R.drawable.icon_list_item_default);
 			initViewItem(convertView, e, isExpanded);
 			return convertView;
 		}
@@ -1306,7 +1301,7 @@ public class OffLineMapActivity extends Activity implements
 
 					convertView.setTag(holder);
 					convertView
-							.setBackgroundResource(R.drawable.icon_list_item_default);
+					.setBackgroundResource(R.drawable.icon_list_item_default);
 
 				} else {
 
@@ -1423,7 +1418,7 @@ public class OffLineMapActivity extends Activity implements
 
 				convertView.setTag(holder);
 				convertView
-						.setBackgroundResource(R.drawable.icon_list_item_default);
+				.setBackgroundResource(R.drawable.icon_list_item_default);
 
 			} else {
 
@@ -1438,10 +1433,10 @@ public class OffLineMapActivity extends Activity implements
 			if (mr != null && mr.size() > 0) {
 				if (isExpanded) {
 					holder.type_iv
-							.setBackgroundResource(R.drawable.icon_poilist_down_arrow_select_up);
+					.setBackgroundResource(R.drawable.icon_poilist_down_arrow_select_up);
 				} else {
 					holder.type_iv
-							.setBackgroundResource(R.drawable.offmap_expendbtn_xml);
+					.setBackgroundResource(R.drawable.offmap_expendbtn_xml);
 				}
 
 				childsizes[position] = mr.size();
@@ -1450,7 +1445,7 @@ public class OffLineMapActivity extends Activity implements
 
 				Log.e("mr", "nono-----------------");
 				holder.type_iv
-						.setBackgroundResource(R.drawable.offmap_downloadbtn_xml);
+				.setBackgroundResource(R.drawable.offmap_downloadbtn_xml);
 				childsizes[position] = 0;
 
 			}
@@ -1519,6 +1514,21 @@ public class OffLineMapActivity extends Activity implements
 				// stopAll(null);
 			}
 		}
+	}
+	@Override
+	public void onResume() {
+		super.onResume();
+		MobclickAgent.onPageStart(mPageName);
+		MobclickAgent.onResume(mContext);
+	}
+
+	@Override
+	public void onPause() {
+		// int cityid = Integer.parseInt(cidView.getText().toString());
+		// mOffline.pause(cityid);
+		super.onPause();
+		MobclickAgent.onPageEnd(mPageName);
+		MobclickAgent.onPause(mContext);
 	}
 
 }

@@ -19,6 +19,7 @@ import com.informationUpload.contents.ContentsManager;
 import com.informationUpload.contents.OnContentUpdateListener;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.map.LocationManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ import java.util.List;
  */
 public abstract class BaseFragment extends Fragment {
     protected ActivityInstanceStateListener mActivityInstanceStateListener;
-
+    private final String mPageName = "BaseFragment";
     protected MyFragmentManager mFragmentManager;
     protected ContentsManager mContentsManager;
     protected MyApplication mApplication;
@@ -131,5 +132,18 @@ public abstract class BaseFragment extends Fragment {
 
     public boolean isFragmentAllowedSwitch() {
         return false;
+    }
+    @Override
+    public void onPause() {
+        // TODO Auto-generated method stub
+        super.onPause();
+        MobclickAgent.onPageEnd(mPageName);
+    }
+
+    @Override
+    public void onResume() {
+        // TODO Auto-generated method stub
+        super.onResume();
+        MobclickAgent.onPageStart(mPageName);
     }
 }

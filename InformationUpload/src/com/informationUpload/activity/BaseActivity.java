@@ -1,5 +1,7 @@
 package com.informationUpload.activity;
 
+import com.umeng.analytics.MobclickAgent;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -33,6 +35,8 @@ public class BaseActivity extends FragmentActivity  implements ActivityInstanceS
     @Override
     protected void onResume() {
         mOnSaveInstanceStateInvoked = false;
+        MobclickAgent.onResume(this);
         super.onResume();
     }
+  
 }

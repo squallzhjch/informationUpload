@@ -306,15 +306,15 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
         // add marker overlay
         for(int i=0;i<list.size();i++){
 
-            if(list.get(i).getInfoType().equals("1")){
+            if(list.get(i).getInfoType().equals("0")){
                 bd = BitmapDescriptorFactory
                         .fromResource(R.drawable.type_bus);
                 text="公交";
-            }else if(list.get(i).getInfoType().equals("2")){
+            }else if(list.get(i).getInfoType().equals("1")){
                 bd = BitmapDescriptorFactory
                         .fromResource(R.drawable.type_establishment);
                 text="设施";
-            }else if(list.get(i).getInfoType().equals("3")){
+            }else if(list.get(i).getInfoType().equals("2")){
                 bd = BitmapDescriptorFactory
                         .fromResource(R.drawable.type_road);
                 text="道路";

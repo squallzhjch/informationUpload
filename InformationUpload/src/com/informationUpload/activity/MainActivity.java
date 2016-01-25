@@ -13,6 +13,7 @@ import com.informationUpload.map.MapManager;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.LoginHelper;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 public class MainActivity extends BaseActivity implements ActivityInstanceStateListener {
@@ -104,4 +105,5 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
     public boolean isInstanceStateSaved() {
         return mOnSaveInstanceStateInvoked;
     }
+ 
 }
