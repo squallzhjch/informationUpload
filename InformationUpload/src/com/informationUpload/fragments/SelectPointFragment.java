@@ -93,6 +93,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 				mSelectView.setAddressText("");
 			}
 		});
+		mMapManager.setCenter();
 		return view;
 	}
 
@@ -123,7 +124,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 	public void onMapStatusChange(MapStatus mapStatus) {
 
 	}
-	
+
 	GeoPoint lastPoint = null;
 	LatLng lastLatLng = null;
 
@@ -133,9 +134,9 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 		GeoPoint point = new GeoPoint(mapStatus.target.latitude, mapStatus.target.longitude);
 		if(lastPoint != null){
 			double dis1= mMapManager.getDistance(lastPoint, point);
-			
+
 			double dis2 = DistanceUtil.getDistance(lastLatLng, mapStatus.target);
-			
+
 			Log.i("chentao","dis1:"+dis1);
 			Log.i("chentao","dis2:"+dis2);
 		}

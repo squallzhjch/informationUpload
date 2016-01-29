@@ -145,6 +145,14 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
      * 上次定位成功时间
      */
     private long mLastLocationTime = 0;
+    /**
+     * 屏幕宽度
+     */
+	private int width;
+	/**
+	 * 屏幕高度
+	 */
+	private int height;
 
 
     @Override
@@ -155,9 +163,12 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
     public View onCreateView(LayoutInflater inflater, ViewGroup container) {
 
         view = inflater.inflate(R.layout.fragment_main, null, true);
+        width=  getActivity().getWindowManager().getDefaultDisplay().getWidth();
+        height=  getActivity().getWindowManager().getDefaultDisplay().getHeight();
         mMapManager = MapManager.getInstance();
         LocationManager.getInstance().addOnLocationListener(this);
         mMengView = view.findViewById(R.id.meng_view);
+        
         popview = inflater.inflate(R.layout.main_fragment_select_pop, null);
         //初始化popview
         initPopview();
@@ -275,7 +286,7 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
             for(int i=0;i<data.size();i++){
                 JSONObject obj = (JSONObject) data.get(i);
                 String info_type = obj.getString("info_type");
-
+                String name=obj.getString("name");
                 String info_intel_id = obj.getString("info_intel_id");
                 String address = obj.getString("address");
                 JSONObject locationObj = obj.getJSONObject("location");
@@ -284,9 +295,9 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
                 double[] ret_pos = ChangePointUtil.realtobaidu(Double.parseDouble(latitude),Double.parseDouble(longitude));
                 GeoPoint gp=new GeoPoint(ret_pos[0],ret_pos[1]);
 
-                AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp);
+                AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp,name);
                 list.add(aioformation);
-
+ 
             }
             if(mMapManager != null && mMapManager.getMap() != null)
                 mMapManager.clear(true);
@@ -328,7 +339,7 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
             MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
                     .zIndex(9).draggable(true);
 
-            String title = text + ":" + list.get(i).getAddress();
+            String title = list.get(i).getName() + ":" + list.get(i).getAddress();
             mMapManager.setMarker(ooA, title);
         }
 
@@ -370,17 +381,18 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
                 }
                 LinearLayout linear=new LinearLayout(getActivity()
                 );
-                LinearLayout.LayoutParams linear_lp =new LinearLayout.LayoutParams(300,100);
+   
+                LinearLayout.LayoutParams linear_lp =new LinearLayout.LayoutParams(width/3*2,height/6);
                 linear_lp.gravity=Gravity.CENTER;
                 linear.setLayoutParams(linear_lp);
 
                 linear.setOrientation(LinearLayout.VERTICAL);
                 linear.setBackgroundResource(R.drawable.select_point_pop_bg);
                 if(title.length==1){
-                    lp = new LinearLayout.LayoutParams(800, 240);
+                    lp = new LinearLayout.LayoutParams(width/3*2,height/7);
                     lp.gravity=Gravity.CENTER;
                 }else{
-                    lp = new LinearLayout.LayoutParams(800, 120);
+                    lp = new LinearLayout.LayoutParams(width/3*2,height/7/2);
                     lp.gravity=Gravity.CENTER;
                 }
                 if(tv2!=null){
