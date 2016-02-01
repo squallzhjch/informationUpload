@@ -19,6 +19,7 @@ import com.informationUpload.activity.OffLineMapActivity;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
+import com.informationUpload.tool.StringTool;
 import com.informationUpload.utils.FileUtils;
 import com.informationUpload.system.SystemConfig;
 
@@ -127,6 +128,7 @@ public class UserCenterFragment extends BaseFragment{
 				if(ConfigManager.getInstance().isLogin()) {
 					bundle.putBoolean(SystemConfig.BUNDLE_DATA_LOGIN_OUT, true);
 					LoginHelper.loginOut();
+					ConfigManager.getInstance().setUserId(StringTool.createUserId());
 				}
 
 				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(LoginFragment.class, bundle));

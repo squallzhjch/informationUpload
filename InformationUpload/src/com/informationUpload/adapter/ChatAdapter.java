@@ -131,7 +131,7 @@ public class ChatAdapter extends BaseAdapter {
 
 				if (getItem(position)!=null) {
 					if(new File(getItem(position).getPath()).exists()){
-						playMusic(getItem(position).getPath(), vh.tv_chatcontent) ;
+						playMusic(getItem(position).getPath(), v) ;
 					}else{
 						Toast.makeText (context, "该文件已经被手动在文件夹中删除",Toast.LENGTH_SHORT).show();
 					}
@@ -144,7 +144,8 @@ public class ChatAdapter extends BaseAdapter {
 	 * @Description
 	 * @param name
 	 */
-	private void playMusic(String name,final TextView tv_chatcontent) {
+	private void playMusic(String name,final View tv_chatcontent) {
+		final TextView tv = (TextView)tv_chatcontent;
 		try {
 			if (mMediaPlayer.isPlaying()) {
 				mMediaPlayer.stop();
@@ -155,15 +156,15 @@ public class ChatAdapter extends BaseAdapter {
 			mMediaPlayer.prepare();
 			mMediaPlayer.start();
 			
-			tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.anim.voice_img, 0, 0, 0);
-			animation = (AnimationDrawable) tv_chatcontent.getCompoundDrawables()[0];
+			tv.setCompoundDrawablesWithIntrinsicBounds(R.anim.voice_img, 0, 0, 0);
+			animation = (AnimationDrawable) tv.getCompoundDrawables()[0];
 
 			animation.start();
 			mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
 				@Override
 				public void onCompletion(MediaPlayer mp) {
 					animation.stop();
-					tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
+					tv.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
 				}
 			});
 		} catch (Exception e) {

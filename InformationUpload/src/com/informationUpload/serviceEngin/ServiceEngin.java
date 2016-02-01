@@ -26,6 +26,8 @@ import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.RequestParams;
 import com.lidroid.xutils.http.client.HttpRequest;
 
+import org.apache.commons.logging.Log;
+
 
 /**
  * 公共网络请求类
@@ -98,19 +100,23 @@ public class ServiceEngin {
 
 			// 参数拼接
 			RequestParams params = new RequestParams();
-
+			String url = SystemConfig.REQUEST_URL +serviceName + "?";
 			Iterator iter = map.entrySet().iterator();
 			while (iter.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter.next();
 				String key = (String) entry.getKey();
 				String val = (String) entry.getValue();
 				params.addBodyParameter(key,val);
+				url += "&"+key+"="+val;
 			}
-			//			
+//			android.util.Log.e("url", url);
 			// 请求超时
 			httputil.configTimeout(1000 * 20);
 			httputil.configSoTimeout(1000 * 20);
 			// 发送请求
+
+
+
 			httputil.send(HttpRequest.HttpMethod.POST, SystemConfig.REQUEST_URL +serviceName+"/",
 					params, callback);
 		} else {

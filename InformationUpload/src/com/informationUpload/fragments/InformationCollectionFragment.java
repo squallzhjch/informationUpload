@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -533,7 +534,14 @@ public class InformationCollectionFragment extends BaseFragment {
 							adapter.notifadataset();
 							resetListView();
 						}
-						additional_remarks_et.setText(additional_remarks_et.getText() + "\n" + result);
+						String str;
+						if(additional_remarks_et.getText().toString().equals("")){
+							 str = additional_remarks_et.getText().toString();
+						}else{
+							str=additional_remarks_et.getText().toString()+"\n";
+						}
+						additional_remarks_et.setText(str + result);
+						additional_remarks_et.clearFocus();
 					}else if(timeLong<1000){
 						Log.i("chentao","录音时间过短");
 						Toast.makeText(getActivity(),"录音时间过短", Toast.LENGTH_SHORT).show();
@@ -619,8 +627,8 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 
 
-				if(mChatList.size()==0 && mPicList.size()==0){
-					Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
+				if(mChatList.size()==0 || mPicList.size()==0){
+					Toast.makeText(getActivity(),"您好，照片和语音不能为空!", Toast.LENGTH_SHORT).show();
 					return ;
 				}
 				if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){

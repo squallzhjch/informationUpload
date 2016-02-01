@@ -9,18 +9,26 @@ public class AroundInformation implements Serializable {
 	private String InfoIntelId;
 	private String InfoType;
 	private String address;
-	private GeoPoint gp;
+	private GeoPoint gp; 
+	private String  name;
 	
 	public AroundInformation() {
 		super();
 	}
 	public AroundInformation(String infoIntelId, String infoType,
-			String address, GeoPoint gp) {
+			String address, GeoPoint gp,String name) {
 		super();
 		InfoIntelId = infoIntelId;
 		InfoType = infoType;
 		this.address = address;
 		this.gp = gp;
+		this.name=name;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public String getInfoIntelId() {
 		return InfoIntelId;
