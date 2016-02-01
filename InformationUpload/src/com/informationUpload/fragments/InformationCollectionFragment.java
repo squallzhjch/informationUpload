@@ -627,8 +627,8 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 
 
-				if(mChatList.size()==0 || mPicList.size()==0){
-					Toast.makeText(getActivity(),"您好，照片和语音不能为空!", Toast.LENGTH_SHORT).show();
+				if(mChatList.size()!=0 && mPicList.size()!=0){
+					Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
 					return ;
 				}
 				if(mPoint==null||mPoint.getLat()==0.0||mPoint.getLon()==0.0){
@@ -906,7 +906,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 保存到本地数据库
 	 */
 	private void  saveLocal(OnDBListener listener){
-		if(mChatList.size()==0 && mPicList.size()==0){
+		if(mChatList.size()!=0 && mPicList.size()!=0){
 			Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
 			return ;
 		}
