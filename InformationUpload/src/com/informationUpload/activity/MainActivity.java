@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity implements ActivityInstanceStateL
 
     @Override
     public void onBackPressed() {
-        if(!ServiceEngin.getInstance().canclDialog()) {
+        if(!ServiceEngin.getInstance().canclDialog() && myFragmentManager != null) {
             myFragmentManager.onBackPressed();
         }
     }
