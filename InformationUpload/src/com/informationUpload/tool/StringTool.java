@@ -20,13 +20,20 @@ public class StringTool {
     public static boolean isTelNum(String tel){
         if(TextUtils.isEmpty(tel))
             return false;
-        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
-
-        Pattern p = Pattern.compile(regExp);
-
-        Matcher m = p.matcher(tel);
-
-        return m.find();//boolean
+        if(tel.trim().length() != 11){
+            return false;
+        }
+        if(tel.startsWith("1")){
+            return true;
+        }
+//        String regExp = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
+//
+//        Pattern p = Pattern.compile(regExp);
+//
+//        Matcher m = p.matcher(tel);
+//
+//        return m.find();//boolean
+        return false;
     }
 
     public static String createUserId(){

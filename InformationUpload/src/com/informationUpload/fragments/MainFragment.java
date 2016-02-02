@@ -334,8 +334,7 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
                         .fromResource(R.drawable.type_other);
                 text="周边变化";
             }
-            double[] ret = ChangePointUtil.realtobaidu(list.get(i).getGp().getLat(),list.get(i).getGp().getLon());
-            LatLng ll_Point = new LatLng(ret[0],ret[1]);
+            LatLng ll_Point = new LatLng(list.get(i).getGp().getLat(), list.get(i).getGp().getLon());
             MarkerOptions ooA = new MarkerOptions().position(ll_Point).icon(bd)
                     .zIndex(9).draggable(true);
 
