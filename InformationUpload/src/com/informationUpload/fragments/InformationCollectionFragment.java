@@ -12,9 +12,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -1052,5 +1055,26 @@ public class InformationCollectionFragment extends BaseFragment {
 		mChatList.remove(index);
 		adapter.setData(mChatList);
 		adapter.notifadataset();
+	}
+	@Override
+	public boolean onBackPressed() {
+		if(mChatList.size() != 0 || mPicList.size() != 0){
+			 new AlertDialog.Builder(getActivity())
+	         .setTitle("退出！")
+	         .setMessage("您有数据尚未保存，您确定要退出吗？")
+	         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+	             @Override
+	             public void onClick(DialogInterface dialogInterface, int i) {
+	            	 mFragmentManager.back();
+	                 hideSoftInput(getActivity());
+	             }
+	         })
+	         .setNegativeButton("取消", null).show();
+		}else{
+			mFragmentManager.back();
+	        hideSoftInput(getActivity());
+		}
+		
+		return true;
 	}
 }
