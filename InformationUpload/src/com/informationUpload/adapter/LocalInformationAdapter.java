@@ -6,6 +6,7 @@ import java.util.HashMap;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,8 +90,9 @@ public class LocalInformationAdapter extends CursorAdapter {
 			int type = getCursor().getInt(3);
 			long time = getCursor().getLong(1);
 			String str_time = df.format(time);
+			Log.i("chentao","time:"+str_time);
 			String[] timestr=str_time.split("-");
-			holder.time.setText(timestr[0]+"年"+timestr[1]+"月"+timestr[2]+"日"+timestr[3]+"时"+timestr[3]+"分");
+			holder.time.setText(timestr[0]+"年"+timestr[1]+"月"+timestr[2]+"日"+timestr[3]+"时"+timestr[4]+"分");
 			if (type == Informations.Information.INFORMATION_TYPE_BUS) {
 				type_str = "公交上报";
 			} else if (type == Informations.Information.INFORMATION_TYPE_ESTABLISHMENT) {

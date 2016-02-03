@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.informationUpload.entity.ChatMessage;
@@ -14,6 +15,7 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.FileUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -135,7 +137,11 @@ public class InformationManager {
                         if (!TextUtils.isEmpty(message.getAdminCode())) {
                             values.put(Informations.Information.ADMINCODE, message.getAdminCode());
                         }
-                        values.put(Informations.Information.TIME, System.currentTimeMillis());
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm");
+                        long mil = System.currentTimeMillis();
+                        String str = df.format(mil);
+                        Log.i("chentao","str:"+str);
+                        values.put(Informations.Information.TIME,mil);
                         values.put(Informations.Information.LATITUDE, message.getLat());
                         values.put(Informations.Information.LONGITUDE, message.getLon());
                         values.put(Informations.Information.TYPE, message.getType());
