@@ -545,9 +545,8 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
         if(!mIsActive || mMapManager == null || location == null)
             return;
         long time = System.currentTimeMillis();
-   
-        double dis = mMapManager.getDistance(mLastLocationPoint, location);
-        Log.i("chentao","dis:"+dis);
+
+//        double dis = mMapManager.getDistance(mLastLocationPoint, location);
         if(
                 mLastLocationTime == 0 ||
                 mLastLocationPoint == null ||

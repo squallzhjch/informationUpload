@@ -109,7 +109,7 @@ public class ServiceEngin {
 				params.addBodyParameter(key,val);
 				url += "&"+key+"="+val;
 			}
-			android.util.Log.e("url", url);
+//			android.util.Log.e("url", url);
 			// 请求超时
 			httputil.configTimeout(1000 * 20);
 			httputil.configSoTimeout(1000 * 20);
@@ -211,6 +211,7 @@ public class ServiceEngin {
 				// jsonObject.get("ResultMsg");
 				// System.out.println("resultMsg*******"+resultMsg);
 				System.out.println("res----------------" + res);
+				android.util.Log.e("url", url.toString());
 				if (res == 200) {
 					handler.sendEmptyMessage(UPLOAD_SUCCESS);
 					return SUCCESS;

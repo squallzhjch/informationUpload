@@ -627,7 +627,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			public void onClick(View arg0) {
 
 
-				if(mChatList.size()!=0 && mPicList.size()!=0){
+				if(mChatList.size() ==0 && mPicList.size() ==0 ){
 					Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
 					return ;
 				}
@@ -644,7 +644,7 @@ public class InformationCollectionFragment extends BaseFragment {
 						public void onSuccess() {
 							pb=new ProgressDialog(getActivity());
 							pb.setMessage("正在上传");
-							pb.setCancelable(false);
+//							pb.setCancelable(true);
 							pb.show();
 
 							ArrayList<String> list_servicepara=new ArrayList<String>();
@@ -653,6 +653,8 @@ public class InformationCollectionFragment extends BaseFragment {
 							HashMap<String,Object> map=new HashMap<String,Object>();
 							map.put("info_fid",infomessage.getRowkey());
 							double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
+
+							double[] ret2 = ChangePointUtil.baidutoreal(ret[0], ret[1]);
 							map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
 							map.put("info_type",infomessage.getType());
 							map.put("adminCode",mAdminCode);
@@ -906,7 +908,7 @@ public class InformationCollectionFragment extends BaseFragment {
 	 * 保存到本地数据库
 	 */
 	private void  saveLocal(OnDBListener listener){
-		if(mChatList.size()!=0 && mPicList.size()!=0){
+		if(mChatList.size() == 0 && mPicList.size() == 0){
 			Toast.makeText(getActivity(),"您好，照片或者语音不能为空!", Toast.LENGTH_SHORT).show();
 			return ;
 		}
