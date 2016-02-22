@@ -329,7 +329,7 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
                 bd = BitmapDescriptorFactory
                         .fromResource(R.drawable.type_road);
                 text="道路";
-            }else if(list.get(i).getInfoType().equals("4")){
+            }else if(list.get(i).getInfoType().equals("3")){
                 bd = BitmapDescriptorFactory
                         .fromResource(R.drawable.type_other);
                 text="周边变化";

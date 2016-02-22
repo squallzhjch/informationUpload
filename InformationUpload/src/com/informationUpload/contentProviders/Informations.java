@@ -23,11 +23,12 @@ public final class Informations {
         public static final int VIDEO_TYPE_PICTURE = 1;//图片
         public static final int VIDEO_TYPE_CHAT = 2; //语音
 
-        public static final int INFORMATION_TYPE_OTHER = 0;//其他
-        public static final int INFORMATION_TYPE_BUS = 1;//公交上报
-        public static final int INFORMATION_TYPE_ESTABLISHMENT = 2;//设施
-        public static final int INFORMATION_TYPE_ROAD = 3;//道路
-        public static final int INFORMATION_TYPE_AROUND = 4;//周边
+      
+        public static final int INFORMATION_TYPE_BUS = 0;//公交上报
+        public static final int INFORMATION_TYPE_ESTABLISHMENT = 1;//设施
+        public static final int INFORMATION_TYPE_ROAD = 2;//道路
+        public static final int INFORMATION_TYPE_AROUND = 3;//周边
+        public static final int INFORMATION_TYPE_OTHER = 4;//其他
     }
 
     public static class Information extends InformationsBase implements InformationColumns {
