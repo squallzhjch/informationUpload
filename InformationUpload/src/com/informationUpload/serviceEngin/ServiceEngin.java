@@ -109,14 +109,14 @@ public class ServiceEngin {
 				params.addBodyParameter(key,val);
 				url += "&"+key+"="+val;
 			}
-//			android.util.Log.e("url", url);
+			android.util.Log.i("url", url);
 			// 请求超时
 			httputil.configTimeout(1000 * 20);
 			httputil.configSoTimeout(1000 * 20);
 			// 发送请求
 
 
-
+       
 			httputil.send(HttpRequest.HttpMethod.POST, SystemConfig.REQUEST_URL +serviceName+"/",
 					params, callback);
 		} else {
