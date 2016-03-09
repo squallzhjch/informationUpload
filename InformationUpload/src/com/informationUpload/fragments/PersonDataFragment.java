@@ -176,8 +176,6 @@ public class PersonDataFragment extends BaseFragment{
 		}
 	}
 
-
-
 	private String path = "";
 
 
