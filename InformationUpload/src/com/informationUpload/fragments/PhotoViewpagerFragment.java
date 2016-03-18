@@ -132,10 +132,12 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
 			ZoomImageView iv=new ZoomImageView(getActivity());
-
+			int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+			int height = getActivity().getWindowManager().getDefaultDisplay().getHeight();
 			//			Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
 			Bitmap bp = BitmapFactory.decodeFile(listViews.get(arg1 % size).getPath());
-			iv.setImageBitmap(bp);
+			 Bitmap bp_big = Bitmap.createScaledBitmap(bp, width, height/6*5, true);
+			iv.setImageBitmap(bp_big);
 			//			iv.setImageURI(uri);
 			//			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
 			((ViewPager) arg0).removeView(iv);

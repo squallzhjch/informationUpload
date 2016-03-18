@@ -75,7 +75,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/head"
-            android:src="@drawable/headshot" />
+          />
 
         <ImageView
             android:id="@+id/head_next"

@@ -137,8 +137,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 
 			double dis2 = DistanceUtil.getDistance(lastLatLng, mapStatus.target);
 
-			Log.i("chentao","dis1:"+dis1);
-			Log.i("chentao","dis2:"+dis2);
+		
 		}
 		lastPoint = point;
 		lastLatLng = mapStatus.target;

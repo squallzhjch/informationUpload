@@ -285,7 +285,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					@Override
 					public void run() {
-						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler);
+						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler,"inforimp");
 
 					}
 				}).start();
@@ -293,7 +293,7 @@ public class InformationCollectionFragment extends BaseFragment {
 			case ServiceEngin.ZIP_FAILURE:
 				pb.dismiss();
 				Toast.makeText(getActivity(),"压缩失败", Toast.LENGTH_SHORT).show();
-				Log.i("chentao","uploadFile:"+"压缩失败");
+				
 				break;
 			case ServiceEngin.UPLOAD_SUCCESS:
 				
@@ -336,11 +336,9 @@ public class InformationCollectionFragment extends BaseFragment {
 					mPoint = null;
 				}else{
 					mChatList=(ArrayList<ChatMessage>) message.getChatMessageList();
-					for(int i=0;i<mChatList.size();i++){
-						Log.i("chentao","time"+i+":"+mChatList.get(i).getChattimelong());
-					}
+				
 					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();
-					Log.i("chentao","PicList:"+mPicList.size());
+					
 					remark = message.getRemark();
 					mType = message.getType();
 					mRowkey =message.getRowkey();
@@ -435,8 +433,7 @@ public class InformationCollectionFragment extends BaseFragment {
 				@Override
 				public void onClick(View arg0) {
 					int j = (Integer) arg0.getTag();
-					Log.i("chentao","j:"+j);
-					Log.i("chentao","listview:"+ listview.size()+"");
+			
 					for(int m=0;m<listview.size();m++){
 						int index = (Integer) listview.get(m).getTag();
 						if(index==j){
@@ -537,22 +534,22 @@ public class InformationCollectionFragment extends BaseFragment {
 							adapter.notifadataset();
 							resetListView();
 						}
-						String str;
-						if(additional_remarks_et.getText().toString().equals("")){
-							 str = additional_remarks_et.getText().toString();
-						}else{
-							str=additional_remarks_et.getText().toString()+"\n";
-						}
-						additional_remarks_et.setText(str + result);
-						additional_remarks_et.clearFocus();
+//						String str;
+//						if(additional_remarks_et.getText().toString().equals("")){
+//							 str = additional_remarks_et.getText().toString();
+//						}else{
+//							str=additional_remarks_et.getText().toString()+"\n";
+//						}
+//						additional_remarks_et.setText(str + result);
+//						additional_remarks_et.clearFocus();
 					}else if(timeLong<1000){
-						Log.i("chentao","录音时间过短");
+					
 						Toast.makeText(getActivity(),"录音时间过短", Toast.LENGTH_SHORT).show();
 						if(new File(path).exists()){
 							new File(path).delete();
 						}
 					}else if(timeLong>6000){
-						Log.i("chentao","录音时间过长");
+						
 						Toast.makeText(getActivity(),"录音时间过长", Toast.LENGTH_SHORT).show();
 						if(new File(path).exists()){
 							new File(path).delete();
@@ -667,7 +664,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
 							for(int j=0;j<chatmsglist.size();j++){
 								ChatMessage chatmsg = chatmsglist.get(j);
-								Log.i("chentao","chatmsg:"+chatmsg.getPath());
+								
 								double[] ret_chat = ChangePointUtil.baidutoreal(chatmsg.getLat(),chatmsg.getLon());
 								list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
 										df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)ret_chat[0],(float)ret_chat[1])));
@@ -684,7 +681,7 @@ public class InformationCollectionFragment extends BaseFragment {
 							map.put("user_id",ConfigManager.getInstance().getUserId());
 							map.put("remark", infomessage.getRemark());
 							servicePara = JSON.toJSONString(map);
-							Log.i("chentao",servicePara.toString());
+						
 							list_servicepara.add(servicePara);
 							//将list在指定文件夹写成文本
 							WriteFileUtil.doWriteFile(list_servicepara);
@@ -696,9 +693,9 @@ public class InformationCollectionFragment extends BaseFragment {
 									try {
 										ArrayList<String> listall=new ArrayList<String>();
 										for(int h=0;h<list_att.size();h++){
-											Log.i("chentao","h:"+list_att.get(h).getUrl());
+										
 											if(list_att.get(h).getType()==1){
-												Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
+												
 												listall.add(path_chat+list_att.get(h).getUrl());
 											}else if(list_att.get(h).getType()==0){
 												listall.add(path_pic+list_att.get(h).getUrl());
@@ -711,12 +708,12 @@ public class InformationCollectionFragment extends BaseFragment {
 
 
 										handler.sendEmptyMessage(ServiceEngin.ZIP_SUCCESS);
-										Log.i("chentao", "压缩成功");
+									
 									} catch (IOException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
 										handler.sendEmptyMessage(ServiceEngin.ZIP_FAILURE);
-										Log.i("chentao", "压缩失败");
+										
 									}
 
 								}
@@ -860,7 +857,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					@Override
 					public void onClick(View arg0) {
 						int num = (Integer) arg0.getTag();
-						Log.i("chentao","num:"+num);
+						
 						Bundle bundle=new Bundle();
 						bundle.putInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM,num);
 						bundle.putSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST, mPicList);
@@ -875,8 +872,7 @@ public class InformationCollectionFragment extends BaseFragment {
 					@Override
 					public void onClick(View arg0) {
 						int j = (Integer) arg0.getTag();
-						Log.i("chentao","j:"+j);
-						Log.i("chentao","listview:"+ listview.size()+"");
+						
 						for(int m=0;m<listview.size();m++){
 							int index = (Integer) listview.get(m).getTag();
 							if(index==j){
@@ -952,18 +948,18 @@ public class InformationCollectionFragment extends BaseFragment {
 			if(mPoint == null){
 				mPoint = mLocationManager.getCurrentPoint();
 			}
-			Log.i("chentao","mPoint:"+mPoint.getLat());
+			
 			mapManager.searchAddress(mPoint, new OnSearchAddressListener() {
 	
 				@Override
 				public void onFailure() {
-					Log.i("chentao",":onFailure");
+					
 				}
 				@Override
 				public void OnSuccess(String address,String adminCode) {
 					mAddress = address;
 					mAdminCode=adminCode;
-					Log.i("chentao",":"+mAddress);
+					
 					select_position.setText(address);
 				}
 			});

@@ -375,7 +375,7 @@ public class MapManager {
 
 			 @Override
 			 public void onGetReverseGeoCodeResult(ReverseGeoCodeResult arg0) {
-				 Log.i("chentao","onGetReverseGeoCodeResult:"+arg0.getAddress());
+			
 
 				 if(listener!=null  && arg0  != null && arg0.getAddressDetail() != null){
 					 String province=arg0.getAddressDetail().province;
@@ -383,7 +383,7 @@ public class MapManager {
 					 String district=arg0.getAddressDetail().district;
 					 String street=arg0.getAddressDetail().street;
 					 String streetNumber=arg0.getAddressDetail().streetNumber;
-                     Log.i("chentao","province:"+province+",city:"+city+",district:"+district+",street:"+street+",streetNumber:"+streetNumber);
+                   
 				     String admincode = province+city+district;
 					 listener.OnSuccess(arg0.getAddress(),admincode);
 				 }
@@ -391,7 +391,7 @@ public class MapManager {
 
 			 @Override
 			 public void onGetGeoCodeResult(GeoCodeResult arg0) {
-				 Log.i("chentao","onGetGeoCodeResult:"+arg0.getAddress());
+		
 
 			 }
 		 });

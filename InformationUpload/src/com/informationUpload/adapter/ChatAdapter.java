@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -79,6 +80,7 @@ public class ChatAdapter extends BaseAdapter {
 			vh.iv_userhead=(ImageView)Convertview.findViewById(R.id.iv_userhead);
 			vh.tv_chatcontent =(TextView) Convertview.findViewById(R.id.tv_chatcontent);
 			vh.tv_time= (TextView)Convertview.findViewById(R.id.tv_time);
+			vh.et_remark = (EditText) Convertview.findViewById(R.id.et_remark);
 			Convertview.setTag(vh);
 		}else{
 			vh=(ViewHolder) Convertview.getTag();
@@ -106,7 +108,7 @@ public class ChatAdapter extends BaseAdapter {
 		vh.tv_chatcontent.setLayoutParams(lp);
 		vh.tv_chatcontent.setCompoundDrawablesWithIntrinsicBounds(R.drawable.chatto_voice_default, 0, 0, 0);
 		vh.tv_time.setText(longti/1000+"''");
-
+		vh.et_remark.setText(getItem(position).getRemark());  
 		vh.iv_userhead.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -175,5 +177,6 @@ public class ChatAdapter extends BaseAdapter {
 		public ImageView iv_userhead;
 		public 	TextView tv_chatcontent;
 		public TextView tv_time;
+		public  EditText et_remark;
 	}
 }

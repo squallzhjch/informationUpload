@@ -114,7 +114,12 @@ public class LoginHelper {
         String errcode = "" +	jsonObj.getInteger("errcode");
         String errmsg =	jsonObj.getString("errmsg");
         if(null != errcode && !"".equals(errcode) &&"0".equals(errcode)){
-            String userid =	jsonObj.getString("data");
+        	JSONObject obj = jsonObj.getJSONObject("data");
+            String userid =	obj.getString("userid");
+            String jpgpath= obj.getString("jpg");
+            String editiontime = obj.getString("edition");
+            ConfigManager.getInstance().setJpgPath(jpgpath);
+            ConfigManager.getInstance().setEditionTime(editiontime);
             ConfigManager.getInstance().setUserId(userid);
             ConfigManager.getInstance().setUserTel(tel);
             ConfigManager.getInstance().setLogin(true);
@@ -163,7 +168,7 @@ public class LoginHelper {
     private static void parseRegisterJson(Context context, String json, String telNum, String password, OnEnginCallbackListener listener) {
         JSONObject jsonObj = JSON.parseObject(json);
         String errcode=""+jsonObj.getInteger("errcode");
-        Log.i("chentao", "errcode:" + errcode);
+   
         String errmsg=jsonObj.getString("errmsg");
         if(null != errcode && !"".equals(errcode) &&"0".equals(errcode)){
             Toast.makeText(context, "注册成功", Toast.LENGTH_SHORT).show();
