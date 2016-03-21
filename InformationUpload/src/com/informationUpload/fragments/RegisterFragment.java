@@ -16,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -49,6 +51,7 @@ import com.informationUpload.utils.StringUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 
+
 /**
  * @author zhjch
  * @version V1.0
@@ -57,7 +60,13 @@ import com.lidroid.xutils.http.ResponseInfo;
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class RegisterFragment extends BaseFragment {
-	
+	/**
+	 * 计时器
+	 */
+	private MyCount mc;
+	/**
+	 * 发送验证码的url地址
+	 */
 	private static String Url = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
 
 	/**
@@ -118,6 +127,21 @@ public class RegisterFragment extends BaseFragment {
      * 偏好设置编辑器
      */
 	private Editor editor;
+	
+	private final static int INFORMATION_SUBMIT_SUCCESS=1;
+	Handler handler=new Handler(){
+		
+		public void handleMessage(android.os.Message msg) {
+			
+			switch (msg.what) {
+			case INFORMATION_SUBMIT_SUCCESS:
+			mc = new MyCount(120000, 1000);
+			mc.start();
+			break;
+			
+			}
+			}
+		};
 
 	@Override
 	public void onDataChange(Bundle bundle) {
@@ -184,6 +208,10 @@ public class RegisterFragment extends BaseFragment {
 					Toast.makeText(getActivity(), "请输入正确的手机号码", Toast.LENGTH_SHORT).show();
 					return;
 				}
+				if(!mGetVerificationCodeEt.getText().toString().trim().equals("")&&!mGetVerificationCodeEt.getText().toString().trim().equals(mSharePre.getString(SystemConfig.GET_VERIFICATION_CODE,""))){
+					Toast.makeText(getActivity(), "验证码不正确！！！", Toast.LENGTH_SHORT).show();
+					return;
+				}
 				if (TextUtils.isEmpty(rgpassword)) {
 					Toast.makeText(getActivity(), "请输入密码", Toast.LENGTH_SHORT).show();
 					return;
@@ -196,6 +224,7 @@ public class RegisterFragment extends BaseFragment {
 					Toast.makeText(getActivity(), "输入密码与确认密码不同", Toast.LENGTH_SHORT).show();
 					return;
 				}
+				
 				InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);  
 				  
 				imm.hideSoftInputFromWindow(mRegister.getWindowToken(), 0); //强制隐藏键盘  
@@ -204,8 +233,11 @@ public class RegisterFragment extends BaseFragment {
 				LoginHelper.register(getActivity(), telNum, rgpassword, new LoginHelper.OnEnginCallbackListener() {
 					@Override
 					public void onSuccess() {
-						if(mIsActive)
+						if(mIsActive){
+							mc.cancel();
 							MyFragmentManager.getInstance().switchFragment(IntentHelper.getInstance().getSingleIntent(MainFragment.class, null));
+						}
+							
 					}
 
 					@Override
@@ -421,6 +453,8 @@ public class RegisterFragment extends BaseFragment {
 				 
 					editor = mSharePre.edit();
 					editor.putString(SystemConfig.GET_VERIFICATION_CODE,mobile_code+"").commit();
+					handler.sendEmptyMessage(INFORMATION_SUBMIT_SUCCESS);
+				
 				Log.i("info","短信提交成功！！！");
 			}else{
 				Toast.makeText(getActivity(),msg,Toast.LENGTH_LONG).show();
@@ -432,5 +466,42 @@ public class RegisterFragment extends BaseFragment {
 		}
 			
     }
+    
+	/**
+	 * 倒计时类
+	 * 
+	 * @author haix
+	 * 
+	 */
+	private class MyCount extends CountDownTimer {
+
+		public MyCount(long millisInFuture, long countDownInterval) {
+			super(millisInFuture, countDownInterval);
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		public void onFinish() {
+			mGetVerificationCodeTv.setText("获取手机验证码");
+			mGetVerificationCodeTv.setClickable(true);
+			editor.putString(SystemConfig.GET_VERIFICATION_CODE,"").commit();
+//			testGetCode.setBackgroundDrawable(new BitmapDrawable(
+//					getResources(), ImageThumbnail.getSoftBitmap(context,
+//							R.drawable.f_register_codebutton).get()));
+
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			mGetVerificationCodeTv.setText("剩余" + millisUntilFinished / 1000 + "秒");
+			mGetVerificationCodeTv.setClickable(false);
+			// 置灰
+//			testGetCode.setBackgroundDrawable(new BitmapDrawable(
+//					getResources(), ImageThumbnail.getSoftBitmap(context,
+//							R.drawable.f_register_codebutton).get()));
+
+		}
+
+	}
 
 }

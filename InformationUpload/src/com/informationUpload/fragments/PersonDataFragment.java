@@ -176,6 +176,7 @@ public class PersonDataFragment extends BaseFragment{
 				progressdialog_download=new ProgressDialog(getActivity());
 				progressdialog_download.setMessage("正在下载头像！！！！");
 				progressdialog_download.show();
+				break;
 		
 			}
 		}
