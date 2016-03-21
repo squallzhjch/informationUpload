@@ -48,8 +48,8 @@ public class SystemConfig {
 
 //    	public static String REQUEST_URL = "http://172.23.44.11:8081/infor/information/";
 //    public static String REQUEST_URL = "http://192.168.3.155:8083/infor/information/";
-//    public static String REQUEST_URL = "http://fs.navinfo.com/infor/information/";
-    public static String REQUEST_URL ="http://192.168.4.189/infor/information/";
+    public static String REQUEST_URL = "http://fs.navinfo.com/infor/information/";
+//    public static String REQUEST_URL ="http://192.168.4.189/infor/information/";
     /**
      *解压过程中的消息
      */
