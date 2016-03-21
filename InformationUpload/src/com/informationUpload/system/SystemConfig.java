@@ -72,4 +72,8 @@ public class SystemConfig {
 
 	//网络状态变化
 	public static final String NET_WORK_STATE="NetWorkState";
+	//验证码
+	public static final String VERIFICATION_CODE="verification_code";
+	//获取验证码
+	public static final String GET_VERIFICATION_CODE="get_verification_code";
 }

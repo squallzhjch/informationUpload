@@ -241,10 +241,6 @@ public class ReportRecordFragment extends BaseFragment{
 		//提交
 		mSubmit.setOnClickListener(new OnClickListener() {
 
-
-
-
-
 			@Override
 			public void onClick(View arg0) {
 				if(bsubmit){
@@ -262,11 +258,7 @@ public class ReportRecordFragment extends BaseFragment{
 							//							values.put(Informations.Information.STATUS,Informations.Information.STATUS_SERVER);
 							//							InformationManager.getInstance().updateInformation(rowkey, values);
 
-
 						} 
-
-
-
 					}
 					if(rowkeys.size()!=0){
 						pb=new ProgressDialog(getActivity());
@@ -394,9 +386,9 @@ public class ReportRecordFragment extends BaseFragment{
 //					}
 //
 //				});
-//				query();
+				query();
 //				modify();
-				queryrepeat();
+//				queryrepeat();
 				mTvDeleteItem.setVisibility(View.INVISIBLE);
 				mSubmit.setVisibility(View.INVISIBLE);
 				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
@@ -628,7 +620,7 @@ public class ReportRecordFragment extends BaseFragment{
     		public void onSuccess(ResponseInfo arg0) {
     			// TODO Auto-generated method stub
     			super.onSuccess(arg0);
-    		
+    		Log.e("请求成功", arg0.result.toString());
     		}
     		@Override
     		public void onFailure(HttpException arg0, String arg1) {
@@ -637,23 +629,6 @@ public class ReportRecordFragment extends BaseFragment{
     		}
     	});
     }
-    //12.情报用户查重接口
-    public void queryrepeat(){
-    	HashMap<String,Object> map=new HashMap<String, Object>();
-    	map.put("tel","18611062750");
-    	ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryuserexit",new EnginCallback(getActivity()){
-    		@Override
-    		public void onSuccess(ResponseInfo arg0) {
-    			// TODO Auto-generated method stub
-    			super.onSuccess(arg0);
-    			Log.e("请求成功", arg0.result.toString());
-    		}
-    		@Override
-    		public void onFailure(HttpException arg0, String arg1) {
-    			// TODO Auto-generated method stub
-    			super.onFailure(arg0, arg1);
-    		}
-    	});
-    }
+
 
 }

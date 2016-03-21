@@ -18,10 +18,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.serviceEngin.ServiceEngin;
-import com.informationUpload.serviceEngin.UploadUtil;
+
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.SystemConfig;
-import com.informationUpload.utils.GetFileByUrlUtil;
+
 import com.informationUpload.utils.RoundBitmapUtil;
 
 import android.app.ProgressDialog;
