@@ -12,11 +12,13 @@ import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.DataBaseMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
+import com.informationUpload.system.ConfigManager;
 import com.informationUpload.thread.ThreadManager;
 import com.informationUpload.utils.FileUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,6 +148,89 @@ public class InformationManager {
                         values.put(Informations.Information.LONGITUDE, message.getLon());
                         values.put(Informations.Information.TYPE, message.getType());
                         values.put(Informations.Information.STATUS, Informations.Information.STATUS_LOCAL);
+                        if (!TextUtils.isEmpty(message.getRemark())) {
+                            values.put(Informations.Information.REMARK, message.getRemark());
+                        }
+                        ContentResolver contentResolver = mContext.getContentResolver();
+                        Cursor cursor = null;
+                        try {
+                            cursor = contentResolver.query(Informations.Information.CONTENT_URI, INFORMATION_PROJECTION_SMAPLE, WHERE_ROWKEY, new String[]{rowkey}, null);
+                            if (cursor != null && cursor.getCount() > 0) {
+                                contentResolver.update(Informations.Information.CONTENT_URI, values, WHERE_ROWKEY, new String[]{rowkey});
+                            } else {
+                                contentResolver.insert(Informations.Information.CONTENT_URI, values);
+                            }
+                        } catch (Exception e) {
+                            result = false;
+                        } finally {
+                            if (cursor != null) {
+                                cursor.close();
+                                cursor = null;
+                            }
+                        }
+
+                        if (message.getChatMessageList() != null) {
+                            for (ChatMessage message1 : message.getChatMessageList()) {
+                                message1.setParentId(rowkey);
+                                insertVideoData(contentResolver, values, message1, Informations.VideoData.VIDEO_TYPE_CHAT);
+                            }
+                        }
+
+                        if (message.getPictureMessageList() != null) {
+                            for (PictureMessage message1 : message.getPictureMessageList()) {
+                                message1.setParentId(rowkey);
+                                insertVideoData(contentResolver, values, message1, Informations.VideoData.VIDEO_TYPE_PICTURE);
+                            }
+                        }
+                        return result;
+                    }
+
+                    @Override
+                    public void onSuccess(Boolean value) {
+                        if (value) {
+                            if (listener != null){
+                                listener.onSuccess();
+                            }
+                            
+                        } else {
+                            if(listener != null){
+                                listener.onFailed();
+                            }
+                           
+                        }
+                    }
+                }
+        );
+
+    }
+    
+    
+    public void saveInformationToServer(final String userId, final InformationMessage message,final OnDBListener listener) {
+        if (TextUtils.isEmpty(userId) || message == null)
+            return;
+        mThreadManager.getHandler().post(
+                new ThreadManager.OnDatabaseOperationRunnable<Boolean>() {
+                    @Override
+                    public Boolean doInBackground() {
+                        boolean result = true;
+                        ContentValues values = new ContentValues();
+                        String rowkey = message.getRowkey();
+                        
+                        values.put(Informations.Information.ROWKEY, rowkey);
+                        values.put(Informations.Information.USER_ID, userId);
+
+                        if (!TextUtils.isEmpty(message.getAddress())) {
+                            values.put(Informations.Information.ADDRESS, message.getAddress());
+                        }
+                        if (!TextUtils.isEmpty(message.getAdminCode())) {
+                            values.put(Informations.Information.ADMINCODE, message.getAdminCode());
+                        }
+                        
+                        values.put(Informations.Information.TIME,message.getTime());
+                        values.put(Informations.Information.LATITUDE, message.getLat());
+                        values.put(Informations.Information.LONGITUDE, message.getLon());
+                        values.put(Informations.Information.TYPE, message.getType());
+                        values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
                         if (!TextUtils.isEmpty(message.getRemark())) {
                             values.put(Informations.Information.REMARK, message.getRemark());
                         }

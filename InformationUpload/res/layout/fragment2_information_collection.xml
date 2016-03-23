@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/background_color"
+    android:orientation="vertical" >
+
+    <com.informationUpload.utils.InnerScrollView
+        android:id="@+id/isv2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl" >
+
+        <LinearLayout
+            android:id="@+id/svll2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:paddingTop="13dp" >
+
+                <RelativeLayout
+                    android:id="@+id/information_collect_back2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:padding="5dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/back_selecter" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/information_collect_title2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="12dp"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/text_size_large"
+                    android:text="上报"
+                    android:textColor="@color/forget_register_bt_color" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/information_collect_title2"
+                    android:layout_marginTop="13dp"
+                    android:background="@color/login_item_color" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/positon_select2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="位置:"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingLeft="3dp" >
+
+                    <TextView
+                        android:id="@+id/select_position2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/location_icon"
+                        android:drawablePadding="3dp"
+                        android:gravity="center_vertical"
+                        android:text="点击选择位置"
+                        android:textColor="@color/select_pop_title_color"
+                        android:textSize="15sp" />
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/select_position2"
+                        android:layout_marginTop="5dp"
+                        android:background="@color/information_location_icon_line" />
+
+                    <TextView
+                        android:id="@+id/select_position_again2"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/login_register_bt_selector"
+                        android:gravity="center"
+                        android:text="重新选点"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/login_item_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@color/background_color" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/login_item_color" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="拍照上传："
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:id="@+id/delete_photo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:text="删除"
+                    android:visibility="invisible"
+                    android:textColor="@color/delete_photo_color"
+                    android:textSize="13sp" />
+            </RelativeLayout>
+
+            <HorizontalScrollView
+                android:id="@+id/hscrollview2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:scrollbars="none" >
+
+                <LinearLayout
+                    android:id="@+id/hlinearlayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp" >
+
+                    <ImageView
+                        android:id="@+id/hliv2"
+                        android:layout_width="210px"
+                        android:layout_height="210px"
+                        android:background="@drawable/bt_add_pic" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/login_item_color" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:background="@color/background_color" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/login_item_color" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="录音上传："
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <ListView
+                android:id="@+id/voice_collection_lv2"
+                android:layout_width="match_parent"
+                android:layout_height="180px"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="7dp"
+                android:layout_marginTop="5dp"
+                android:background="#00000000"
+                android:divider="#00000000"
+                android:fadingEdge="none"
+                android:scrollbars="@null" >
+            </ListView>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/login_item_color" />
+
+      
+
+        <!--     <ScrollView
+                android:id="@+id/additional_remarks_sv"
+                android:layout_width="match_parent"
+                android:layout_height="130dp" >
+
+             
+            </ScrollView>
+        --> 
+           <EditText
+                    android:id="@+id/additional_remarks_et2"
+                    android:layout_width="match_parent"
+                    android:layout_height="130dp"
+                    android:background="#00000000"
+                    android:hint="点此补充说明哦!"
+                    android:padding="10dp"
+                    android:gravity="left|top"
+                    android:textSize="14sp" />
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/login_item_color" />
+
+         
+        </LinearLayout>
+    </com.informationUpload.utils.InnerScrollView>
+
+    <RelativeLayout
+        android:id="@+id/rl2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="vertical" >
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/background_color" />
+
+            
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll2"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/transparent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone" >
+           
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+              <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/savetolocal2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:background="@drawable/saveandreport_selecter"
+                    android:text="保存到本地"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/recordvoice2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/record_button_selector" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+               <View android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/report_at_once2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:textColor="@android:color/black"
+                    android:background="@drawable/saveandreport_selecter"
+                    android:text="立刻上报"
+                    android:textSize="17sp" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -11,6 +11,7 @@ public class AroundInformation implements Serializable {
 	private String address;
 	private GeoPoint gp; 
 	private String  name;
+
 	
 	public AroundInformation() {
 		super();

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -41,18 +42,22 @@ import android.widget.Toast;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.activity.ActivityInstanceStateListener;
 import com.informationUpload.activity.MyApplication;
 import com.informationUpload.adapter.LocalInformationAdapter;
 import com.informationUpload.contentProviders.InformationCheckData;
 import com.informationUpload.contentProviders.InformationManager;
+import com.informationUpload.contentProviders.InformationManager.OnDBListener;
 import com.informationUpload.contentProviders.InformationObserver;
 import com.informationUpload.contentProviders.InformationObserver.OnCheckMessageCountListener;
 import com.informationUpload.contentProviders.Informations;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
+import com.informationUpload.entity.SubmitInformation;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -151,6 +156,10 @@ public class ReportRecordFragment extends BaseFragment{
 	 * 上传文件全名
 	 */
 	private String path_all_name;
+	/**
+	 * 已提交信息数组
+	 */
+	private ArrayList<SubmitInformation> list_subinfo;
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -201,6 +210,8 @@ public class ReportRecordFragment extends BaseFragment{
 			}
 		}
 	};
+
+	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -370,35 +381,12 @@ public class ReportRecordFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-//				HashMap<String,Object> map=new HashMap<String, Object>();
-//
-//				map.put("userid",ConfigManager.getInstance().getUserId());
-//				Log.i("chentao","userid:"+ConfigManager.getInstance().getUserId());
-//				ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryuserworklist", new EnginCallback(getActivity()){
-//					@Override
-//					public void onSuccess(ResponseInfo arg0) {
-//						super.onSuccess(arg0);
-//						Log.e("请求成功", arg0.result.toString());
-//					}
-//					@Override
-//					public void onFailure(HttpException arg0, String arg1) {
-//						super.onFailure(arg0, arg1);
-//					}
-//
-//				});
-				query();
-//				modify();
-//				queryrepeat();
-				mTvDeleteItem.setVisibility(View.INVISIBLE);
-				mSubmit.setVisibility(View.INVISIBLE);
-				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
-				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
-				mAlreadySubmitIv.setLayoutParams(lp);
-				mWaitSubmitIv.setLayoutParams(lp1);
-				select_all.setVisibility(View.INVISIBLE);
-				bsubmit=false;
 
-				//				mListView.setAdapter(mServiceAdapter);
+				queryInformation();
+
+//				modify();
+
+			
 
 			}
 		});
@@ -517,6 +505,11 @@ public class ReportRecordFragment extends BaseFragment{
 							bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
 							bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,false);
 							mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment.class, bundle));
+						}else{
+							Bundle bundle = new Bundle();
+							bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
+							bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,false);
+							mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment2.class, bundle));
 						}
 					}
 				} catch (Exception e) {
@@ -590,25 +583,108 @@ public class ReportRecordFragment extends BaseFragment{
 	public static Boolean get(Integer po){
 		return map.get(po);
 	}
-	//10.情报数据提交任务信息查询接口
-	public void query( ){
-        HashMap<String,Object> map=new HashMap<String, Object>();
-        map.put("info_fid","5f7bbc7b3efa449b9cd6deb625c0d6e4");
-		ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryworkbyid", new EnginCallback(getActivity()){
-			@Override
-			public void onSuccess(ResponseInfo arg0) {
-				// TODO Auto-generated method stub
-				super.onSuccess(arg0);
-				Log.e("请求成功", arg0.result.toString());
-			}
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				// TODO Auto-generated method stub
-				super.onFailure(arg0, arg1);
-			}
-		});
-
+	//9.情报数据用户提交列表信息查询接口
+	public void queryInformation(){
+		   HashMap<String,Object> map=new HashMap<String, Object>();
+		   map.put("userid",ConfigManager.getInstance().getUserId());
+			ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryuserworklist", new EnginCallback(getActivity()){
+				@Override
+				public void onSuccess(ResponseInfo arg0) {
+					// TODO Auto-generated method stub
+					super.onSuccess(arg0);
+					String result="" ;
+					result=arg0.result.toString();
+					Log.e("请求成功",result);
+					//对服务器信息列表json进行解析
+					parseQueryListJson(result);
+					
+				}
+				@Override
+				public void onFailure(HttpException arg0, String arg1) {
+					// TODO Auto-generated method stub
+					super.onFailure(arg0, arg1);
+				}
+			});
+			
 	}
+	/**
+	 * 对服务器信息列表json进行解析
+	 * @param result
+	 */
+	protected void parseQueryListJson(String result) {
+		JSONObject jsonObj = JSON.parseObject(result);
+		String errcode = jsonObj.getString("errcode");
+		String errmsg  = jsonObj.getString("errmsg");
+		if(null!=errcode&&!"".equals(errcode)&&errcode.equals("0")){
+			  JSONArray dataAry = jsonObj.getJSONArray("data");
+//			  list_subinfo=new ArrayList<SubmitInformation>();       
+			    for(int i=0;i<dataAry.size();i++){
+			    	JSONObject dataObj = (JSONObject) dataAry.get(i);
+			    	String info_fid = dataObj.getString("info_fid");
+			    	int info_type  =  dataObj.getInteger("info_type");
+			    	String  uploadDate  =  dataObj.getString("uploadDate");
+			    	String   address =  dataObj.getString("address");
+			    	JSONObject locationObj = dataObj.getJSONObject("location");
+			    	double latitude=  locationObj.getDouble("latitude");
+			    	double longitude=  locationObj.getDouble("longitude");
+//			        SubmitInformation subInfo = new SubmitInformation(info_fid,info_type,uploadDate,address,latitude,longitude);
+//			        list_subinfo.add(subInfo);
+			    	InformationMessage message = new InformationMessage();
+					
+					message.setAddress(address);
+					message.setType(info_type);
+					message.setRowkey(info_fid);
+                    
+					message.setLat(latitude);
+					message.setLon(longitude);
+					/**
+    				 * 将字符串数据转化为毫秒数
+    				 */
+    				Calendar c = Calendar.getInstance();
+                    try {
+                    	c.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(uploadDate));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				    message.setTime(c.getTimeInMillis());
+//					message.setRemark(additional_remarks_et.getText().toString());
+//					message.setChatMessageList(mChatList);
+//					message.setPictureMessageList(mPicList);
+					mInformationManager.saveInformationToServer(ConfigManager.getInstance().getUserId(), message,new OnDBListener() {
+						
+						@Override
+						public void onSuccess() {
+							Log.i("info","保存成功！！！");
+							
+						}
+						
+						@Override
+						public void onFailed() {
+							Log.i("info","保存失败！！！");
+							
+						}
+					});
+			    }
+				mTvDeleteItem.setVisibility(View.INVISIBLE);
+				mSubmit.setVisibility(View.INVISIBLE);
+				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
+				LayoutParams lp1 = new LinearLayout.LayoutParams(0,5,1);
+				mAlreadySubmitIv.setLayoutParams(lp);
+				mWaitSubmitIv.setLayoutParams(lp1);
+				select_all.setVisibility(View.INVISIBLE);
+				bsubmit=false;
+
+				mListView.setAdapter(mServiceAdapter); 
+			    
+		}else{
+			Toast.makeText(getActivity(),errmsg,Toast.LENGTH_LONG).show();
+		}
+	  
+		
+	}
+
+
+
 	//11.情报用户信息修改接口
     public void modify(){
     	HashMap<String,Object> map=new HashMap<String, Object>();

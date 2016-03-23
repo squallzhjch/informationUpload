@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.informationUpload.R;
 import com.informationUpload.contentProviders.InformationManager;
 import com.informationUpload.entity.ChatMessage;
+import com.informationUpload.fragments.BaseFragment;
 import com.informationUpload.fragments.InformationCollectionFragment;
 
 import android.content.Context;
@@ -113,17 +114,20 @@ public class ChatAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View arg0) {
-				File file =new File(getItem(position).getPath());
-				if(file.exists()){
-					file.delete();
+				if(fragm!=null){
+					File file =new File(getItem(position).getPath());
+					if(file.exists()){
+						file.delete();
+					}
+//					list.remove(position);
+					InformationManager.getInstance().deleteVideo(getItem(position).getRowkey(),getItem(position).getPath());
+					fragm.removeChatList(position);
+					
+//					ChatAdapter.this.notifadataset();
+					fragm.resetListView();
+					Toast.makeText(context,"已经删除",Toast.LENGTH_LONG).show();
 				}
-//				list.remove(position);
-				InformationManager.getInstance().deleteVideo(getItem(position).getRowkey(),getItem(position).getPath());
-				fragm.removeChatList(position);
-				
-//				ChatAdapter.this.notifadataset();
-				fragm.resetListView();
-				Toast.makeText(context,"已经删除",Toast.LENGTH_LONG).show();
+	
 			}
 		});
 		vh.tv_chatcontent.setOnClickListener(new OnClickListener() {
