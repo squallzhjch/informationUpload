@@ -25,7 +25,7 @@ public class SystemConfig {
 
 	//就地释放
 	public static String FREE_FRAGMENT = "fragment_free";
-
+    
 	/**
 	 * fragment 接收消息的类别
 	 */

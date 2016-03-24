@@ -135,8 +135,38 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	private int info_type;
 	private String draw_txt;
 	private Drawable draw_title;
-	
-
+	private ArrayList<String> list_pic_path=new ArrayList<String>();
+	private ArrayList<String> list_chat_path=new ArrayList<String>();
+	private int e;
+	private int k;
+	Handler handler=new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case ServiceEngin.DOWNLOAD_CHAT_SUCCESS:
+				String chat_path=(String) msg.obj;
+				list_chat_path.add(chat_path);
+				if(list_chat_path.size()==chatList.size()){
+					for(int i=0;i<list_chat_path.size();i++){
+						chatList.get(i).setPath(list_chat_path.get(i));
+					}
+				}
+				adapter = new ChatAdapter(getActivity(),null, chatList);
+				resetListView();
+				voice_collection_lv.setAdapter(adapter);
+				break;
+			case ServiceEngin.DOWNLOAD_PIC_SUCCESS:
+				String pic_path=(String) msg.obj;
+				list_pic_path.add(pic_path);
+				if(list_pic_path.size()==picList.size()){
+					for(int j=0;j<list_pic_path.size();j++){
+						picList.get(j).setPath(pic_path);
+					}
+					queryinit();
+				}
+				break;
+			}
+		}
+	};
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -153,9 +183,7 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	 */
 	private void queryinit(){
 		additional_remarks_et.setText(main_remark);
-		adapter = new ChatAdapter(getActivity(),null, chatList);
-		resetListView();
-		voice_collection_lv.setAdapter(adapter);
+		
 		select_position.setText(address);
 		for(int i=0;i<picList.size();i++){
 			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
@@ -172,6 +200,7 @@ public class InformationCollectionFragment2 extends BaseFragment {
 			imageView.setLayoutParams(lp);
 
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+			Log.i("info","geti lujing:"+picList.get(i).getPath());
 			imageView.setImageURI(Uri.fromFile(new File(picList.get(i).getPath())));
 			imageView.setTag(i);
 			ImageView iv_delete = new ImageView(getActivity());
@@ -397,8 +426,8 @@ public class InformationCollectionFragment2 extends BaseFragment {
 					}
 
 					if(!TextUtils.isEmpty(url)) {
-						Log.i("info","url:"+url);
-						message.setPath(url);
+						
+						message.setPath(SystemConfig.MAIN_URL+url.substring(6));
 					}
 
 					message.setLat(lat_att);
@@ -406,7 +435,42 @@ public class InformationCollectionFragment2 extends BaseFragment {
 					message.setRowkey(info_fid);
 
 				}
-				queryinit();
+				for(int f=0;f<picList.size();f++){
+					    e=f; 
+						new Thread(new Runnable() {
+							public void run() {
+								try {
+								ServiceEngin.getInstance().getFileStream(picList.get(e).getPath(), handler);
+								
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						}).start();
+						
+					
+				}
+				
+				for(int h=0;h<chatList.size();h++){
+					k=h;
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+						    try {
+								ServiceEngin.getInstance().getFileStream(chatList.get(k).getPath(), handler);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+					}).start();
+			   
+				}
+				
+			
 			}
 
 		}else{

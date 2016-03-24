@@ -492,6 +492,8 @@ public class InformationCollectionFragment extends BaseFragment {
 			@Override
 			public void onParseResult(String path, String result) {
 				synchronized (mChatList) {
+					Log.i("info","chatpath:"+path);
+					Log.i("info", "datapath:"+SystemConfig.DATA_CHAT_PATH);
 					try {
 						md = new MediaPlayer();
 						md.reset();
