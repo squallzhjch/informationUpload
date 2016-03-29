@@ -185,6 +185,7 @@ public class MapManager {
 				LatLng ll = new LatLng(location.getLat(),
 						location.getLon());
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+				Log.i("info","11111111111111111");
 				mMapView.getMap().animateMapStatus(u);
 			}
 		}

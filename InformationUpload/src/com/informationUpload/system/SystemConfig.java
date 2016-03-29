@@ -74,6 +74,8 @@ public class SystemConfig {
 	public static final String NET_WORK_STATE="NetWorkState";
 	//验证码
 	public static final String VERIFICATION_CODE="verification_code";
-	//获取验证码
+	//注册获取验证码
 	public static final String GET_VERIFICATION_CODE="get_verification_code";
+	//找回密码获取验证码
+	public static final String FINDPASSWORD_VERIFICATION_CODE="findpassword_verification_code";
 }

@@ -2,6 +2,7 @@ package com.informationUpload.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
+import com.informationUpload.activity.FindPasswordActivity;
 import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.fragments.utils.MyFragmentManager;
 import com.informationUpload.system.ConfigManager;
@@ -144,16 +146,16 @@ public class LoginFragment extends BaseFragment {
                 hideSoftInput(getActivity());
             }
         });
-//        //找回密码
-//        mFindPassword.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//
-//                LoginActivity.this.startActivity(new Intent(LoginActivity.this,FindPasswordActivity.class));
-//                LoginActivity.this.finish();
-//            }
-//        });
+        //找回密码
+        mFindPassword.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent intent =new Intent(getActivity(),FindPasswordActivity.class);
+                getActivity().startActivity(intent);
+             
+            }
+        });
         //快速注册
         mQuickRegister.setOnClickListener(new View.OnClickListener() {
 

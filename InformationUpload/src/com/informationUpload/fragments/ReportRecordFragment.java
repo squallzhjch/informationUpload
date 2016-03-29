@@ -384,7 +384,7 @@ public class ReportRecordFragment extends BaseFragment{
 
 				queryInformation();
 
-//				modify();
+		
 
 			
 
@@ -685,26 +685,7 @@ public class ReportRecordFragment extends BaseFragment{
 
 
 
-	//11.情报用户信息修改接口
-    public void modify(){
-    	HashMap<String,Object> map=new HashMap<String, Object>();
-    	map.put("userid",ConfigManager.getInstance().getUserId());
-    	map.put("pwd","444444");
-//    	map.put("nickname","fchen");
-    	ServiceEngin.getInstance().Request(getActivity(), map,"informodifyuserinfo",new EnginCallback(getActivity()){
-    		@Override
-    		public void onSuccess(ResponseInfo arg0) {
-    			// TODO Auto-generated method stub
-    			super.onSuccess(arg0);
-    		Log.e("请求成功", arg0.result.toString());
-    		}
-    		@Override
-    		public void onFailure(HttpException arg0, String arg1) {
-    			// TODO Auto-generated method stub
-    			super.onFailure(arg0, arg1);
-    		}
-    	});
-    }
+
 
 
 }

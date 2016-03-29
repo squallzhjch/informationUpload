@@ -401,7 +401,7 @@ public class RegisterFragment extends BaseFragment {
 		
 	}
     
-    public void sendSmsMessage(){
+    public void sendSmsMessage(){ 
     	HttpClient client = new HttpClient(); 
 		PostMethod method = new PostMethod(Url); 
 			
@@ -470,7 +470,7 @@ public class RegisterFragment extends BaseFragment {
 	/**
 	 * 倒计时类
 	 * 
-	 * @author haix
+	 * @author chentao
 	 * 
 	 */
 	private class MyCount extends CountDownTimer {

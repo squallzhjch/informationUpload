@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
@@ -67,8 +68,15 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 		mSelectView.setOnSubmitListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress, mAdminCode, mPoint);
-				mFragmentManager.back();
+				 double dis = mMapManager.getDistance(mLocationManager.getCurrentPoint(),lastPoint);
+				 Log.i("info","dis:"+dis);
+				 if(dis>2000){
+					 Toast.makeText(getActivity(),"所选位置与定位点相差大于2000米，不符合规定，请重新选点！", Toast.LENGTH_SHORT).show();
+				 }else{
+						mContentsManager.notifyContentUpdateSuccess(SystemConfig.FRAGMENT_UPDATE_SELECT_POINT_ADDRESS, mAddress, mAdminCode, mPoint);
+						mFragmentManager.back(); 
+				 }
+			
 			}
 		});
 
@@ -137,7 +145,7 @@ public class SelectPointFragment extends BaseFragment implements BaiduMap.OnMapS
 
 			double dis2 = DistanceUtil.getDistance(lastLatLng, mapStatus.target);
 
-		
+		   
 		}
 		lastPoint = point;
 		lastLatLng = mapStatus.target;

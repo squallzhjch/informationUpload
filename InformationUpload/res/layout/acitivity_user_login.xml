@@ -138,7 +138,7 @@
                 android:gravity="center"
                 android:text="忘记密码?"
                 android:textColor="@color/forget_register_bt_color"
-                android:visibility="invisible" />
+              />
 
             <TextView
                 android:layout_width="wrap_content"

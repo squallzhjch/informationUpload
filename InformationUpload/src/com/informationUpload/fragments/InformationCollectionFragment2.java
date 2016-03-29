@@ -84,7 +84,7 @@ import com.lidroid.xutils.http.ResponseInfo;
  * @author chentao
  * @version V1.0
  * @ClassName: InformationCollectionFragment
- * @Date 2015/12/3
+ * @Date 2016/03/24
  * @Description: ${TODO}(用一句话描述该文件做什么)
  */
 public class InformationCollectionFragment2 extends BaseFragment {
