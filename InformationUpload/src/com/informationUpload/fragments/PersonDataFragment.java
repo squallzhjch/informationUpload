@@ -22,6 +22,7 @@ import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.SystemConfig;
 
+import com.informationUpload.utils.CommonDialog;
 import com.informationUpload.utils.RoundBitmapUtil;
 
 import android.app.ProgressDialog;
@@ -321,15 +322,14 @@ public class PersonDataFragment extends BaseFragment{
 	//添加监听器
 	private void addListeners() {
 		//昵称rl
-		//		NameRl.setOnClickListener(new OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View arg0) {
-		//				Intent intent =new Intent(getActivity(),RegisterActivity.class);
-		//				getActivity().startActivity(intent);
-		//
-		//			}
-		//		});
+				NameRl.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View arg0) {
+					CommonDialog dialog = new CommonDialog(getActivity());
+		            dialog.show();
+					}
+				});
 		//		//手机rl
 		//		TelRl.setOnClickListener(new OnClickListener() {
 		//

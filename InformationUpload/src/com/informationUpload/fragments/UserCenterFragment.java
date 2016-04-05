@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.informationUpload.R;
@@ -75,6 +76,18 @@ public class UserCenterFragment extends BaseFragment{
 	 * 退出登录或者绑定手机号
 	 */
 	private Button mExitLogin;
+	/**
+	 * 我的账户
+	 */
+	private TextView mTvAccount;
+	/**
+	 * 下一步进入修改昵称界面
+	 */
+	private ImageView mIvHeadNext;
+	/**
+	 * 下一步进入修改昵称界面
+	 */
+	private RelativeLayout mRlHeadNext;
 
 
 	@Override
@@ -114,11 +127,36 @@ public class UserCenterFragment extends BaseFragment{
 
 		mAboutLayout = (RelativeLayout) view.findViewById(R.id.about);
 		mBack=(RelativeLayout)view.findViewById(R.id.back);
+		mTvAccount     = (TextView) view.findViewById(R.id.tv_account);
+		mIvHeadNext   =  (ImageView) view.findViewById(R.id.iv_head_next);
+		 mRlHeadNext           =      (RelativeLayout) view.findViewById(R.id.rl_head_next);
+		 String tel = ConfigManager.getInstance().getUserTel();
+		 if(null!=tel&&!"".equals(tel)){
+			 mTvAccount.setText("账号:"+tel);
+		 }
 	}
 	/**
 	 * 注册监听器
 	 */
 	private void addListeners() {
+		//下一步修改个人资料
+		mRlHeadNext.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+				
+			}
+		});
+		//下一步进入个人资料
+		mIvHeadNext.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+				
+			}
+		});
 		//绑定手机号或者退出登录
 		mExitLogin.setOnClickListener(new OnClickListener() {
 			@Override
