@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,6 +62,7 @@ import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.DataBaseMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
+import com.informationUpload.entity.SubmitInformation;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
@@ -139,6 +141,7 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	private ArrayList<String> list_chat_path=new ArrayList<String>();
 	private int e;
 	private int k;
+	private SubmitInformation subinfo;
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -167,13 +170,14 @@ public class InformationCollectionFragment2 extends BaseFragment {
 			}
 		}
 	};
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
-
+            subinfo= (SubmitInformation)bundle.getSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION);
 
 
 		}
@@ -185,6 +189,16 @@ public class InformationCollectionFragment2 extends BaseFragment {
 		additional_remarks_et.setText(main_remark);
 		
 		select_position.setText(address);
+		select_position.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Bundle bundle=new Bundle();
+				bundle.putSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION, subinfo);
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(DisplayPointFragment.class, bundle));
+				
+			}
+		});
 		for(int i=0;i<picList.size();i++){
 			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
 			//			lp_rl.setMargins(10,0,10,0);

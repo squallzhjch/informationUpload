@@ -6,11 +6,11 @@ import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 
 public class SubmitInformation implements Serializable{
 	private String info_fid;
-	private String info_type;
+	private int info_type;
 	private String uploadDate;
 	private String address;
-	private String lat;
-	private String lon;
+	private double lat;
+	private double lon;
 
 	public SubmitInformation() {
 		super();
@@ -18,8 +18,8 @@ public class SubmitInformation implements Serializable{
 
 	
 
-	public SubmitInformation(String info_fid, String info_type,
-			String uploadDate, String address, String lat, String lon) {
+	public SubmitInformation(String info_fid, int info_type,
+			String uploadDate, String address, double lat, double lon) {
 		super();
 		this.info_fid = info_fid;
 		this.info_type = info_type;
@@ -39,11 +39,11 @@ public class SubmitInformation implements Serializable{
 		this.info_fid = info_fid;
 	}
 
-	public String getInfo_type() {
+	public int getInfo_type() {
 		return info_type;
 	}
 
-	public void setInfo_type(String info_type) {
+	public void setInfo_type(int info_type) {
 		this.info_type = info_type;
 	}
 
@@ -65,25 +65,25 @@ public class SubmitInformation implements Serializable{
 
 
 
-	public String getLat() {
+	public double getLat() {
 		return lat;
 	}
 
 
 
-	public void setLat(String lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 
 
 
-	public String getLon() {
+	public double getLon() {
 		return lon;
 	}
 
 
 
-	public void setLon(String lon) {
+	public void setLon(double lon) {
 		this.lon = lon;
 	}
 

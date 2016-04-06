@@ -54,6 +54,7 @@ import com.informationUpload.contentProviders.InformationManager.OnDBListener;
 import com.informationUpload.contentProviders.InformationObserver;
 import com.informationUpload.contentProviders.InformationObserver.OnCheckMessageCountListener;
 import com.informationUpload.contentProviders.Informations;
+import com.informationUpload.entity.AroundInformation;
 import com.informationUpload.entity.ChatMessage;
 import com.informationUpload.entity.InformationMessage;
 import com.informationUpload.entity.PictureMessage;
@@ -61,6 +62,7 @@ import com.informationUpload.entity.SubmitInformation;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.map.GeoPoint;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
@@ -509,6 +511,7 @@ public class ReportRecordFragment extends BaseFragment{
 							Bundle bundle = new Bundle();
 							bundle.putString(SystemConfig.BUNDLE_DATA_ROWKEY, rowkey);
 							bundle.putBoolean(SystemConfig.BUNDLE_DATA_SOURCE,false);
+							bundle.putSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION, list_subinfo.get(position));
 							mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(InformationCollectionFragment2.class, bundle));
 						}
 					}
@@ -617,7 +620,7 @@ public class ReportRecordFragment extends BaseFragment{
 		String errmsg  = jsonObj.getString("errmsg");
 		if(null!=errcode&&!"".equals(errcode)&&errcode.equals("0")){
 			  JSONArray dataAry = jsonObj.getJSONArray("data");
-//			  list_subinfo=new ArrayList<SubmitInformation>();       
+			  list_subinfo=new ArrayList<SubmitInformation>();       
 			    for(int i=0;i<dataAry.size();i++){
 			    	JSONObject dataObj = (JSONObject) dataAry.get(i);
 			    	String info_fid = dataObj.getString("info_fid");
@@ -627,8 +630,10 @@ public class ReportRecordFragment extends BaseFragment{
 			    	JSONObject locationObj = dataObj.getJSONObject("location");
 			    	double latitude=  locationObj.getDouble("latitude");
 			    	double longitude=  locationObj.getDouble("longitude");
-//			        SubmitInformation subInfo = new SubmitInformation(info_fid,info_type,uploadDate,address,latitude,longitude);
-//			        list_subinfo.add(subInfo);
+			    	double[] ret_pos = ChangePointUtil.realtobaidu(latitude,longitude);
+//	                GeoPoint gp=new GeoPoint(ret_pos[0],ret_pos[1]);
+			        SubmitInformation subInfo = new SubmitInformation(info_fid,info_type,uploadDate,address,ret_pos[0],ret_pos[1]);
+			        list_subinfo.add(subInfo);
 			    	InformationMessage message = new InformationMessage();
 					
 					message.setAddress(address);
@@ -650,6 +655,9 @@ public class ReportRecordFragment extends BaseFragment{
 //					message.setRemark(additional_remarks_et.getText().toString());
 //					message.setChatMessageList(mChatList);
 //					message.setPictureMessageList(mPicList);
+				  
+
+                 
 					mInformationManager.saveInformationToServer(ConfigManager.getInstance().getUserId(), message,new OnDBListener() {
 						
 						@Override

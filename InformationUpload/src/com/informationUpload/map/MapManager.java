@@ -173,7 +173,7 @@ public class MapManager {
 			MyLocationData locData = new MyLocationData.Builder()
 			.accuracy(radius)
 			// 此处设置开发者获取到的方向信息，顺时针0-360
-			.direction(100).latitude( location.getLat())
+			.direction(100).latitude(location.getLat())
 			.longitude(location.getLon()).build();
 			mMapView.getMap().setMyLocationData(locData);
 			mMapView.getMap()
