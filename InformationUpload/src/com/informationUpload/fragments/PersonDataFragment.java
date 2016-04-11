@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
 import com.informationUpload.activity.FindPasswordActivity;
 import com.informationUpload.contents.ContentsManager;
+import com.informationUpload.fragments.utils.IntentHelper;
 import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
 
@@ -358,17 +359,21 @@ public class PersonDataFragment extends BaseFragment{
 		            dialog.show();
 					}
 				});
-		//		//手机rl
-		//		TelRl.setOnClickListener(new OnClickListener() {
-		//
-		//			@Override
-		//			public void onClick(View arg0) {
-		//
-		//				Intent intent =new Intent(getActivity(),RegisterActivity.class);
-		//				getActivity().startActivity(intent);
-		//
-		//			}
-		//		});
+			
+				//手机rl
+				TelRl.setOnClickListener(new OnClickListener() {
+		
+					@Override
+					public void onClick(View arg0) {
+						if(islogin){
+							Toast.makeText(getActivity(), "已是登录状态，不能进行再注册！",Toast.LENGTH_SHORT).show();
+						}else{
+							mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(RegisterFragment.class, null));
+						}
+					
+		
+					}
+				});
 		//头像
 		IvHead.setOnClickListener(new OnClickListener() {
 
