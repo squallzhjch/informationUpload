@@ -11,12 +11,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 
 
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.informationUpload.R;
+import com.informationUpload.activity.FindPasswordActivity;
+import com.informationUpload.contents.ContentsManager;
+import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
 
 import com.informationUpload.system.ConfigManager;
@@ -24,6 +28,8 @@ import com.informationUpload.system.SystemConfig;
 
 import com.informationUpload.utils.CommonDialog;
 import com.informationUpload.utils.RoundBitmapUtil;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -124,6 +130,14 @@ public class PersonDataFragment extends BaseFragment{
 	 * 初始化头像
 	 */
 	private Bitmap initBitmap;
+	/**
+	 * 昵称textview
+	 */
+	private TextView mNameTv;
+	/**
+	 * 我的名字(昵称)
+	 */
+	private String userName;
 	Handler handler=new Handler(){
 	
 		public void handleMessage(android.os.Message msg) {
@@ -182,6 +196,8 @@ public class PersonDataFragment extends BaseFragment{
 			}
 		}
 	};
+	
+
 	
    @Override
 	public void onDataChange(Bundle bundle) {
@@ -251,14 +267,23 @@ public class PersonDataFragment extends BaseFragment{
 	//初始化
 
 	private void init() {
+	   
 		InputStream is = getResources().openRawResource(R.drawable.headshot);  
 
-	  initBitmap = BitmapFactory.decodeStream(is);
+	    initBitmap = BitmapFactory.decodeStream(is);
 	
 		IvHead = (ImageView) view.findViewById(R.id.iv_head);
 		IvHead.setImageBitmap(initBitmap);
 		PersondataBack=(RelativeLayout)view.findViewById(R.id.persondata_back);
 		NameRl =(RelativeLayout) view.findViewById(R.id.name_rl);
+		mNameTv =       (TextView) view.findViewById(R.id.name_tv);
+		userName=ConfigManager.getInstance().getUserName();
+		if(null!=userName&&!"".equals(userName)){
+			mNameTv.setText(userName);
+			mContentsManager.notifyContentUpdateSuccess(SystemConfig.MODIFY_USERNAME, userName);
+		}else{
+			mNameTv.setText("昵称");
+		}
 		TelRl=(RelativeLayout)view.findViewById(R.id.tel_rl);
 		islogin=ConfigManager.getInstance().isLogin();
 		jpgPath=ConfigManager.getInstance().getJpgPath();
@@ -326,7 +351,10 @@ public class PersonDataFragment extends BaseFragment{
 		
 					@Override
 					public void onClick(View arg0) {
-					CommonDialog dialog = new CommonDialog(getActivity());
+					final CommonDialog dialog = new CommonDialog(getActivity(),mNameTv);
+					
+					dialog.setCancelable(false);
+					
 		            dialog.show();
 					}
 				});
@@ -431,6 +459,8 @@ public class PersonDataFragment extends BaseFragment{
 	}
 
 	private String path = "";
+	private String telNum;
+	private String nickName;
 
 
 
@@ -584,5 +614,7 @@ public class PersonDataFragment extends BaseFragment{
 		bos.flush();    
 		bos.close();  
 	}
+	
+
 
 }

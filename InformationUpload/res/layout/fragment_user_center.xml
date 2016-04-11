@@ -11,6 +11,7 @@
         android:orientation="vertical" >
 
         <RelativeLayout
+            android:id="@+id/rl_head"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
@@ -28,26 +29,29 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginRight="30dp"
-                android:layout_centerInParent="true"
+                android:layout_toRightOf="@id/iv_head"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
             <TextView
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:layout_below="@id/iv_head"
                 android:layout_centerHorizontal="true"
-                android:text="我的名字"
-                android:textSize="18sp"
-                android:textColor="#343434" 
+                android:text="我的名字:昵称"
+                android:textSize="16sp"
+                android:textColor="@color/select_pop_title_color"
                 />
             <TextView android:id="@+id/tv_account"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                  android:text="账号"
-                 android:textSize="18sp"
-                 android:layout_marginTop="20dp"
-                android:textColor="#343434" />
+                 android:textSize="14sp"
+                 android:layout_marginTop="7dp"
+                android:textColor="@color/select_pop_title_color" />
             </LinearLayout>
             <RelativeLayout android:id="@+id/rl_head_next"
                 android:layout_width="wrap_content"

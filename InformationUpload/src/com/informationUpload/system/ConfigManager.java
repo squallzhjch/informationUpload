@@ -61,6 +61,9 @@ public class ConfigManager {
     public String getUserName(){
         return mSharePre.getString("user_name", null);
     }
+    public void setUserName(String userName){
+    	 mSharePre.edit().putString("user_name", userName).commit();
+    }
 
     public String getUserTel(){
         return mSharePre.getString("user_tel", "");

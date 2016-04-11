@@ -50,6 +50,11 @@ import com.informationUpload.tool.StringTool;
 import com.informationUpload.utils.StringUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
+import com.taobao.api.ApiException;
+import com.taobao.api.DefaultTaobaoClient;
+import com.taobao.api.TaobaoClient;
+import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
+import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
 
 /**
@@ -67,8 +72,8 @@ public class RegisterFragment extends BaseFragment {
 	/**
 	 * 发送验证码的url地址
 	 */
-	private static String Url = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
-
+//	private static String Url = "http://106.ihuyi.cn/webservice/sms.php?method=Submit";
+	private static String Url = "http://gw.api.taobao.com/router/rest";
 	/**
 	 * 电话号码输入框
 	 */
@@ -178,7 +183,16 @@ public class RegisterFragment extends BaseFragment {
 			@Override
 			public void onClick(View arg0) {
 				//查重，看是否该手机号有 没有注册过
-				queryrepeat();
+//				queryrepeat();
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						sendSmsMessage();
+						
+					}
+				}).start();
+			
 			}
 		});
 		//返回
@@ -402,6 +416,33 @@ public class RegisterFragment extends BaseFragment {
 	}
     
     public void sendSmsMessage(){ 
+//    	TaobaoClient client = new DefaultTaobaoClient(Url, "23340476", "34943bb60d519f13b62920bb2a4b7ce8");
+//    	AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
+//    	
+//    	req.setExtend("123456");
+//    	req.setSmsType("normal");
+//    	req.setSmsFreeSignName("大鱼测试");
+//    	req.setSmsParamString("{\"code\":\"1234\",\"product\":\"alidayu\"}");
+//    	req.setRecNum("18611062750");
+//    	req.setSmsTemplateCode("SMS_7231312");
+//    	
+//    	
+//    	
+//		try {
+//			AlibabaAliqinFcSmsNumSendResponse rsp = client.execute(req);
+//			 Log.i("info", "chentao:"+rsp.getBody());
+//		} catch (ApiException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//    	
+       
+    	
+   
+    	
+
+    	
+    	
     	HttpClient client = new HttpClient(); 
 		PostMethod method = new PostMethod(Url); 
 			

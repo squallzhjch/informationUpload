@@ -31,7 +31,8 @@ public class SystemConfig {
 	 */
 	// 地图选点 返回坐标和地址
 	public static String FRAGMENT_UPDATE_SELECT_POINT_ADDRESS = "fragment_update_select_point_address";
-
+    //修改昵称返回昵称
+	public static String MODIFY_USERNAME="modify_username";
 	/**
 	 * Bundle 传值
 	 */
