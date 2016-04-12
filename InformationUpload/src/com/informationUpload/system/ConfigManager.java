@@ -95,5 +95,10 @@ public class ConfigManager {
     public String getJpgPath(){
        return mSharePre.getString("jpg_path","");
     }
-    
+    public void setSaveHeadName(String name){
+    	mSharePre.edit().putString("save_head_name", name);
+    }
+    public String getSaveHeadName(){
+    	return mSharePre.getString("save_head_name","");
+    }
 }

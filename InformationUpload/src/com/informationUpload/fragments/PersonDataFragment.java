@@ -171,7 +171,7 @@ public class PersonDataFragment extends BaseFragment{
 				try {
 					
 					saveFileToLoacl(bitmap_init,c_download.getTimeInMillis()+"_"+ConfigManager.getInstance().getUserId());
-				
+					 ConfigManager.getInstance().setSaveHeadName(c_download.getTimeInMillis()+"_"+ConfigManager.getInstance().getUserId());
 				} catch (Exception e) {
 				
 					e.printStackTrace();
@@ -233,13 +233,13 @@ public class PersonDataFragment extends BaseFragment{
 						e.printStackTrace();
 					}
 					System.out.println("时间转化后的毫秒数为：" + c.getTimeInMillis());
-					String pathName = path+c.getTimeInMillis()+"_"+myCaptureFile.getName();
+				
 				
 					myCaptureFile.renameTo(new File(path,c.getTimeInMillis()+"_"+myCaptureFile.getName()));
-				
+				    ConfigManager.getInstance().setSaveHeadName(c.getTimeInMillis()+"_"+myCaptureFile.getName());
 					ConfigManager.getInstance().setEditionTime(edition);
 					IvHead.setImageBitmap(RoundBitmapUtil.toRoundBitmap(IvHead,bitmap));
-					
+					mContentsManager.notifyContentUpdateSuccess(SystemConfig.MODIFY_HEAD_PIC, null);
 					progressdialog.cancel();
 					
 				

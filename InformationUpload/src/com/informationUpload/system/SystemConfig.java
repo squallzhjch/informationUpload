@@ -33,6 +33,8 @@ public class SystemConfig {
 	public static String FRAGMENT_UPDATE_SELECT_POINT_ADDRESS = "fragment_update_select_point_address";
     //修改昵称返回昵称
 	public static String MODIFY_USERNAME="modify_username";
+	//修改头像图片
+	public static String MODIFY_HEAD_PIC="modify_head_pic";
 	/**
 	 * Bundle 传值
 	 */

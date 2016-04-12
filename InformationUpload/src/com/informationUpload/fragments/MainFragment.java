@@ -216,6 +216,9 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
             	  s = mMapManager.getMap().getMapStatus();
                   double lat = s.target.latitude;
                   double lon = s.target.longitude;
+                  Log.i("info", "lat:"+lat);
+                  Log.i("info", "lon:"+lon);
+           
                 //刷新码点
                 refreshMap(true,new GeoPoint(lat,lon));
             }

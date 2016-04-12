@@ -1,12 +1,19 @@
 package com.informationUpload.fragments;
 
 import java.io.File;
+import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +34,7 @@ import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
 import com.informationUpload.utils.FileUtils;
+import com.informationUpload.utils.RoundBitmapUtil;
 import com.informationUpload.system.SystemConfig;
 
 /**
@@ -102,6 +110,10 @@ public class UserCenterFragment extends BaseFragment{
 	 */
 	private TextView mTvName;
 	private String userName;
+	private String editionTime;
+	private boolean islogin;
+	private String path;
+	private Bitmap initBitmap;
 
     @Override
     public void onAttach(Activity activity) {
@@ -110,8 +122,64 @@ public class UserCenterFragment extends BaseFragment{
     	registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
 			
 			@Override
+			public String getKey() {
+				// TODO Auto-generated method stub
+				return SystemConfig.MODIFY_HEAD_PIC;
+			}
+			
+			@Override
 			public void onContentUpdated(List<Object[]> values) {
-				Log.i("info","values:"+values.get(0)[0]);
+				editionTime= ConfigManager.getInstance().getEditionTime();
+				islogin= ConfigManager.getInstance().isLogin();
+				/**
+				 * 将字符串数据转化为毫秒数
+				 */
+				Calendar c_init = Calendar.getInstance();
+				try {
+					c_init.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(editionTime));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if(islogin){
+						if(hasSDcard()){
+							path = SystemConfig.SDCARD_HEAD_IMG_PATH;    
+						}else{
+							path = SystemConfig.INNER_HEAD_IMG_PATH; 
+						}
+						String pathName_init = path+c_init.getTimeInMillis()+"_"+ConfigManager.getInstance().getUserId();
+				
+						File file_init=new File(pathName_init);
+						if(file_init.exists()){
+							final Bitmap bitmap_init = BitmapFactory.decodeFile(pathName_init);
+							mPersonData.setImageBitmap(initBitmap);
+							new Handler().post(new Runnable() {
+								
+								@Override
+								public void run() {
+									mPersonData.setImageBitmap(RoundBitmapUtil.toRoundBitmap(mPersonData,bitmap_init));
+									
+								}
+							});
+						
+						}
+				
+		}
+				
+				
+			}
+			
+			@Override
+			public boolean isActive() {
+				// TODO Auto-generated method stub
+				return mIsActive;
+			}
+		});
+    	registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
+			
+			@Override
+			public void onContentUpdated(List<Object[]> values) {
+				
 				if (values != null) {
 						userName = (String) values.get(0)[0];
 						
@@ -155,6 +223,10 @@ public class UserCenterFragment extends BaseFragment{
 	 * 初始化
 	 */
 	private void init() {
+		InputStream is = getResources().openRawResource(R.drawable.headshot);  
+
+	    initBitmap = BitmapFactory.decodeStream(is);	
+	
 		mExitLogin     =(Button) view.findViewById(R.id.exit_login);
 		mPersonData = (ImageView) view.findViewById(R.id.iv_head);
 		 mRlHead= (RelativeLayout) view.findViewById(R.id.rl_head);
@@ -185,6 +257,43 @@ public class UserCenterFragment extends BaseFragment{
 			}else{
 				mTvName.setText("我的名字:昵称");
 			}
+			
+			editionTime= ConfigManager.getInstance().getEditionTime();
+			islogin= ConfigManager.getInstance().isLogin();
+			/**
+			 * 将字符串数据转化为毫秒数
+			 */
+			Calendar c_init = Calendar.getInstance();
+			try {
+				c_init.setTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(editionTime));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(islogin){
+					if(hasSDcard()){
+						path = SystemConfig.SDCARD_HEAD_IMG_PATH;    
+					}else{
+						path = SystemConfig.INNER_HEAD_IMG_PATH; 
+					}
+					String pathName_init = path+c_init.getTimeInMillis()+"_"+ConfigManager.getInstance().getUserId();
+			
+					File file_init=new File(pathName_init);
+					if(file_init.exists()){
+						final Bitmap bitmap_init = BitmapFactory.decodeFile(pathName_init);
+						mPersonData.setImageBitmap(initBitmap);
+						new Handler().post(new Runnable() {
+							
+							@Override
+							public void run() {
+								mPersonData.setImageBitmap(RoundBitmapUtil.toRoundBitmap(mPersonData,bitmap_init));
+								
+							}
+						});
+					
+					}
+			
+	}
 	}
 	/**
 	 * 注册监听器
@@ -317,5 +426,13 @@ public class UserCenterFragment extends BaseFragment{
 			}
 		});
 
+	}
+	public static boolean hasSDcard() {
+		String status = Environment.getExternalStorageState();
+		if (status.equals(Environment.MEDIA_MOUNTED)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
