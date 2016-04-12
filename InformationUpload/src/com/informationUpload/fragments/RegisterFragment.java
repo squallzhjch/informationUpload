@@ -439,7 +439,7 @@ public class RegisterFragment extends BaseFragment {
     	
     	
     	HttpClient client = new HttpClient();
-		PostMethod method = new PostMethod(Url); 
+		PostMethod method = new PostMethod(Url);
 			
 		//client.getParams().setContentCharset("GBK");		
 		client.getParams().setContentCharset("UTF-8");
