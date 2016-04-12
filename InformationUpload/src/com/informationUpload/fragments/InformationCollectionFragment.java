@@ -335,6 +335,8 @@ public class InformationCollectionFragment extends BaseFragment {
 					mRowkey = null;
 					mPoint = null;
 				}else{
+					mChatList.clear();
+					mPicList.clear();
 					mChatList=(ArrayList<ChatMessage>) message.getChatMessageList();
 				
 					mPicList=(ArrayList<PictureMessage>) message.getPictureMessageList();

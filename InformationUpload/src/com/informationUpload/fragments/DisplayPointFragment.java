@@ -16,6 +16,8 @@ import com.informationUpload.system.SystemConfig;
 import com.informationUpload.utils.ChangePointUtil;
 import com.informationUpload.widget.TitleView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -93,6 +95,12 @@ public class DisplayPointFragment extends BaseFragment{
 			}
 		});
 		return view;
+	}
+	@Override
+	public boolean onBackPressed() {
+		mMapManager.clear(true);
+		
+		return true;
 	}
 
 }
