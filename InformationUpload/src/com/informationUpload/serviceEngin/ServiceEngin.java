@@ -1,10 +1,12 @@
 package com.informationUpload.serviceEngin;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -56,6 +58,9 @@ public class ServiceEngin {
 	public final static int START_DOWNLOAD=6;
 	public final static int DOWNLOAD_FAIL=7;
 	
+	public final static int DOWNLOAD_CHAT_SUCCESS=8;
+	public final static int DOWNLOAD_PIC_SUCCESS=9;
+
 	private final static HttpUtils httputil = new HttpUtils();
 	private ProgressDialog pd;
 	private Context mContext;
@@ -247,14 +252,14 @@ public class ServiceEngin {
 
 				String resMsg = conn.getResponseMessage();
 
-				
-			
+
+
 				android.util.Log.e("url", url.toString());
 				if (res == 200) {
 					handler.sendEmptyMessage(UPLOAD_SUCCESS);
 					return SUCCESS;
 				}
-			
+
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -350,9 +355,9 @@ public class ServiceEngin {
 					result = "网络请求返回：" + res;
 				}
 
-			 
 
-			
+
+
 				android.util.Log.e("url", url.toString());
 				if (res == 200) {
 					Message msg = Message.obtain();
@@ -373,39 +378,145 @@ public class ServiceEngin {
 		msg.what=UPLOAD_FAILURE;
 		msg.obj=result;
 		handler.sendMessage(msg);
-	
+
 		return FAILURE;
 
 	}
-	 /**
-	  * 下载图片
-     * Get image from newwork
-     * @param path The path of image
-     * @return InputStream
-     * @throws Exception
-     */
-    public void getImageStream(String path,final Handler handler) throws Exception{
-    	
-        URL url = new URL(path);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setConnectTimeout(60 * 1000);
-        conn.setRequestMethod("GET");
-      
-        if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
-    
-        	 Bitmap bitmap = BitmapFactory.decodeStream(conn.getInputStream());
-        	final Message msg = Message.obtain();
-        	msg.what=ServiceEngin.DOWNLOAD_SUCCESS;
-        	msg.obj=bitmap;
+	/**
+	 * 下载图片
+	 * Get image from newwork
+	 * @param path The path of image
+	 * @return InputStream
+	 * @throws Exception
+	 */
+	public void getImageStream(String path,final Handler handler) throws Exception{
+
+		URL url = new URL(path);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setConnectTimeout(60 * 1000);
+		conn.setRequestMethod("GET");
+
+		if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+
+			Bitmap bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+			final Message msg = Message.obtain();
+			msg.what=ServiceEngin.DOWNLOAD_SUCCESS;
+			msg.obj=bitmap;
 			handler.sendMessage(msg);
-            
-        }else{
-        	handler.sendEmptyMessage(ServiceEngin.DOWNLOAD_FAIL);
-            
-        }
-      
-    }
+
+		}else{
+			handler.sendEmptyMessage(ServiceEngin.DOWNLOAD_FAIL);
+
+		}
+
+	}
+
+	/**
+	 * 下载文件
+	 * Get image from newwork
+	 * @param path The path of image
+	 * @return InputStream
+	 * @throws Exception
+	 */
+	public void getFileStream(String path,final Handler handler) throws Exception{
+
+		URL url = new URL(path);
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setConnectTimeout(60 * 1000);
+		conn.setRequestMethod("GET");
+
+		if(conn.getResponseCode() == HttpURLConnection.HTTP_OK){
+			android.util.Log.i("info","lujing:"+path.substring(path.lastIndexOf(".")+1));
+			if(path.substring(path.lastIndexOf(".")+1).equals("jpg")){
+				Bitmap bitmap = BitmapFactory.decodeStream(conn.getInputStream());
+				android.util.Log.i("info","piclujing:"+path.substring(path.lastIndexOf("/")+1,path.lastIndexOf(".")));
+				saveFileToPath(bitmap,path.substring(path.lastIndexOf("/"),path.lastIndexOf(".")),SystemConfig.DATA_PICTURE_PATH,handler);
+			}else if(path.substring(path.lastIndexOf(".")+1).equals("wav")){
+				android.util.Log.i("info","chatlujing:"+path.substring(path.lastIndexOf("/")+1,path.lastIndexOf(".")));
+				writeSDFromInput(SystemConfig.DATA_CHAT_PATH,path.substring(path.lastIndexOf("/")+1,path.lastIndexOf(".")),conn.getInputStream(),handler);
+			}
+			
 
 
+		}else{
+			handler.sendEmptyMessage(ServiceEngin.DOWNLOAD_FAIL);
 
+		}
+
+	}
+	/**  
+	 * 保存bitmap文件 到指定路径
+	 * @param bm  
+	 * @param fileName  
+	 * @throws IOException  
+	 */    
+	public void saveFileToPath(Bitmap bm, String fileName,String path,Handler handler) throws Exception{
+
+
+		File dirFile = new File(path);   
+
+		if(!dirFile.exists()){  
+
+			dirFile.mkdir();    
+		}    
+
+		File myCaptureFile = new File(path + fileName);   
+
+
+		BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(myCaptureFile));    
+		bm.compress(Bitmap.CompressFormat.JPEG,80, bos);    
+		bos.flush();    
+		bos.close(); 
+		final Message msg = Message.obtain();
+		msg.what=ServiceEngin.DOWNLOAD_PIC_SUCCESS;
+		msg.obj=path+fileName;
+		handler.sendMessage(msg);
+	}
+	/**
+	 * 将一个InputStream里面的数据写入到SD卡中
+	 */
+	public File writeSDFromInput(String path, String fileName,
+			InputStream input,Handler handler) {
+		File file = null;
+		OutputStream output = null;
+		try {
+			file=new File(path);
+			if(!file.exists()){
+				file.mkdirs();
+			}
+			file = new File(path,fileName);
+			output = new FileOutputStream(file);
+			byte buffer[] = new byte[4 * 1024];
+			// while ((input.read(buffer)) != -1) {
+				// output.write(buffer);
+				// }
+
+			while (true) {
+				int temp = input.read(buffer, 0, buffer.length);
+				if (temp == -1) {
+					break;
+				}
+				output.write(buffer, 0, temp);
+			}
+
+			output.flush();
+			final Message msg = Message.obtain();
+			msg.what=ServiceEngin.DOWNLOAD_CHAT_SUCCESS;
+			msg.obj=path+fileName;
+			handler.sendMessage(msg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				output.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return file;
+	}
 }
+
+
+
+

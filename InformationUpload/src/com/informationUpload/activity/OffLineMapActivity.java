@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -369,7 +370,9 @@ MKOfflineMapListener, OnClickListener {
 	public void clickCityListButton(View view) {
 
 		clButton.setBackgroundResource(R.drawable.main_leftbtn_off_xml);
+		clButton.setTextColor(Color.parseColor("#ffffff"));
 		localButton.setBackgroundResource(R.drawable.main_leftbtn_xml);
+		localButton.setTextColor(Color.parseColor("#ffa312"));
 		LinearLayout cl = (LinearLayout) findViewById(R.id.citylist_layout);
 		RelativeLayout lm = (RelativeLayout) findViewById(R.id.localmap_layout);
 		lm.setVisibility(View.GONE);
@@ -388,7 +391,9 @@ MKOfflineMapListener, OnClickListener {
 	public void clickLocalMapListButton(View view) {
 
 		clButton.setBackgroundResource(R.drawable.main_leftbtn_xml);
+		clButton.setTextColor(Color.parseColor("#ffa312"));
 		localButton.setBackgroundResource(R.drawable.main_rightbtn_off_xml);
+		localButton.setTextColor(Color.parseColor("#ffffff"));
 		LinearLayout cl = (LinearLayout) findViewById(R.id.citylist_layout);
 		RelativeLayout lm = (RelativeLayout) findViewById(R.id.localmap_layout);
 		lm.setVisibility(View.VISIBLE);
@@ -1147,6 +1152,7 @@ MKOfflineMapListener, OnClickListener {
 			TextView title = (TextView) view.findViewById(R.id.title);
 			TextView update = (TextView) view.findViewById(R.id.update);
 			TextView ratio = (TextView) view.findViewById(R.id.ratio);
+			ratio.setTextColor(Color.parseColor("#ffa312"));
 			ImageView suspend = (ImageView) view.findViewById(R.id.suspend);
 			if (isExpanded) {
 				suspend.setBackgroundResource(R.drawable.icon_poilist_down_arrow_select_up);
@@ -1311,6 +1317,7 @@ MKOfflineMapListener, OnClickListener {
 				holder.title.setText(mr.get(childPosition).cityName);
 				holder.size.setText(formatDataSize(mr.get(childPosition).size));
 				holder.status.setText("");
+				holder.status.setTextColor(Color.parseColor("#ffa312"));
 				holder.type_iv.setEnabled(true);
 				if (localMapList != null && localMapList.size() > 0) {
 
@@ -1427,7 +1434,7 @@ MKOfflineMapListener, OnClickListener {
 
 			holder.title.setText(mDatas.get(position).cityName);
 			holder.size.setText(formatDataSize(mDatas.get(position).size));
-
+            holder.status.setTextColor(Color.parseColor("#ffa312"));
 			final ArrayList<MKOLSearchRecord> mr = mDatas.get(position).childCities;
 			holder.type_iv.setEnabled(true);
 			if (mr != null && mr.size() > 0) {

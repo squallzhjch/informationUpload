@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="center_vertical">
- 
-        
-         <LinearLayout
+    android:layout_gravity="center_vertical"
+    android:orientation="horizontal" >
+
+    <LinearLayout
         android:id="@+id/user_track_ll"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -15,49 +14,50 @@
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
-        <TextView android:id="@+id/title" 
+        <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="fdsfdsf"
             android:textColor="@drawable/default_font_color_xml"
-            android:textSize="15dip" 
-            android:layout_marginLeft="10dp"
-            android:text="fdsfdsf"/>
-        
-      
-          
-           <TextView android:id="@+id/status" 
+            android:textSize="15dip" />
+
+        <TextView
+            android:id="@+id/status"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:textSize="15dip" 
-            android:textColor="@android:color/holo_red_light"
             android:layout_marginLeft="10dp"
-            android:text=""/>
+            android:text=""
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="15dip" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:gravity="right" >
-            
-            <TextView android:id="@+id/size" 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:layout_gravity="center_vertical"
-            android:textColor="@drawable/black_font_color_xml"
-            android:textSize="15dip" 
-            android:layout_marginLeft="10dp"
-            android:text=""/>
+            android:gravity="right|center_vertical" >
+
+            <TextView
+                android:id="@+id/size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+              
+                android:layout_marginLeft="10dp"
+                android:text=""
+                android:textColor="@drawable/black_font_color_xml"
+                android:textSize="15dip" />
 
             <ImageView
                 android:id="@+id/statusView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                
                 android:layout_marginLeft="2dp"
+                android:layout_marginRight="10dp"
                 android:background="@drawable/offmap_downloadbtn_xml" />
         </LinearLayout>
     </LinearLayout>
- 
-    
+
 </LinearLayout>

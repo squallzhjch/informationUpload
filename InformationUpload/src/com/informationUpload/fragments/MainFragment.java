@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,6 +33,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -153,6 +155,14 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
 	 * 屏幕高度
 	 */
 	private int height;
+	/**
+	 * 地图状态
+	 */
+	private MapStatus s;
+	/**
+	 * json解析数据location
+	 */
+	private JSONObject locationObj;
 
 
     @Override
@@ -166,6 +176,8 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
         width=  getActivity().getWindowManager().getDefaultDisplay().getWidth();
         height=  getActivity().getWindowManager().getDefaultDisplay().getHeight();
         mMapManager = MapManager.getInstance();
+       
+        
         LocationManager.getInstance().addOnLocationListener(this);
         mMengView = view.findViewById(R.id.meng_view);
         
@@ -201,8 +213,11 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
 
             @Override
             public void onClick(View arg0) {
+            	  s = mMapManager.getMap().getMapStatus();
+                  double lat = s.target.latitude;
+                  double lon = s.target.longitude;
                 //刷新码点
-                refreshMap(true);
+                refreshMap(true,new GeoPoint(lat,lon));
             }
         });
 
@@ -245,11 +260,15 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
      * bLoading : 是否显示loading动画
      */
 
-    protected void refreshMap(boolean bLoading) {
+    protected void refreshMap(boolean bLoading,GeoPoint gp) {
+    	
         HashMap<String,Object> map=new HashMap<String, Object>();
-        double[] ret = ChangePointUtil.baidutoreal(mLocationManager.getCurrentPoint().getLat(),mLocationManager.getCurrentPoint().getLon());
-        map.put("latitude",(ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+5));
-        map.put("longitude",(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+5));
+        double[] ret = ChangePointUtil.baidutoreal(gp.getLat(),gp.getLon());
+        Log.i("info","ret[0]:"+ (ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+6));
+        Log.i("info", "ret[1]:"+(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+6));
+        map.put("latitude",(ret[0]+"").substring(0,(ret[0]+"").lastIndexOf(".")+6));
+        map.put("longitude",(ret[1]+"").substring(0,(ret[1]+"").lastIndexOf(".")+6));
+      
 
         ServiceEngin.getInstance().Request(getActivity(), map, "inforquery", new EnginCallback(getActivity(), bLoading) {
             @Override
@@ -289,20 +308,26 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
                 String name=obj.getString("name");
                 String info_intel_id = obj.getString("info_intel_id");
                 String address = obj.getString("address");
-                JSONObject locationObj = obj.getJSONObject("location");
-                String latitude = locationObj.getString("latitude");
-                String longitude = locationObj.getString("longitude");
-                double[] ret_pos = ChangePointUtil.realtobaidu(Double.parseDouble(latitude),Double.parseDouble(longitude));
-                GeoPoint gp=new GeoPoint(ret_pos[0],ret_pos[1]);
+                 locationObj = obj.getJSONObject("location");
+//                if(locationObj!=null){
+                    String latitude = locationObj.getString("latitude");
+                    String longitude = locationObj.getString("longitude");
+                    double[] ret_pos = ChangePointUtil.realtobaidu(Double.parseDouble(latitude),Double.parseDouble(longitude));
+                    GeoPoint gp=new GeoPoint(ret_pos[0],ret_pos[1]);
 
-                AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp,name);
-                list.add(aioformation);
+                    AroundInformation aioformation = new AroundInformation(info_intel_id,info_type,address,gp,name);
+                    list.add(aioformation);
+//                }
+            
  
             }
             if(mMapManager != null && mMapManager.getMap() != null)
                 mMapManager.clear(true);
-            //在地图上添加覆盖物
-            initOverlay(list);
+//            if(locationObj!=null){
+            	//在地图上添加覆盖物
+                initOverlay(list);
+//            }
+            
         }else{
             Toast.makeText(getActivity(),errmsg,Toast.LENGTH_SHORT).show();
         }
@@ -546,16 +571,21 @@ public class MainFragment extends BaseFragment implements LocationManager.OnLoca
             return;
         long time = System.currentTimeMillis();
 
+        
+      
+        
 //        double dis = mMapManager.getDistance(mLastLocationPoint, location);
         if(
                 mLastLocationTime == 0 ||
-                mLastLocationPoint == null ||
-                (mMapManager.getDistance(mLastLocationPoint, location) > 500 &&
-                 time - mLastLocationTime > 1 * 1000 * 60 )
+                mLastLocationPoint == null 
                 ){
             mLastLocationPoint = location;
             mLastLocationTime = time;
-            refreshMap(false);
+     
+				 refreshMap(false,location);
+				
+		
+           
         }
     }
 }

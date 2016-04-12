@@ -30,7 +30,7 @@ public class SystemConfig {
 
 	//就地释放
 	public static String FREE_FRAGMENT = "fragment_free";
-
+    
 	/**
 	 * fragment 接收消息的类别
 	 */
@@ -41,6 +41,7 @@ public class SystemConfig {
 	 * Bundle 传值
 	 */
 	//传递ROWKEY 显示相应的数据
+	public static String BUNDLE_DATA_LIST_POSITION="bundle_data_list_position";
 	public static String BUNDLE_DATA_SOURCE="bundle_data_source";
 	public static String BUNDLE_DATA_ROWKEY = "bundle_data_rowkey";
 	public static String BUNDLE_DATA_PICTURE_NUM = "bundle_data_picture_num";
@@ -70,4 +71,10 @@ public class SystemConfig {
 
 	//网络状态变化
 	public static final String NET_WORK_STATE="NetWorkState";
+	//验证码
+	public static final String VERIFICATION_CODE="verification_code";
+	//注册获取验证码
+	public static final String GET_VERIFICATION_CODE="get_verification_code";
+	//找回密码获取验证码
+	public static final String FINDPASSWORD_VERIFICATION_CODE="findpassword_verification_code";
 }
