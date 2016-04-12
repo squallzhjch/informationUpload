@@ -142,10 +142,16 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	private int e;
 	private int k;
 	private SubmitInformation subinfo;
+	/**
+	 * 下载图片跟语音进度条
+	 */
+	private ProgressDialog pb;
+//	private int count =0;
 	Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case ServiceEngin.DOWNLOAD_CHAT_SUCCESS:
+//				count++;
 				String chat_path=(String) msg.obj;
 				list_chat_path.add(chat_path);
 				if(list_chat_path.size()==chatList.size()){
@@ -156,8 +162,13 @@ public class InformationCollectionFragment2 extends BaseFragment {
 				adapter = new ChatAdapter(getActivity(),null, chatList);
 				resetListView();
 				voice_collection_lv.setAdapter(adapter);
+//				if(count==2){
+					pb.dismiss();
+//					count=0;
+//				}
 				break;
 			case ServiceEngin.DOWNLOAD_PIC_SUCCESS:
+//				count++;
 				String pic_path=(String) msg.obj;
 				list_pic_path.add(pic_path);
 				if(list_pic_path.size()==picList.size()){
@@ -166,10 +177,20 @@ public class InformationCollectionFragment2 extends BaseFragment {
 					}
 					queryinit();
 				}
+//				if(count==2){
+					pb.dismiss();
+//					count=0;
+//				}
+				break;
+			case ServiceEngin.DOWNLOAD_FAIL:
+//				count=0;
+				pb.dismiss();
+				Toast.makeText(getActivity(), "下载失败！",Toast.LENGTH_LONG).show();
 				break;
 			}
 		}
 	};
+
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -217,20 +238,20 @@ public class InformationCollectionFragment2 extends BaseFragment {
 			Log.i("info","geti lujing:"+picList.get(i).getPath());
 			imageView.setImageURI(Uri.fromFile(new File(picList.get(i).getPath())));
 			imageView.setTag(i);
-			ImageView iv_delete = new ImageView(getActivity());
-
-			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
-			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-			lp_del.setMargins(2,2,5,2);
-
-			iv_delete.setLayoutParams(lp_del);
-			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
-			iv_delete.setBackgroundResource(R.drawable.delete_item);
+//			ImageView iv_delete = new ImageView(getActivity());
+//
+//			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+//
+//			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
+//			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
+//			lp_del.setMargins(2,2,5,2);
+//
+//			iv_delete.setLayoutParams(lp_del);
+//			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
+//			iv_delete.setBackgroundResource(R.drawable.delete_item);
 		
 			rl.addView(imageView);
-			rl.addView(iv_delete);
+//			rl.addView(iv_delete);
 			
 			rl.setTag(listview.size());       
 			hlinearlayout.addView(rl, 0);
@@ -276,6 +297,14 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	private void init() {
 		listview = new ArrayList<View>();
 		title_back = (RelativeLayout) view.findViewById(R.id.information_collect_back2);
+		title_back.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.back();
+				
+			}	
+		});
 		delete_photo=(TextView)view.findViewById(R.id.delete_photo2);
 		select_position_again=(TextView)view.findViewById(R.id.select_position_again2);
 		isv=    (InnerScrollView)     view.findViewById(R.id.isv2);
@@ -449,6 +478,10 @@ public class InformationCollectionFragment2 extends BaseFragment {
 					message.setRowkey(info_fid);
 
 				}
+				pb=new ProgressDialog(getActivity());
+				pb.setMessage("正在下载图片跟语音");
+				pb.setCancelable(false);
+				pb.show();
 				for(int f=0;f<picList.size();f++){
 					    e=f; 
 						new Thread(new Runnable() {
