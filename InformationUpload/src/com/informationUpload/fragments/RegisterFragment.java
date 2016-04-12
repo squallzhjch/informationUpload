@@ -50,11 +50,6 @@ import com.informationUpload.tool.StringTool;
 import com.informationUpload.utils.StringUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
-import com.taobao.api.ApiException;
-import com.taobao.api.DefaultTaobaoClient;
-import com.taobao.api.TaobaoClient;
-import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
-import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 
 
 /**
@@ -443,8 +438,8 @@ public class RegisterFragment extends BaseFragment {
 
     	
     	
-    	HttpClient client = new HttpClient(); 
-		PostMethod method = new PostMethod(Url); 
+    	HttpClient client = new HttpClient();
+		PostMethod method = new PostMethod(Url);
 			
 		//client.getParams().setContentCharset("GBK");		
 		client.getParams().setContentCharset("UTF-8");
