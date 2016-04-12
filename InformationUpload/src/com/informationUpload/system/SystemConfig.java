@@ -12,11 +12,6 @@ import android.support.v4.os.EnvironmentCompat;
  */
 public class SystemConfig {
 
-	//    	public static String REQUEST_URL = "http://172.23.44.11:8081/infor/information/";
-	//  public static String REQUEST_URL = "http://192.168.3.155:8083/infor/information/";
-	public static String REQUEST_URL = "http://fs.navinfo.com/infor/information/";
-//    public static String REQUEST_URL ="http://192.168.4.189/infor/information/";
-
 	public static String DATA_BASE_PATH = Environment
 			.getExternalStorageDirectory() + "/InformationUpload/";
 
@@ -36,7 +31,8 @@ public class SystemConfig {
 	 */
 	// 地图选点 返回坐标和地址
 	public static String FRAGMENT_UPDATE_SELECT_POINT_ADDRESS = "fragment_update_select_point_address";
-
+    //修改昵称返回昵称
+	public static String MODIFY_USERNAME="modify_username";
 	/**
 	 * Bundle 传值
 	 */
@@ -53,9 +49,16 @@ public class SystemConfig {
 	public static String BUNDLE_DATA_TYPE="bundle_data_type";
 
 	public static String BUNDLE_DATA_LOGIN_OUT = "bundle_data_login_out";
+    public  static String MAIN_URL="http://fs.navinfo.com/";
+	//  public static String REQUEST_URL = "http://172.23.125.202:8081/infor/information/";
+	//  public static String REQUEST_URL = "http://192.168.3.155:8083/infor/information/";
+	
+	public static String REQUEST_URL = MAIN_URL+"infor/information/";
+	//	public static String REQUEST_URL ="http://192.168.4.63:8098/infor/information/";
 
-
-	 /*解压过程中的消息
+//	public static String REQUEST_URL ="http://192.168.4.189:/infor/information/";
+	/**
+	 *解压过程中的消息
 	 */
 	public static final int MSG_TASK_GET_DATA_UNZIP_START = 3120;
 	public static final int MSG_TASK_GET_DATA_UNZIP_FAILED = 3121;

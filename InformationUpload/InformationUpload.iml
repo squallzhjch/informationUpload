@@ -90,18 +90,22 @@
     <orderEntry type="jdk" jdkName="Android API 18 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
+    <orderEntry type="library" exported="" name="commons-codec-1.3" level="project" />
+    <orderEntry type="library" exported="" name="dom4j-1.6.1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_cloud_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="Msc" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_radar_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging-1.0.4" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_base_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="fastjson-1.1.31" level="project" />
+    <orderEntry type="library" exported="" name="baidumapapi_util_v3_6_1" level="project" />
+    <orderEntry type="library" exported="" name="locSDK_6.13" level="project" />
+    <orderEntry type="library" exported="" name="commons-httpclient-3.0-rc4" level="project" />
     <orderEntry type="library" exported="" name="umeng-analytics-v5.6.4" level="project" />
     <orderEntry type="library" exported="" name="xUtils-2.6.14" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_map_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="baidumapapi_search_v3_6_1" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_base_v3_6_1" level="project" />
-    <orderEntry type="library" exported="" name="fastjson-1.1.31" level="project" />
     <orderEntry type="library" exported="" name="umeng-update-v2.6.0.1" level="project" />
-    <orderEntry type="library" exported="" name="baidumapapi_util_v3_6_1" level="project" />
     <orderEntry type="library" exported="" name="Sunflower" level="project" />
-    <orderEntry type="library" exported="" name="locSDK_6.13" level="project" />
   </component>
 </module>

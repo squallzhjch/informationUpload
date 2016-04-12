@@ -124,7 +124,7 @@ public class ServiceEngin {
 
 			// 参数拼接
 			RequestParams params = new RequestParams();
-			String url = SystemConfig.REQUEST_URL +serviceName + "/";
+			String url = SystemConfig.REQUEST_URL +serviceName + "?";
 			Iterator iter = map.entrySet().iterator();
 			while (iter.hasNext()) {
 				Map.Entry entry = (Map.Entry) iter.next();
@@ -202,6 +202,7 @@ public class ServiceEngin {
 				 * 当文件不为空，把文件包装并且上传
 				 */
 				OutputStream outputSteam = conn.getOutputStream();
+
 				DataOutputStream dos = new DataOutputStream(outputSteam);
 				StringBuffer sb = new StringBuffer();
 				sb.append(PREFIX);

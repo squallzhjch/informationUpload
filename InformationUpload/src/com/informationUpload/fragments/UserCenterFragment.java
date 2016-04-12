@@ -1,10 +1,13 @@
 package com.informationUpload.fragments;
 
 import java.io.File;
+import java.util.List;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +20,9 @@ import android.widget.Toast;
 
 import com.informationUpload.R;
 import com.informationUpload.activity.OffLineMapActivity;
+import com.informationUpload.contents.AbstractOnContentUpdateListener;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.map.GeoPoint;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.system.LoginHelper;
 import com.informationUpload.tool.StringTool;
@@ -88,8 +93,46 @@ public class UserCenterFragment extends BaseFragment{
 	 * 下一步进入修改昵称界面
 	 */
 	private RelativeLayout mRlHeadNext;
+	/**
+	 * 进入个人资料的relativelayout
+	 */
+	private RelativeLayout mRlHead;
+	/**
+	 * 昵称显示textview
+	 */
+	private TextView mTvName;
+	private String userName;
 
-
+    @Override
+    public void onAttach(Activity activity) {
+    	// TODO Auto-generated method stub
+    	super.onAttach(activity);
+    	registerOnContentUpdateListener(new AbstractOnContentUpdateListener() {
+			
+			@Override
+			public void onContentUpdated(List<Object[]> values) {
+				Log.i("info","values:"+values.get(0)[0]);
+				if (values != null) {
+						userName = (String) values.get(0)[0];
+						
+						if(mTvName!=null&&userName!=null&&!userName.equals("")){
+							mTvName.setText("我的名字:"+userName);
+							
+						}else{
+							mTvName.setText("我的名字:昵称");
+						}						
+				}
+			}
+			@Override
+			public boolean isActive() {
+				return mIsActive;
+			}
+			@Override
+			public String getKey() {
+				return SystemConfig.MODIFY_USERNAME;
+			}
+		});
+    }
 	@Override
 	public void onDataChange(Bundle bundle) {
 		if(!ConfigManager.getInstance().isLogin()){
@@ -114,6 +157,7 @@ public class UserCenterFragment extends BaseFragment{
 	private void init() {
 		mExitLogin     =(Button) view.findViewById(R.id.exit_login);
 		mPersonData = (ImageView) view.findViewById(R.id.iv_head);
+		 mRlHead= (RelativeLayout) view.findViewById(R.id.rl_head);
 		mRecordLayout = (RelativeLayout) view.findViewById(R.id.report_record);
 		mMyRecordLayout = (RelativeLayout) view.findViewById(R.id.my_record);
 
@@ -129,11 +173,18 @@ public class UserCenterFragment extends BaseFragment{
 		mBack=(RelativeLayout)view.findViewById(R.id.back);
 		mTvAccount     = (TextView) view.findViewById(R.id.tv_account);
 		mIvHeadNext   =  (ImageView) view.findViewById(R.id.iv_head_next);
-		 mRlHeadNext           =      (RelativeLayout) view.findViewById(R.id.rl_head_next);
+		 mRlHeadNext   =   (RelativeLayout) view.findViewById(R.id.rl_head_next);
+		  mTvName   =    (TextView)view.findViewById(R.id.tv_name);
 		 String tel = ConfigManager.getInstance().getUserTel();
 		 if(null!=tel&&!"".equals(tel)){
 			 mTvAccount.setText("账号:"+tel);
 		 }
+		 String userName = ConfigManager.getInstance().getUserName();
+			if(null!=userName&&!"".equals(userName)){
+		       mTvName.setText("我的名字:"+userName);
+			}else{
+				mTvName.setText("我的名字:昵称");
+			}
 	}
 	/**
 	 * 注册监听器
@@ -179,6 +230,15 @@ public class UserCenterFragment extends BaseFragment{
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.back();
+			}
+		});
+		//进入个人资料界面按钮
+		mRlHead.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+				
 			}
 		});
 		//个人资料
