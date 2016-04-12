@@ -8,10 +8,12 @@ import java.util.List;
 import com.informationUpload.R;
 import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.system.SystemConfig;
+import com.informationUpload.widget.ZoomImageView;
 
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -23,6 +25,8 @@ import android.view.ViewGroup;
 
 
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 /**
  * 点击图片，可放大，可删除界面
@@ -48,18 +52,18 @@ public class PhotoViewpagerFragment extends BaseFragment{
 	 * 点击哪个图片
 	 */
 	private int position;
-	
-	  @Override
-	    public void onAttach(Activity activity) {
-		  super.onAttach(activity);
-		  Bundle arg = getArguments();
-		  if(arg != null){
-			  position=arg.getInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM);
-			  
-			  listViews=(ArrayList<PictureMessage>) arg.getSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST);
-		  }
-	
-	  }
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		Bundle arg = getArguments();
+		if(arg != null){
+			position=arg.getInt(SystemConfig.BUNDLE_DATA_PICTURE_NUM);
+
+			listViews=(ArrayList<PictureMessage>) arg.getSerializable(SystemConfig.BUNDLE_DATA_PICTURE_LIST);
+		}
+
+	}
 
 	@Override
 	public void onDataChange(Bundle bundle) {
@@ -77,8 +81,8 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		adapter = new MyPageAdapter(listViews);// 构造adapter
 		pager.setAdapter(adapter);// 设置适配器
-	
-		
+
+
 		pager.setCurrentItem(position);
 		return view;
 	}
@@ -105,10 +109,10 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		private int size;// 页数
 
-		private ImageView iv;
+		private ZoomImageView iv;
 
 		public MyPageAdapter(ArrayList<PictureMessage> listViews) {// 构造函数
-															// 初始化viewpager的时候给的一个页面
+			// 初始化viewpager的时候给的一个页面
 			this.listViews = listViews;
 			size = listViews == null ? 0 : listViews.size();
 		}
@@ -127,11 +131,15 @@ public class PhotoViewpagerFragment extends BaseFragment{
 		}
 
 		public void destroyItem(View arg0, int arg1, Object arg2) {// 销毁view对象
-			ImageView iv=new ImageView(getActivity());
-			
-			Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
-			iv.setImageURI(uri);
-//			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
+			ZoomImageView iv=new ZoomImageView(getActivity());
+			int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+			int height = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+			//			Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
+			Bitmap bp = BitmapFactory.decodeFile(listViews.get(arg1 % size).getPath());
+			 Bitmap bp_big = Bitmap.createScaledBitmap(bp, width, height/6*5, true);
+			iv.setImageBitmap(bp_big);
+			//			iv.setImageURI(uri);
+			//			((ViewPager) arg0).removeView(listViews.get(arg1 % size));
 			((ViewPager) arg0).removeView(iv);
 		}
 
@@ -140,15 +148,21 @@ public class PhotoViewpagerFragment extends BaseFragment{
 
 		public Object instantiateItem(View arg0, int arg1) {// 返回view对象
 			try {
-				 iv=new ImageView(getActivity());
-				Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
-				iv.setImageURI(uri);
-//				((ViewPager) arg0).addView(listViews.get(arg1 % size), 0);
+				iv=new ZoomImageView(getActivity());
+				int width = getActivity().getWindowManager().getDefaultDisplay().getWidth();
+				int height = getActivity().getWindowManager().getDefaultDisplay().getHeight();
+			
+				//				Uri uri = Uri.fromFile(new File(listViews.get(arg1 % size).getPath()));
+				Bitmap bp = BitmapFactory.decodeFile(listViews.get(arg1 % size).getPath());
+			    Bitmap bp_big = Bitmap.createScaledBitmap(bp, width, height/6*5, true);
+				//				iv.setImageURI(uri);
+				iv.setImageBitmap(bp_big);
+				//				((ViewPager) arg0).addView(listViews.get(arg1 % size), 0);
 				((ViewPager) arg0).addView(iv, 0);
 
 			} catch (Exception e) {
 			}
-//			return listViews.get(arg1 % size);
+			//			return listViews.get(arg1 % size);
 			return iv;
 		}
 

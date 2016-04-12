@@ -148,7 +148,7 @@ public class UserCenterFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
-//				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
+				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(PersonDataFragment.class, null));
 
 			}
 		});

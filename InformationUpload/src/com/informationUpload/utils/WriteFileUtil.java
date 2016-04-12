@@ -31,7 +31,7 @@ public class WriteFileUtil {
 		try{
 			//创建字符流
 			fw = new FileWriter(path+"poi.txt");
-			Log.i("chentao","fw:"+path+"poi.txt");
+			
 			//封装字符流的过滤流
 			pw = new PrintWriter(fw);
 			//文件写入

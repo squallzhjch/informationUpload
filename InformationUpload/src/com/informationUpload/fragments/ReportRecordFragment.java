@@ -56,6 +56,7 @@ import com.informationUpload.entity.PictureMessage;
 import com.informationUpload.entity.attachmentsMessage;
 import com.informationUpload.entity.locationMessage;
 import com.informationUpload.fragments.utils.IntentHelper;
+import com.informationUpload.serviceEngin.EnginCallback;
 import com.informationUpload.serviceEngin.ServiceEngin;
 import com.informationUpload.system.ConfigManager;
 import com.informationUpload.thread.ThreadManager;
@@ -64,6 +65,8 @@ import com.informationUpload.system.SystemConfig;
 import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.informationUpload.widget.TitleView;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.ResponseInfo;
 
 /**
  * @author zhjch
@@ -142,7 +145,7 @@ public class ReportRecordFragment extends BaseFragment{
 	/**
 	 * 文档保存的文件路径
 	 */
-	private static String 	path = Environment
+	private static String path = Environment
 			.getExternalStorageDirectory()+"/InformationUpload/Upload/";
 	/**
 	 * 上传文件全名
@@ -156,7 +159,7 @@ public class ReportRecordFragment extends BaseFragment{
 
 					@Override
 					public void run() {
-						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler);
+						ServiceEngin.getInstance().uploadFile(new File(path_all_name), handler,"inforimp");
 
 					}
 				}).start();
@@ -165,36 +168,36 @@ public class ReportRecordFragment extends BaseFragment{
 			case 1:
 				pb.dismiss();
 				Toast.makeText(getActivity(),"压缩失败", Toast.LENGTH_SHORT).show();
-				Log.i("chentao","uploadFile:"+"压缩失败");
+			
 				break;
 			case 2:
 				pb.dismiss();
 				for(int i=0;i<rowkeys.size();i++){
-				ContentValues values = new ContentValues();
-				values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
-				mInformationManager.updateInformation(rowkeys.get(i),values);
+					ContentValues values = new ContentValues();
+					values.put(Informations.Information.STATUS, Informations.Information.STATUS_SERVER);
+					mInformationManager.updateInformation(rowkeys.get(i),values);
 				}
 				if(rowkeys!=null){
 					rowkeys.clear();
 				}
-                final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
+				final Toast toast=Toast.makeText(getActivity(),"上传成功",300);
 				toast.show();
-                
-//				  handler.postDelayed(new Runnable() {
-//						
-//						@Override
-//						public void run() {
-//							toast.cancel();
-//							mFragmentManager.back();
-//							
-//						}
-//					}, 600);
+
+				//				  handler.postDelayed(new Runnable() {
+				//						
+				//						@Override
+				//						public void run() {
+				//							toast.cancel();
+				//							mFragmentManager.back();
+				//							
+				//						}
+				//					}, 600);
 				break;
 			case 3:	
 				pb.dismiss();
 				Toast.makeText(getActivity(),"上传失败", Toast.LENGTH_SHORT).show();
 				break;
-			
+
 			}
 		}
 	};
@@ -279,16 +282,15 @@ public class ReportRecordFragment extends BaseFragment{
 							double[] ret = ChangePointUtil.baidutoreal(infomessage.getLat(), infomessage.getLon());
 							map.put("location", new locationMessage((float)ret[0],(float)ret[1]));
 							map.put("info_type",infomessage.getType());
-							Log.i("chentao","adminCode:"+infomessage.getAdminCode());
-							Log.i("chentao","address:"+infomessage.getAddress());
+						
 							map.put("adminCode",infomessage.getAdminCode());
 							map.put("address",infomessage.getAddress());
-							
+
 							List<ChatMessage> chatmsglist = infomessage.getChatMessageList();
 							List<PictureMessage> picmsglist = infomessage.getPictureMessageList();
 							for(int m=0;m<chatmsglist.size();m++){
 								ChatMessage chatmsg = chatmsglist.get(m);
-								Log.i("chentao","chatmsg:"+chatmsg.getPath());
+							
 								double[] ret_chat = ChangePointUtil.baidutoreal(chatmsg.getLat(),chatmsg.getLon());
 								list_att.add(new attachmentsMessage(1,chatmsg.getPath().substring(chatmsg.getPath().lastIndexOf("/")+1, chatmsg.getPath().length()),
 										df.format(chatmsg.getTime()),chatmsg.getRemark(),new locationMessage((float)ret_chat[0],(float)ret_chat[1])));
@@ -302,11 +304,11 @@ public class ReportRecordFragment extends BaseFragment{
 							map.put("attachments",list_att);
 
 							map.put("operateDate",df.format(infomessage.getTime()));
-							
+
 							map.put("user_id",ConfigManager.getInstance().getUserId());
 							map.put("remark", infomessage.getRemark());
 							servicePara = JSON.toJSONString(map);
-							Log.i("chentao",servicePara.toString());
+							
 							list_servicepara.add(servicePara);
 						}
 						WriteFileUtil.doWriteFile(list_servicepara);
@@ -322,9 +324,9 @@ public class ReportRecordFragment extends BaseFragment{
 								try {
 									ArrayList<String> listall=new ArrayList<String>();
 									for(int h=0;h<list_att.size();h++){
-										Log.i("chentao","h:"+list_att.get(h).getUrl());
+										
 										if(list_att.get(h).getType()==1){
-											Log.i("chentao","hurl:"+path_chat+list_att.get(h).getUrl());
+										
 											listall.add(path_chat+list_att.get(h).getUrl());
 										}else if(list_att.get(h).getType()==0){
 											listall.add(path_pic+list_att.get(h).getUrl());
@@ -337,12 +339,12 @@ public class ReportRecordFragment extends BaseFragment{
 
 
 									handler.sendEmptyMessage(0);
-									Log.i("chentao", "压缩成功");
+								
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 									handler.sendEmptyMessage(1);
-									Log.i("chentao", "压缩失败");
+									
 								}
 
 							}
@@ -352,7 +354,7 @@ public class ReportRecordFragment extends BaseFragment{
 				}else{
 					Toast.makeText(getActivity(),"此项是已提交数据，请勿重复提交，谢谢！",Toast.LENGTH_LONG).show();
 				}
-			
+
 			}
 		});
 		//待提交
@@ -376,6 +378,25 @@ public class ReportRecordFragment extends BaseFragment{
 
 			@Override
 			public void onClick(View arg0) {
+//				HashMap<String,Object> map=new HashMap<String, Object>();
+//
+//				map.put("userid",ConfigManager.getInstance().getUserId());
+//				Log.i("chentao","userid:"+ConfigManager.getInstance().getUserId());
+//				ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryuserworklist", new EnginCallback(getActivity()){
+//					@Override
+//					public void onSuccess(ResponseInfo arg0) {
+//						super.onSuccess(arg0);
+//						Log.e("请求成功", arg0.result.toString());
+//					}
+//					@Override
+//					public void onFailure(HttpException arg0, String arg1) {
+//						super.onFailure(arg0, arg1);
+//					}
+//
+//				});
+//				query();
+//				modify();
+				queryrepeat();
 				mTvDeleteItem.setVisibility(View.INVISIBLE);
 				mSubmit.setVisibility(View.INVISIBLE);
 				LayoutParams lp = new LinearLayout.LayoutParams(0,8,1);
@@ -385,8 +406,8 @@ public class ReportRecordFragment extends BaseFragment{
 				select_all.setVisibility(View.INVISIBLE);
 				bsubmit=false;
 
-				mListView.setAdapter(mServiceAdapter);
-                    
+				//				mListView.setAdapter(mServiceAdapter);
+
 			}
 		});
 
@@ -444,7 +465,7 @@ public class ReportRecordFragment extends BaseFragment{
 				LocalInformationAdapter.ORDER_BY
 				), false,"server");
 		for( int i=0;i<mLocalAdapter.getCount();i++){
-			Log.i("chentao",":"+i);
+			
 			set(i,false);
 
 		}
@@ -577,7 +598,62 @@ public class ReportRecordFragment extends BaseFragment{
 	public static Boolean get(Integer po){
 		return map.get(po);
 	}
+	//10.情报数据提交任务信息查询接口
+	public void query( ){
+        HashMap<String,Object> map=new HashMap<String, Object>();
+        map.put("info_fid","5f7bbc7b3efa449b9cd6deb625c0d6e4");
+		ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryworkbyid", new EnginCallback(getActivity()){
+			@Override
+			public void onSuccess(ResponseInfo arg0) {
+				// TODO Auto-generated method stub
+				super.onSuccess(arg0);
+				Log.e("请求成功", arg0.result.toString());
+			}
+			@Override
+			public void onFailure(HttpException arg0, String arg1) {
+				// TODO Auto-generated method stub
+				super.onFailure(arg0, arg1);
+			}
+		});
 
-
+	}
+	//11.情报用户信息修改接口
+    public void modify(){
+    	HashMap<String,Object> map=new HashMap<String, Object>();
+    	map.put("userid",ConfigManager.getInstance().getUserId());
+    	map.put("pwd","444444");
+//    	map.put("nickname","fchen");
+    	ServiceEngin.getInstance().Request(getActivity(), map,"informodifyuserinfo",new EnginCallback(getActivity()){
+    		@Override
+    		public void onSuccess(ResponseInfo arg0) {
+    			// TODO Auto-generated method stub
+    			super.onSuccess(arg0);
+    		
+    		}
+    		@Override
+    		public void onFailure(HttpException arg0, String arg1) {
+    			// TODO Auto-generated method stub
+    			super.onFailure(arg0, arg1);
+    		}
+    	});
+    }
+    //12.情报用户查重接口
+    public void queryrepeat(){
+    	HashMap<String,Object> map=new HashMap<String, Object>();
+    	map.put("tel","18611062750");
+    	ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryuserexit",new EnginCallback(getActivity()){
+    		@Override
+    		public void onSuccess(ResponseInfo arg0) {
+    			// TODO Auto-generated method stub
+    			super.onSuccess(arg0);
+    			Log.e("请求成功", arg0.result.toString());
+    		}
+    		@Override
+    		public void onFailure(HttpException arg0, String arg1) {
+    			// TODO Auto-generated method stub
+    			super.onFailure(arg0, arg1);
+    		}
+    	});
+    }
 
 }

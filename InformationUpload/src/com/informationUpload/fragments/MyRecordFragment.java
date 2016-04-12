@@ -69,7 +69,7 @@ public class MyRecordFragment extends BaseFragment {
 		HashMap<String,Object> map=new HashMap<String, Object>();
 		
 		//		map.put("userid", userName);
-		Log.i("chentao",""+"userid:"+ConfigManager.getInstance().getUserId());
+	
 		map.put("userid", ConfigManager.getInstance().getUserId());
 		ServiceEngin.getInstance().Request(getActivity(), map, "inforcount", new EnginCallback(getActivity()) {
 			@Override

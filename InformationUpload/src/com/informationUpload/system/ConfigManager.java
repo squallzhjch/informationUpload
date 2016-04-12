@@ -1,5 +1,7 @@
 package com.informationUpload.system;
 
+
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -75,4 +77,20 @@ public class ConfigManager {
     public void setLogin(boolean b){
         mSharePre.edit().putBoolean("is_login", b).commit();
     }
+    
+    
+    public void setEditionTime(String editiontime){
+    	mSharePre.edit().putString("edition_time",editiontime).commit();
+    }
+    
+    public String getEditionTime(){
+    	return mSharePre.getString("edition_time","");
+    }
+    public void setJpgPath(String jpgpath){
+    	mSharePre.edit().putString("jpg_path",jpgpath).commit();
+    }
+    public String getJpgPath(){
+       return mSharePre.getString("jpg_path","");
+    }
+    
 }
