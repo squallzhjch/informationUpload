@@ -271,7 +271,7 @@ public class PersonDataFragment extends BaseFragment{
 	   
 		InputStream is = getResources().openRawResource(R.drawable.headshot);  
 
-	    initBitmap = BitmapFactory.decodeStream(is);
+	    initBitmap = BitmapFactory.decodeStream(is);		
 	
 		IvHead = (ImageView) view.findViewById(R.id.iv_head);
 		IvHead.setImageBitmap(initBitmap);
