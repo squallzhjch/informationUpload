@@ -17,8 +17,9 @@
             android:layout_margin="5dp"
             android:text="查看地图"
             android:layout_weight="1"
+            android:padding="5dp"
             android:background="@drawable/main_btn_xml"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
             
             <Button
             android:id="@+id/start_download"
@@ -27,8 +28,9 @@
             android:layout_margin="5dp"
             android:text="开始下载"
             android:layout_weight="1"
+            android:padding="5dp"
             android:background="@drawable/main_btn_xml"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
                     
             
             <Button
@@ -37,9 +39,10 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:text="删除"
+            android:padding="5dp"
                android:layout_weight="1"
             android:background="@drawable/main_btn_xml"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
            
            
               
