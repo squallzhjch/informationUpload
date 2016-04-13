@@ -87,8 +87,8 @@ public class CommonDialog extends Dialog {
 		Display display = wm.getDefaultDisplay();
 
 		params.width = (int) (display.getWidth()* 0.7);
-		params.height =  (int) (display.getHeight() *0.35+30
-				);
+		params.height =  (int) (display.getHeight() *0.25);
+				
 		//		params.x=260;
 		//	    params.y=100;
 		//		this.getWindow().setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);

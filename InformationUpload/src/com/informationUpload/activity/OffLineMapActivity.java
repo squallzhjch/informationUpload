@@ -84,6 +84,7 @@ MKOfflineMapListener, OnClickListener {
 	private NetworkInfo info;
 	private OffLineMapActivity mContext;
 	private final String mPageName = "OffLineMapActivity";
+	private RelativeLayout user_back_rl;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -124,7 +125,7 @@ MKOfflineMapListener, OnClickListener {
 	}
 
 	private void initView() {
-
+		user_back_rl =  (RelativeLayout)findViewById(R.id.user_back_rl);
 		cidView = (TextView) findViewById(R.id.cityid);
 		cityNameView = (EditText) findViewById(R.id.city);
 		stateView = (TextView) findViewById(R.id.state);
@@ -945,7 +946,9 @@ MKOfflineMapListener, OnClickListener {
 		case R.id.user_back_btn:
 			finish();
 			break;
-
+		case R.id.user_back_rl:
+			finish();
+			break;
 		case R.id.update_all:
 			startAll(null);
 			break;

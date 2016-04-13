@@ -11,35 +11,37 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:text="更改昵称"
-        android:textSize="17sp"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="17sp" />
 
     <EditText
         android:id="@+id/et_name"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="20dp"
-        android:background="#f1f1f1" 
+        android:layout_marginTop="15dp"
+        android:background="@drawable/modify_name_et_bg"
+        android:gravity="top|left"
         android:hint="我的名字"
         android:padding="6dp"
-        android:gravity="top|left"/>
-
-   
+        android:singleLine="true"
+        android:textSize="15dip" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal" 
         android:layout_gravity="bottom"
-       android:layout_marginTop="30dp">
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
 
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/usercenter_select_bg_color"
+            android:clickable="true"
             android:gravity="center" >
 
             <TextView
@@ -47,26 +49,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="取消"
-                android:textSize="17sp"
-                android:textColor="#ff7979" />
+                android:textColor="#ff7979"
+                android:textSize="17sp" />
         </RelativeLayout>
-      <View android:layout_width="1dp"
-          android:layout_height="31dp"
-          android:layout_gravity="center_vertical"
-          android:background="@android:color/black"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="31dp"
+            android:layout_gravity="center_vertical"
+            android:background="@android:color/black" />
+
         <RelativeLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/usercenter_select_bg_color"
+            android:clickable="true"
             android:gravity="center" >
 
             <TextView
                 android:id="@+id/confirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="确定" 
-                android:textSize="17sp"
-                android:textColor="@android:color/black"/>
+                android:text="确定"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
         </RelativeLayout>
     </LinearLayout>
 
