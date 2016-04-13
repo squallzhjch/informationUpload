@@ -493,9 +493,9 @@ public class InformationCollectionFragment extends BaseFragment {
 			}
 			@Override
 			public void onParseResult(String path, String result) {
+				Log.i("info", "返回:"+path);
 				synchronized (mChatList) {
-					Log.i("info","chatpath:"+path);
-					Log.i("info", "datapath:"+SystemConfig.DATA_CHAT_PATH);
+					
 					try {
 						md = new MediaPlayer();
 						md.reset();
@@ -509,7 +509,7 @@ public class InformationCollectionFragment extends BaseFragment {
 
 					md.release();
 					md=null;
-					if(timeLong>=1000&&timeLong<=6000){
+					if(timeLong>=1000&&timeLong<=60000){
 						long longti=  (timeLong/1000);
 
 
@@ -538,21 +538,14 @@ public class InformationCollectionFragment extends BaseFragment {
 							adapter.notifadataset();
 							resetListView();
 						}
-//						String str;
-//						if(additional_remarks_et.getText().toString().equals("")){
-//							 str = additional_remarks_et.getText().toString();
-//						}else{
-//							str=additional_remarks_et.getText().toString()+"\n";
-//						}
-//						additional_remarks_et.setText(str + result);
-//						additional_remarks_et.clearFocus();
+                    Log.i("info","timelong:"+timeLong);
 					}else if(timeLong<1000){
 					
 						Toast.makeText(getActivity(),"录音时间过短", Toast.LENGTH_SHORT).show();
 						if(new File(path).exists()){
 							new File(path).delete();
 						}
-					}else if(timeLong>6000){
+					}else if(timeLong>60000){
 						
 						Toast.makeText(getActivity(),"录音时间过长", Toast.LENGTH_SHORT).show();
 						if(new File(path).exists()){

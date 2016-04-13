@@ -23,6 +23,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,8 @@ public class CommonDialog extends Dialog {
 	 * 昵称显示栏
 	 */
 	private TextView mNameTv;
+	private RelativeLayout mConfirmRl;
+	private RelativeLayout mCancelRl;
 
 	public CommonDialog(Context context,TextView mNameTv) {
 		super(context, R.style.customerDialog);
@@ -122,8 +125,32 @@ public class CommonDialog extends Dialog {
 
 		
 		});
+    	//确认
+    	mConfirmRl.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				String nickName = mEtName.getText().toString();
+				if("".equals(nickName)){
+					Toast.makeText(context,"修改昵称，昵称不能为空！",Toast.LENGTH_SHORT).show();
+				}else{
+					dismiss();
+					modify(nickName);
+				}
+				
+			}
+		});
     	//取消
         mCancel.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				dismiss();
+				
+			}
+		});
+        //取消
+        mCancelRl.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
@@ -139,7 +166,8 @@ public class CommonDialog extends Dialog {
 	    
 	       mCancel  =  (TextView)findViewById(R.id.cancel);
 	       mConfirm =  (TextView)findViewById(R.id.confirm);
-		
+		   mConfirmRl =(RelativeLayout)findViewById(R.id.confirm_rl);
+		   mCancelRl=(RelativeLayout)findViewById(R.id.cancel_rl);
 	}
 
 	public String getEtName(){

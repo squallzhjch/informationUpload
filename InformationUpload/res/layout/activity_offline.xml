@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" 
    android:background="@color/background_color">
-    
+   
     <RelativeLayout
         android:id="@+id/map_bar"
         android:layout_width="fill_parent"
@@ -13,7 +13,9 @@
         android:gravity="center_vertical"
         android:layout_gravity="center_vertical"
         android:focusableInTouchMode="true"
-        android:padding="10dp" >
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="13dp" >
        <RelativeLayout
            android:id="@+id/user_back_rl" 
            android:layout_width="wrap_content"
@@ -21,14 +23,20 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:padding="5dp" >
+            android:paddingLeft="15dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:paddingRight="15dp"
+            android:clickable="true"
+            android:addStatesFromChildren="true">
          <Button
             android:id="@+id/user_back_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-          
+           
             android:background="@drawable/back_selecter"
           />
+             
         </RelativeLayout>
         
     <LinearLayout
@@ -72,7 +80,12 @@
           
          
     </RelativeLayout>
-    
+     <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+        
+            
+            android:background="@color/login_item_color" />
     <LinearLayout
         android:id="@+id/citylist_layout"
         android:layout_width="match_parent"
@@ -94,7 +107,7 @@
         android:layout_width="fill_parent"
         android:layout_height="30dp"
         android:layout_margin="10dp"
-        android:paddingTop="2dp"
+        android:paddingTop="5dp"
         android:paddingRight="5dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
@@ -112,7 +125,7 @@
         android:id="@+id/city"
         android:layout_width="match_parent"
         android:layout_height="26dp"
-     
+       
         android:gravity="center_vertical"
         android:layout_gravity="center"
         android:hint="请输入城市名称或首字母"

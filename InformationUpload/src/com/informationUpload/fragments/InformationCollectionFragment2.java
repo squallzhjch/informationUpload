@@ -1,4 +1,5 @@
 package com.informationUpload.fragments;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,6 +83,7 @@ import com.informationUpload.utils.WriteFileUtil;
 import com.informationUpload.utils.ZipUtil;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
+
 /**
  * @author chentao
  * @version V1.0
@@ -101,11 +103,11 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	/**
 	 * 语音信息数组
 	 */
-	private ArrayList<ChatMessage> chatList=new ArrayList<ChatMessage>();
+	private ArrayList<ChatMessage> chatList = new ArrayList<ChatMessage>();
 	/**
 	 * 图片信息数组
 	 */
-	private ArrayList<PictureMessage> picList=new ArrayList<PictureMessage>();
+	private ArrayList<PictureMessage> picList = new ArrayList<PictureMessage>();
 	/**
 	 * 主view
 	 */
@@ -137,8 +139,8 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	private int info_type;
 	private String draw_txt;
 	private Drawable draw_title;
-	private ArrayList<String> list_pic_path=new ArrayList<String>();
-	private ArrayList<String> list_chat_path=new ArrayList<String>();
+	private ArrayList<String> list_pic_path = new ArrayList<String>();
+	private ArrayList<String> list_chat_path = new ArrayList<String>();
 	private int e;
 	private int k;
 	private SubmitInformation subinfo;
@@ -146,114 +148,121 @@ public class InformationCollectionFragment2 extends BaseFragment {
 	 * 下载图片跟语音进度条
 	 */
 	private ProgressDialog pb;
-//	private int count =0;
-	Handler handler=new Handler(){
+	// private int count =0;
+	Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case ServiceEngin.DOWNLOAD_CHAT_SUCCESS:
-//				count++;
-				String chat_path=(String) msg.obj;
+				// count++;
+				String chat_path = (String) msg.obj;
 				list_chat_path.add(chat_path);
-				if(list_chat_path.size()==chatList.size()){
-					for(int i=0;i<list_chat_path.size();i++){
+				if (list_chat_path.size() == chatList.size()) {
+					for (int i = 0; i < list_chat_path.size(); i++) {
 						chatList.get(i).setPath(list_chat_path.get(i));
 					}
 				}
-				adapter = new ChatAdapter(getActivity(),null, chatList);
+				adapter = new ChatAdapter(getActivity(), null, chatList);
 				resetListView();
 				voice_collection_lv.setAdapter(adapter);
-//				if(count==2){
-					pb.dismiss();
-//					count=0;
-//				}
+				// if(count==2){
+				pb.dismiss();
+				// count=0;
+				// }
 				break;
 			case ServiceEngin.DOWNLOAD_PIC_SUCCESS:
-//				count++;
-				String pic_path=(String) msg.obj;
+				// count++;
+				String pic_path = (String) msg.obj;
 				list_pic_path.add(pic_path);
-				if(list_pic_path.size()==picList.size()){
-					for(int j=0;j<list_pic_path.size();j++){
+				if (list_pic_path.size() == picList.size()) {
+					for (int j = 0; j < list_pic_path.size(); j++) {
 						picList.get(j).setPath(pic_path);
 					}
 					queryinit();
 				}
-//				if(count==2){
-					pb.dismiss();
-//					count=0;
-//				}
+				// if(count==2){
+				pb.dismiss();
+				// count=0;
+				// }
 				break;
 			case ServiceEngin.DOWNLOAD_FAIL:
-//				count=0;
+				// count=0;
 				pb.dismiss();
-				Toast.makeText(getActivity(), "下载失败！",Toast.LENGTH_LONG).show();
+				Toast.makeText(getActivity(), "下载失败！", Toast.LENGTH_LONG)
+						.show();
 				break;
 			}
 		}
 	};
 
-	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		Bundle bundle = getArguments();
 		if (bundle != null) {
 			mRowkey = bundle.getString(SystemConfig.BUNDLE_DATA_ROWKEY);
-            subinfo= (SubmitInformation)bundle.getSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION);
-
+			subinfo = (SubmitInformation) bundle
+					.getSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION);
 
 		}
 	}
+
 	/**
 	 * 请求后对控件进行初始化赋值
 	 */
-	private void queryinit(){
-		additional_remarks_et.setText(main_remark);
-		
-		select_position.setText(address);
+	private void queryinit() {
+
 		select_position.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				Bundle bundle=new Bundle();
-				bundle.putSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION, subinfo);
-				mFragmentManager.showFragment(IntentHelper.getInstance().getSingleIntent(DisplayPointFragment.class, bundle));
-				
+				Bundle bundle = new Bundle();
+				bundle.putSerializable(SystemConfig.BUNDLE_DATA_LIST_POSITION,
+						subinfo);
+				mFragmentManager.showFragment(IntentHelper.getInstance()
+						.getSingleIntent(DisplayPointFragment.class, bundle));
+
 			}
 		});
-		for(int i=0;i<picList.size();i++){
-			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(220,210);
-			//			lp_rl.setMargins(10,0,10,0);
+		for (int i = 0; i < picList.size(); i++) {
+			RelativeLayout.LayoutParams lp_rl = new RelativeLayout.LayoutParams(
+					220, 210);
+			// lp_rl.setMargins(10,0,10,0);
 
-			RelativeLayout rl=new RelativeLayout(getActivity());
+			RelativeLayout rl = new RelativeLayout(getActivity());
 
 			rl.setLayoutParams(lp_rl);
 
 			ImageView imageView = new ImageView(getActivity());
-			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(210,210);
-			lp.setMargins(5,0,5,0);
+			RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+					210, 210);
+			lp.setMargins(5, 0, 5, 0);
 
 			imageView.setLayoutParams(lp);
 
 			imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-			Log.i("info","geti lujing:"+picList.get(i).getPath());
-			imageView.setImageURI(Uri.fromFile(new File(picList.get(i).getPath())));
+			Log.i("info", "geti lujing:" + picList.get(i).getPath());
+			imageView.setImageURI(Uri.fromFile(new File(picList.get(i)
+					.getPath())));
 			imageView.setTag(i);
-//			ImageView iv_delete = new ImageView(getActivity());
-//
-//			RelativeLayout.LayoutParams lp_del = new RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
-//
-//			lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
-//			lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
-//			lp_del.setMargins(2,2,5,2);
-//
-//			iv_delete.setLayoutParams(lp_del);
-//			iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
-//			iv_delete.setBackgroundResource(R.drawable.delete_item);
-		
+			// ImageView iv_delete = new ImageView(getActivity());
+			//
+			// RelativeLayout.LayoutParams lp_del = new
+			// RelativeLayout.LayoutParams(android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+			//
+			// lp_del.addRule(RelativeLayout.ALIGN_PARENT_RIGHT,
+			// RelativeLayout.TRUE);
+			// lp_del.addRule(RelativeLayout.ALIGN_PARENT_TOP,
+			// RelativeLayout.TRUE);
+			// lp_del.setMargins(2,2,5,2);
+			//
+			// iv_delete.setLayoutParams(lp_del);
+			// iv_delete.setScaleType(ImageView.ScaleType.FIT_XY);
+			// iv_delete.setBackgroundResource(R.drawable.delete_item);
+
 			rl.addView(imageView);
-//			rl.addView(iv_delete);
-			
-			rl.setTag(listview.size());       
+			// rl.addView(iv_delete);
+
+			rl.setTag(listview.size());
 			hlinearlayout.addView(rl, 0);
 			listview.add(rl);
 
@@ -268,71 +277,78 @@ public class InformationCollectionFragment2 extends BaseFragment {
 				});
 			}
 		}
-		
-		switch(info_type){
+
+		switch (info_type) {
 		case Informations.Information.INFORMATION_TYPE_BUS:
-			draw_txt="公交";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.bus_select_title);
+			draw_txt = "公交";
+			draw_title = getActivity().getResources().getDrawable(
+					R.drawable.bus_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_ESTABLISHMENT:
-			draw_txt="设施";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.establishment_select_title);
+			draw_txt = "设施";
+			draw_title = getActivity().getResources().getDrawable(
+					R.drawable.establishment_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_ROAD:
-			draw_txt="道路";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.road_select_title);
+			draw_txt = "道路";
+			draw_title = getActivity().getResources().getDrawable(
+					R.drawable.road_select_title);
 			break;
 		case Informations.Information.INFORMATION_TYPE_AROUND:
-			draw_txt="周边其他";
-			draw_title=getActivity().getResources().getDrawable(R.drawable.change_near_select_title);
+			draw_txt = "周边其他";
+			draw_title = getActivity().getResources().getDrawable(
+					R.drawable.change_near_select_title);
 			break;
 		}
 		mInformationCollectTitle.setText(draw_txt);
-		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds (draw_title,
-				null,null,null);
+		mInformationCollectTitle.setCompoundDrawablesWithIntrinsicBounds(
+				draw_title, null, null, null);
 	}
+
 	/**
 	 * 初始化组件
 	 */
 	private void init() {
 		listview = new ArrayList<View>();
-		title_back = (RelativeLayout) view.findViewById(R.id.information_collect_back2);
+		title_back = (RelativeLayout) view
+				.findViewById(R.id.information_collect_back2);
 		title_back.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				mFragmentManager.back();
-				
-			}	
-		});
-		delete_photo=(TextView)view.findViewById(R.id.delete_photo2);
-		select_position_again=(TextView)view.findViewById(R.id.select_position_again2);
-		isv=    (InnerScrollView)     view.findViewById(R.id.isv2);
-		svll=    (LinearLayout)     view.findViewById(R.id.svll2);
 
-		mInformationCollectTitle= (TextView)view.findViewById(R.id.information_collect_title2);
+			}
+		});
+		delete_photo = (TextView) view.findViewById(R.id.delete_photo2);
+		select_position_again = (TextView) view
+				.findViewById(R.id.select_position_again2);
+		isv = (InnerScrollView) view.findViewById(R.id.isv2);
+		svll = (LinearLayout) view.findViewById(R.id.svll2);
+
+		mInformationCollectTitle = (TextView) view
+				.findViewById(R.id.information_collect_title2);
 		select_position = (TextView) view.findViewById(R.id.select_position2);
 		hliv = (ImageView) view.findViewById(R.id.hliv2);
-		voice_collection_lv = (ListView) view.findViewById(R.id.voice_collection_lv2);
-		hscrollview = (HorizontalScrollView) view.findViewById(R.id.hscrollview2);
+		voice_collection_lv = (ListView) view
+				.findViewById(R.id.voice_collection_lv2);
+		hscrollview = (HorizontalScrollView) view
+				.findViewById(R.id.hscrollview2);
 		hlinearlayout = (LinearLayout) view.findViewById(R.id.hlinearlayout2);
 
-		additional_remarks_et = (EditText) view.findViewById(R.id.additional_remarks_et2);
+		additional_remarks_et = (EditText) view
+				.findViewById(R.id.additional_remarks_et2);
 		savetolocal = (Button) view.findViewById(R.id.savetolocal2);
 		recordvoice = (Button) view.findViewById(R.id.recordvoice2);
 		report_at_once = (Button) view.findViewById(R.id.report_at_once);
-		
+
 	}
 
-
-
-
-
-	//重新计算高度
+	// 重新计算高度
 	public void resetListView() {
 
 		int count = this.adapter.getCount();
-		if(count!=0){
+		if (count != 0) {
 			View itemView = this.adapter.getView(0, null, null);
 			if (itemView != null) {
 				itemView.measure(
@@ -342,8 +358,8 @@ public class InformationCollectionFragment2 extends BaseFragment {
 				int defHeight = count
 						* (itemView.getMeasuredHeight() + voice_collection_lv
 								.getDividerHeight());
-				if(defHeight>180){
-					LayoutParams lp =  voice_collection_lv.getLayoutParams();
+				if (defHeight > 180) {
+					LayoutParams lp = voice_collection_lv.getLayoutParams();
 
 					lp.height = defHeight;
 					voice_collection_lv.setLayoutParams(lp);
@@ -352,110 +368,119 @@ public class InformationCollectionFragment2 extends BaseFragment {
 		}
 	}
 
-
-
 	@Override
 	public void onDetach() {
 		super.onDetach();
 
 	}
+
 	@Override
 	public void onDataChange(Bundle bundle) {
 
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container) {
-		view = inflater.inflate(R.layout.fragment2_information_collection, null);
+		view = inflater
+				.inflate(R.layout.fragment2_information_collection, null);
 		DisplayMetrics metric = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-		width = metric.widthPixels;     // 屏幕宽度（像素）
+		width = metric.widthPixels; // 屏幕宽度（像素）
 		df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-		//初始化
+		// 初始化
 		init();
-		
-		if(!TextUtils.isEmpty(mRowkey)){
+
+		if (!TextUtils.isEmpty(mRowkey)) {
 			query(mRowkey);
 		}
-		
-		
 
 		return view;
 	}
+
 	@Override
 	public void onPause() {
 		super.onPause();
 
 	}
+
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 	}
+
 	@Override
 	public void onViewStateRestored(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onViewStateRestored(savedInstanceState);
 	}
-	
 
-	//10.情报数据提交任务信息查询接口
-	public void query(String info_fid ){
-		HashMap<String,Object> map=new HashMap<String, Object>();
-		map.put("info_fid",info_fid);
-		ServiceEngin.getInstance().Request(getActivity(), map,"inforqueryworkbyid", new EnginCallback(getActivity()){
-			@Override
-			public void onSuccess(ResponseInfo arg0) {
-				// TODO Auto-generated method stub
-				super.onSuccess(arg0);
-				String result;
-				result=arg0.result.toString();
-				Log.e("请求成功", result);
-				//对情报数据提交任务信息进行json解析
-				parsesubmitJson(result);
+	// 10.情报数据提交任务信息查询接口
+	public void query(String info_fid) {
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		map.put("info_fid", info_fid);
+		ServiceEngin.getInstance().Request(getActivity(), map,
+				"inforqueryworkbyid", new EnginCallback(getActivity()) {
+					@Override
+					public void onSuccess(ResponseInfo arg0) {
+						// TODO Auto-generated method stub
+						super.onSuccess(arg0);
+						String result;
+						result = arg0.result.toString();
+						Log.e("请求成功", result);
+						// 对情报数据提交任务信息进行json解析
+						parsesubmitJson(result);
 
-			}
-			@Override
-			public void onFailure(HttpException arg0, String arg1) {
-				// TODO Auto-generated method stub
-				super.onFailure(arg0, arg1);
-			}
-		});
+					}
+
+					@Override
+					public void onFailure(HttpException arg0, String arg1) {
+						// TODO Auto-generated method stub
+						super.onFailure(arg0, arg1);
+					}
+				});
 
 	}
+
 	/**
 	 * 对情报数据提交任务信息进行json解析
+	 * 
 	 * @param result
 	 */
 	protected void parsesubmitJson(String result) {
 		JSONObject jsonObj = JSON.parseObject(result);
 		String errcode = jsonObj.getString("errcode");
 		String errmsg = jsonObj.getString("errmsg");
-		if(null!=errcode&&!"".equals(errcode)&&errcode.equals("0")){
+		if (null != errcode && !"".equals(errcode) && errcode.equals("0")) {
 			JSONArray data_ary = jsonObj.getJSONArray("data");
 
-			for(int j=0;j<data_ary.size();j++){
-				JSONObject data_obj=(JSONObject) data_ary.get(j);
+			for (int j = 0; j < data_ary.size(); j++) {
+				JSONObject data_obj = (JSONObject) data_ary.get(j);
 				String user_id = data_obj.getString("user_id");
-				String adminCode  = data_obj.getString("adminCode");
-				String info_fid  =  data_obj.getString("info_fid");
-				   info_type   =   data_obj.getIntValue("info_type");
+				String adminCode = data_obj.getString("adminCode");
+				String info_fid = data_obj.getString("info_fid");
+				info_type = data_obj.getIntValue("info_type");
 				JSONObject locationObj = data_obj.getJSONObject("location");
 
 				String lat = locationObj.getString("latitude");
-				String lon=locationObj.getString("longitude");
-				 address=data_obj.getString("address");
-				 main_remark = data_obj.getString("remark");
-				JSONArray attachment_list = data_obj.getJSONArray("attachments");
-				for(int i=0;i<attachment_list.size();i++){
+				String lon = locationObj.getString("longitude");
+				address = data_obj.getString("address");
+				main_remark = data_obj.getString("remark");
+				additional_remarks_et.setText(main_remark);
+
+				select_position.setText(address);
+				JSONArray attachment_list = data_obj
+						.getJSONArray("attachments");
+				for (int i = 0; i < attachment_list.size(); i++) {
 					JSONObject Obj = (JSONObject) attachment_list.get(i);
 					String url = Obj.getString("url");
 					int type = Obj.getIntValue("type");
-					Log.i("info","type:"+type);
-					String remark =  Obj.getString("remark");
+					Log.i("info", "type:" + type);
+					String remark = Obj.getString("remark");
 					JSONObject location_obj = Obj.getJSONObject("location");
-					double lat_att=location_obj.getDoubleValue("latitude");
-					double lon_att=location_obj.getDoubleValue("longitude");
-					String  time =  Obj.getString("time");
+					double lat_att = location_obj.getDoubleValue("latitude");
+					double lon_att = location_obj.getDoubleValue("longitude");
+					String time = Obj.getString("time");
 					if (type == 1) {
 						message = new ChatMessage();
 						chatList.add((ChatMessage) message);
@@ -464,13 +489,14 @@ public class InformationCollectionFragment2 extends BaseFragment {
 						picList.add((PictureMessage) message);
 					}
 
-					if (!TextUtils.isEmpty(remark)){
+					if (!TextUtils.isEmpty(remark)) {
 						message.setRemark(remark);
 					}
 
-					if(!TextUtils.isEmpty(url)) {
-						
-						message.setPath(SystemConfig.MAIN_URL+url.substring(6));
+					if (!TextUtils.isEmpty(url)) {
+
+						message.setPath(SystemConfig.MAIN_URL
+								+ url.substring(6));
 					}
 
 					message.setLat(lat_att);
@@ -478,49 +504,49 @@ public class InformationCollectionFragment2 extends BaseFragment {
 					message.setRowkey(info_fid);
 
 				}
-				pb=new ProgressDialog(getActivity());
+				pb = new ProgressDialog(getActivity());
 				pb.setMessage("正在下载图片跟语音");
 				pb.setCancelable(false);
 				pb.show();
-				for(int f=0;f<picList.size();f++){
-					    e=f; 
-						new Thread(new Runnable() {
-							public void run() {
-								try {
-								ServiceEngin.getInstance().getFileStream(picList.get(e).getPath(), handler);
-								
-								} catch (Exception e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-						}).start();
-						
-					
-				}
-				
-				for(int h=0;h<chatList.size();h++){
-					k=h;
+				for (int f = 0; f < picList.size(); f++) {
+					e = f;
 					new Thread(new Runnable() {
-						
-						@Override
 						public void run() {
-						    try {
-								ServiceEngin.getInstance().getFileStream(chatList.get(k).getPath(), handler);
+							try {
+								ServiceEngin.getInstance().getFileStream(
+										picList.get(e).getPath(), handler);
+
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							
 						}
 					}).start();
-			   
+
 				}
-				
-			
+
+				for (int h = 0; h < chatList.size(); h++) {
+					k = h;
+					new Thread(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								ServiceEngin.getInstance().getFileStream(
+										chatList.get(k).getPath(), handler);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+
+						}
+					}).start();
+
+				}
+
 			}
 
-		}else{
+		} else {
 			Toast.makeText(getActivity(), errmsg, Toast.LENGTH_SHORT).show();
 		}
 

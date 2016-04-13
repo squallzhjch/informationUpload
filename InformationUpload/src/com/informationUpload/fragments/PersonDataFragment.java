@@ -139,6 +139,10 @@ public class PersonDataFragment extends BaseFragment{
 	 * 我的名字(昵称)
 	 */
 	private String userName;
+	/**
+	 * 头像relativelayout
+	 */
+	private RelativeLayout HeadRl;
 	Handler handler=new Handler(){
 	
 		public void handleMessage(android.os.Message msg) {
@@ -197,6 +201,7 @@ public class PersonDataFragment extends BaseFragment{
 			}
 		}
 	};
+	
 	
 
 	
@@ -274,7 +279,9 @@ public class PersonDataFragment extends BaseFragment{
 	    initBitmap = BitmapFactory.decodeStream(is);		
 	
 		IvHead = (ImageView) view.findViewById(R.id.iv_head);
+		                    
 		IvHead.setImageBitmap(initBitmap);
+		HeadRl    =(RelativeLayout)view.findViewById(R.id.head_rl);
 		PersondataBack=(RelativeLayout)view.findViewById(R.id.persondata_back);
 		NameRl =(RelativeLayout) view.findViewById(R.id.name_rl);
 		mNameTv =       (TextView) view.findViewById(R.id.name_tv);
@@ -347,6 +354,15 @@ public class PersonDataFragment extends BaseFragment{
 	
 	//添加监听器
 	private void addListeners() {
+		//头像rl
+		HeadRl.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				new PopupWindows(getActivity(),view);
+				
+			}
+		});
 		//昵称rl
 				NameRl.setOnClickListener(new OnClickListener() {
 		

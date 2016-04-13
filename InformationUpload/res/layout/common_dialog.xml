@@ -37,11 +37,13 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
+            android:id="@+id/cancel_rl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/usercenter_select_bg_color"
             android:clickable="true"
+              android:addStatesFromChildren="true"
             android:gravity="center" >
 
             <TextView
@@ -60,11 +62,13 @@
             android:background="@android:color/black" />
 
         <RelativeLayout
+            android:id="@+id/confirm_rl"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@drawable/usercenter_select_bg_color"
             android:clickable="true"
+            android:addStatesFromChildren="true"
             android:gravity="center" >
 
             <TextView
