@@ -498,6 +498,7 @@ public class ReportRecordFragment extends BaseFragment{
 		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Log.i("info", "position:"+position);
 				try {
 					String rowkey = (String) view.getTag(R.id.cb);
 
