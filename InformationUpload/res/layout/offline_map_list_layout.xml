@@ -12,7 +12,9 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="5dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:clickable="true"
+        android:background="@drawable/usercenter_select_bg_color">
 
         <TextView
             android:id="@+id/title"
@@ -21,7 +23,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
             android:text="fdsfdsf"
-            android:textColor="@drawable/default_font_color_xml"
+             android:textColor="@color/select_pop_title_color"
             android:textSize="15dip" />
 
         <TextView
@@ -46,7 +48,7 @@
               
                 android:layout_marginLeft="10dp"
                 android:text=""
-                android:textColor="@drawable/black_font_color_xml"
+                  android:textColor="@color/select_pop_title_color"
                 android:textSize="15dip" />
 
             <ImageView

@@ -11,13 +11,17 @@
     android:layout_height="50dp"
     android:layout_gravity="center_vertical"
     android:gravity="center_vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:background="@drawable/usercenter_select_bg_color">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textColor="@drawable/default_font_color_xml"
+        android:textColor="@color/select_pop_title_color"
+           android:textSize="15dip"
+           android:singleLine="true"
+          android:ellipsize="end"
         android:text="已下载城市 " />
 
     <TextView
@@ -25,6 +29,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="sdfsdf"
+           android:textSize="15dip"
         android:layout_marginLeft="10dp"
         android:textColor="#ffa312" />
 
@@ -40,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="100dp"
         android:layout_alignParentRight="true"
+        android:textSize="15dip"
         android:textColor="@android:color/holo_red_light"
         android:text="dsfsd" />
     

@@ -38,6 +38,7 @@
             android:layout_centerVertical="true"
             android:text="下载管理"
             android:background="@drawable/main_leftbtn_xml"
+            android:textSize="15dip"
             android:textColor="@drawable/offlinemap_leftbtn_textcolor"/>
         
          <Button
@@ -47,7 +48,7 @@
              android:layout_height="wrap_content"
              android:layout_centerVertical="true"
              android:text="城市列表"
-            
+             android:textSize="15dip"
              android:background="@drawable/main_leftbtn_xml"/>
           </LinearLayout>
           
@@ -83,7 +84,7 @@
         android:background="#c4c7cc">
          <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_margin="10dp"
         android:paddingTop="2dp"
         android:paddingRight="5dp"
@@ -102,12 +103,12 @@
         <EditText
         android:id="@+id/city"
         android:layout_width="match_parent"
-        android:layout_height="31dp"
+        android:layout_height="26dp"
      
         android:gravity="center_vertical"
         android:layout_gravity="center"
         android:hint="请输入城市名称或首字母"
-        
+       android:textSize="15dip"
         android:background="@drawable/et_search_city_bg" />
         
         
@@ -122,7 +123,8 @@
             android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
             android:textColor="@color/offline_map_color"
-            android:background="@color/background_color" />
+            android:background="@color/background_color"
+            android:textSize="15dip" />
 
         <ExpandableListView
             android:id="@+id/hotcitylist"
@@ -139,6 +141,7 @@
             android:textColor="@color/offline_map_color"
              android:background="@color/background_color" 
             android:text="全国" 
+            android:textSize="15dip"
              android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"/>
 
